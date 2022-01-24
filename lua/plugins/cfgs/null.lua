@@ -9,7 +9,14 @@ null.setup({
 
         -- lua
         null.builtins.formatting.stylua.with({
-            extra_args = { "--column-width", "88", "--indent-type", "Spaces" },
+            extra_args = {
+                "--column-width",
+                "88",
+                "--indent-type",
+                "Spaces",
+                "--indent-width",
+                "4",
+            },
         }),
 
         -- markdown

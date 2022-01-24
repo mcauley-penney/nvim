@@ -1,3 +1,4 @@
+local util = require("utils")
 local hi = require("options.status.highlight")
 local icon = require("nvim-web-devicons")
 
@@ -32,7 +33,7 @@ M.get_diagnostics = function(status_bg)
             cur_hi = hi.create_hi_grp_str({
                 grp = diag_grp,
                 bg = status_bg,
-                fg = hi.get_hl_by_name(diag_fg),
+                fg = util.get_hl_by_name(diag_fg),
             })
 
             --[[
@@ -55,17 +56,19 @@ M.get_diagnostics = function(status_bg)
     -- if lsp is available, include diagnostic info in status
     if cur_lsp ~= nil then
         -- get total diagnostic count
-        local count = #vim.diagnostic.get(0)
+        local total_count = #vim.diagnostic.get(0)
 
         -- if we have no diagnostics, return a nice little symbol
-        if count < 1 then
+        if total_count < 1 then
             local success_hi = hi.create_hi_grp_str({
                 grp = "DiagnosticSuccess",
                 bg = status_bg,
-                fg = "#F7C548",
+                fg = "#347d39",
             })
 
-            return success_hi .. "--" .. "%*" .. "  "
+            local sym = "[]"
+
+            return success_hi .. sym .. "%*" .. " "
         else
             local diag_tbl = _get_diag_str_tbl()
 

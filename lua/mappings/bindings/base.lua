@@ -5,7 +5,11 @@ local na = {}
 
 -- comments
 utils.fmap("i", "<F2>", func.send_comment, utils.expr)
-utils.map("i", "<F14>", "- ", na)
+utils.map("i", "<F14>", "• ", na)
+utils.map("i", "!!", "!=", utils.nore)
+
+-- equation
+utils.map("i", "<F1>", "= ", na)
 
 -- fold
 utils.map("n", "<F2>", "za", na)

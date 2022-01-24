@@ -13,7 +13,7 @@ local lsp_langs = { "c", "lua", "python", "sh" }
 
 require("packer").startup({
     function(use)
-        -- core {{{
+        -- core
         use("wbthomason/packer.nvim")
 
         use({ "lewis6991/impatient.nvim", rocks = "mpack" })
@@ -75,7 +75,6 @@ require("packer").startup({
                         ["clangd"] = function()
                             default_opts.settings = {
                                 "clangd",
-                                "--clang-tidy",
                                 "--completion-style=detailed",
                                 "--cross-file-rename",
                                 "--header-insertion=iwyu",
@@ -123,7 +122,7 @@ require("packer").startup({
             run = ":TSUpdate",
         })
 
-        -- formatting {{
+        -- formatting
         use({
             "jose-elias-alvarez/null-ls.nvim",
             config = [[ require "plugins.cfgs.null" ]],
@@ -137,19 +136,17 @@ require("packer").startup({
             "mcauley-penney/tidy.nvim",
             event = "BufWritePre",
         })
-        -- }} end formatting
-        -- }}} end core
+        -- end core
 
-        --luxuries {{{
+        --luxuries
 
-        -- scheme {{
-        use("/home/m/files/nonwork/cacophony.nvim")
+        -- scheme
+        use("/home/m/files/nonwork/still_light.nvim")
 
         use({
             "kyazdani42/nvim-web-devicons",
             config = [[ require "plugins.cfgs.icons" ]],
         })
-        -- }} end scheme
 
         -- vim.cmd("packadd! cfilter")
 
@@ -194,13 +191,9 @@ require("packer").startup({
         })
 
         use({
-            "blackCauldron7/surround.nvim",
-            config = function()
-                require("surround").setup({
-                    mappings_style = "sandwich",
-                    prefix = "<F14>",
-                })
-            end,
+            "petertriho/nvim-scrollbar",
+            config = [[ require "plugins.cfgs.scroll_bar" ]],
+            event = "CursorMoved",
         })
 
         -- use({ "simrat39/symbols-outline.nvim", ft = lsp_langs })
@@ -254,8 +247,6 @@ require("packer").startup({
             end,
             event = "InsertEnter",
         })
-
-        -- }}} end luxuries
 
         -- Testing
     end,

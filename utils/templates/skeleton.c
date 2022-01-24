@@ -1,12 +1,4 @@
-// Author: MP
+#include <stdio.h>
+#include <stdlib.h>
 
-
-// libraries
-#include<stdio.h>
-#include<stdlib.h>
-
-
-int main( int argc, char *argv[] )
-{
-    return EXIT_SUCCESS;
-}
+int main(int argc, char *argv[]) { return EXIT_SUCCESS; }

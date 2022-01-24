@@ -5,12 +5,12 @@ local M = {
         Error = { sym = "" },
         Warn = { sym = "" },
         Hint = { sym = "" },
-        Info = { sym = "" },
+        Info = { sym = "" },
     },
 
     onAttach = function(client)
         if client.resolved_capabilities.document_formatting then
-            vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()")
+            vim.cmd("au BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()")
         end
 
         require("lsp_signature").on_attach({

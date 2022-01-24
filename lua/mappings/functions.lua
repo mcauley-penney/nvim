@@ -1,6 +1,31 @@
 -- api docs: https://neovim.io/doc/user/api.html
 
-local api = vim.api
+local str = {
+    c_sl = "// ",
+    dash = "-- ",
+    latx = "% ",
+    text = "- ",
+    octo = "# ",
+}
+
+local ft_match_table = {
+    ["c"] = str.c_sl,
+    ["css"] = "/*  */",
+    ["cuda"] = str.c_sl,
+    ["gitcommit"] = str.text,
+    ["gitconfig"] = str.octo,
+    ["javascript"] = str.c_sl,
+    ["lua"] = str.dash,
+    ["make"] = str.octo,
+    ["markdown"] = str.text,
+    ["python"] = str.octo,
+    ["sh"] = str.octo,
+    ["tex"] = str.latx,
+    ["txt"] = str.text,
+    ["text"] = str.text,
+    ["vim"] = '" ',
+    ["yaml"] = str.octo,
+}
 
 local M = {
 
@@ -11,11 +36,11 @@ local M = {
     -- if it is, turn on relativenumber; if relativenumber
     -- is on, turn off all numbering.
     num_toggle = function()
-        local set_opt = api.nvim_win_set_option
+        local set_opt = vim.api.nvim_win_set_option
 
         -- determine what settings are on
-        local num_on = api.nvim_win_get_option(0, "number")
-        local relnum_on = api.nvim_win_get_option(0, "relativenumber")
+        local num_on = vim.api.nvim_win_get_option(0, "number")
+        local relnum_on = vim.api.nvim_win_get_option(0, "relativenumber")
 
         -- if number is off, turn it on
         if not num_on then
@@ -41,34 +66,7 @@ local M = {
     -- the correct comment string for the current
     -- filetype.
     send_comment = function()
-        local str = {
-            c_sl = "// ",
-            dash = "-- ",
-            latx = "% ",
-            text = "- ",
-            octo = "# ",
-        }
-
-        local ft_match_table = {
-            ["c"] = str.c_sl,
-            ["css"] = "/*  */",
-            ["cuda"] = str.c_sl,
-            ["gitcommit"] = str.text,
-            ["gitconfig"] = str.octo,
-            ["javascript"] = str.c_sl,
-            ["lua"] = str.dash,
-            ["make"] = str.octo,
-            ["markdown"] = str.text,
-            ["python"] = str.octo,
-            ["sh"] = str.octo,
-            ["tex"] = str.latx,
-            ["txt"] = str.text,
-            ["text"] = str.text,
-            ["vim"] = '" ',
-            ["yaml"] = str.octo,
-        }
-
-        local ft = api.nvim_buf_get_option(0, "filetype")
+        local ft = vim.api.nvim_buf_get_option(0, "filetype")
 
         return ft_match_table[ft]
     end,

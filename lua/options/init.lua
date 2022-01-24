@@ -7,8 +7,8 @@
     opt syntax:     https://github.com/neovim/neovim/pull/13479#event-4813249467
 ]]
 
-require("options.status")
 require("options.functions")
+require("options.providers")
 
 -- alias syntax
 local o = vim.opt
@@ -19,6 +19,7 @@ o.colorcolumn = "+0"
 o.cindent = true
 o.clipboard = "unnamedplus"
 o.confirm = true
+o.emoji = false
 o.expandtab = true
 o.fillchars = { eob = " ", fold = " " }
 o.foldenable = false
@@ -47,11 +48,9 @@ o.showcmd = false
 o.showmode = false
 o.signcolumn = "yes:1"
 o.softtabstop = 4
-o.statusline = "%!v:lua.init_status()"
 o.swapfile = false
 o.synmaxcol = 1000
 o.termguicolors = true
-o.textwidth = 125
 o.timeout = false
 o.undodir = vim.fn.expand(vim.fn.stdpath("data") .. "/undo/")
 o.undofile = true
@@ -61,39 +60,3 @@ o.virtualedit = "all"
 o.wildmode = "longest:full"
 o.wildoptions = "pum"
 o.writebackup = false
-
--- filetype
-vim.g.python_recommended_style = 0
-vim.g.did_load_filetypes = 0
-vim.g.do_filetype_lua = 1
-
---[[
-    providers
-    https://github.com/neovim/neovim/blob/master/runtime/doc/provider.txt
-]]
-vim.g.loaded_node_provider = 0
-vim.g.loaded_perl_provider = 0
-vim.g.loaded_python_provider = 0 -- disables Python2 support
-vim.g.loaded_ruby_provider = 0
-
-vim.g.python3_host_prog = "/usr/bin/python3"
-
---[[
-    Define clipboard commands here to preempt clipboard.vim runtime
-    execution; Same concept as defining providers to speed up.
-    See https://github.com/neovim/neovim/blob/master/runtime/autoload/provider/clipboard.vim
-]]
-vim.cmd([[
-    let g:clipboard = {
-        \ 'name': 'xsel',
-        \ 'copy': {
-        \    '+': 'xsel --nodetach -i -b',
-        \    '*': 'xsel --nodetach -i -p',
-        \  },
-        \ 'paste': {
-        \    '+': 'xsel -o -b',
-        \    '*': 'xsel -o -p',
-        \ },
-        \ 'cache_enabled': 1,
-        \ }
-]])

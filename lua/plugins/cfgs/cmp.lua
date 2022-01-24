@@ -56,7 +56,7 @@ cmp.setup({
         { name = "buffer", max_item_count = 5 },
         { name = "cmp_git" },
         { name = "emoji", max_item_count = 10 },
-        { name = "latex_symbols", max_item_count = 7 },
+        { name = "latex_symbols" },
         { name = "nvim_lsp" },
         { name = "nvim_lua", max_item_count = 5 },
         { name = "path" },

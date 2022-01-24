@@ -1,18 +1,39 @@
-local M = {}
+local tw_tbl = {
+    ["c"] = 88,
+    ["gitcommit"] = 50,
+    ["lua"] = 88,
+    ["python"] = 88,
+    ["sh"] = 88,
+    ["tex"] = 78,
+    ["text"] = 120,
+}
 
-M.hi_long_lines = function()
-    local ft = vim.api.nvim_buf_get_option(0, "filetype")
+local M = {
 
-    if ft ~= "csv" then
-        -- get textwidth string, cast to an int, and add 1
-        local tw_int = tonumber(vim.api.nvim_get_option("textwidth")) + 1
+    hi_long_lines = function()
+        local ft = vim.api.nvim_buf_get_option(0, "filetype")
 
-        -- cast tw to str and append %
-        local tw_str = "%" .. tostring(tw_int)
+        if ft ~= "csv" then
+            -- get textwidth string, cast to an int, and add 1
+            local tw = vim.api.nvim_buf_get_option(0, "textwidth") + 1
 
-        -- format matching syntax cmd with tw string and execute
-        vim.cmd(string.format([[match Error /\%sv.\+/]], tw_str))
-    end
-end
+            -- cast tw to str and append %
+            local tw_str = "%" .. tostring(tw)
+
+            -- format matching syntax cmd with tw string and execute
+            vim.cmd(string.format([[match Error /\%sv.\+/]], tw_str))
+        end
+    end,
+
+    set_textwidth = function(default)
+        local tw = tw_tbl[vim.api.nvim_buf_get_option(0, "filetype")]
+
+        if tw == nil then
+            tw = default
+        end
+
+        vim.api.nvim_buf_set_option(0, "textwidth", tw)
+    end,
+}
 
 return M
