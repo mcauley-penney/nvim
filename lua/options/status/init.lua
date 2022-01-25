@@ -1,4 +1,3 @@
-local util = require("utils")
 local srcs = require("options.status.external_srcs")
 
 -- see https://vimhelp.org/options.txt.html#%27statusline%27 for part fmt strs
@@ -54,7 +53,7 @@ _G.get_active_status = function()
     -- if the current buffer name is not in the table of buffer names that we do not
     -- want a statusline for, proceed
     if _is_acceptable_buf(EXCLUDED) then
-        local status_bg = util.get_hl_by_name("StatusLine", "bg")
+        local status_bg = require("utils").get_hl_by_name("StatusLine", "bg")
 
         -- init tables of keys used to access statusline fmt strs
         status_tbl = { "icon", "ab_path", "mod", "ro", "indent", "diag", "lines" }

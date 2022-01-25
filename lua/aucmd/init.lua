@@ -1,8 +1,6 @@
 -- aucmds
 --  event types: https://neovim.io/doc/user/autocmd.html#events
 
-require("options.status")
-
 local aucmds = {
 
     -- use a template file if one exists for that filetype. See templates dir
@@ -72,14 +70,6 @@ local aucmds = {
             au!
             au ExitPre * set guicursor=a:ver90
         augroup END
-    ]],
-
-    [[
-        augroup ChangeStatus
-            au!
-            au WinEnter,BufEnter * setlocal statusline=%!v:lua.get_active_status()
-        augroup END
-
     ]],
 }
 

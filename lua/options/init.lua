@@ -9,6 +9,7 @@
 
 require("options.functions")
 require("options.providers")
+require("options.status")
 
 -- alias syntax
 local o = vim.opt
@@ -48,11 +49,12 @@ o.showcmd = false
 o.showmode = false
 o.signcolumn = "yes:1"
 o.softtabstop = 4
+vim.wo.statusline = "%!v:lua.get_active_status()"
 o.swapfile = false
 o.synmaxcol = 1000
 o.termguicolors = true
 o.timeout = false
-o.undodir = vim.fn.expand(vim.fn.stdpath("data") .. "/undo/")
+o.undodir = vim.fn.expand(vim.fn.stdpath("data")) .. "/undo/"
 o.undofile = true
 o.updatetime = 350 -- used for swap file and cursorhold
 o.viewoptions = "cursor,folds"

@@ -1,6 +1,4 @@
-local util = require("utils")
 local hi = require("options.status.highlight")
-local icon = require("nvim-web-devicons")
 
 local M = {}
 
@@ -17,7 +15,6 @@ M.get_diagnostics = function(status_bg)
         local count = nil
         local cur_hi = nil
         local diag_fg = nil
-        local diag_grp = nil
         local diag_tbl = {}
 
         -- for signs in LSP signs
@@ -27,13 +24,12 @@ M.get_diagnostics = function(status_bg)
 
             -- create diagnostic group name from diag type
             diag_fg = "Diagnostic" .. type
-            diag_grp = "Status" .. diag_fg
 
             -- create highlight
             cur_hi = hi.create_hi_grp_str({
-                grp = diag_grp,
+                grp = "Status" .. diag_fg,
                 bg = status_bg,
-                fg = util.get_hl_by_name(diag_fg),
+                fg = require("utils").get_hl_by_name(diag_fg),
             })
 
             --[[
@@ -43,7 +39,7 @@ M.get_diagnostics = function(status_bg)
                 lsp.lua, is an associative array, meaning that it cannot guarantee
                 ordered access. Therefore, we must order it ourselves
             ]]
-            diag_tbl[type] = string.format("%s:%d  ", cur_hi .. cfg.sym .. "%*", count)
+            diag_tbl[type] = table.concat({ cur_hi, cfg.sym, "%*:", count, "  " }, "")
         end
 
         -- return associative table of diagnostic str; diag_type = diag_count_str
@@ -68,7 +64,7 @@ M.get_diagnostics = function(status_bg)
 
             local sym = "[]"
 
-            return success_hi .. sym .. "%*" .. " "
+            return table.concat({ success_hi, sym, "%* " }, "")
         else
             local diag_tbl = _get_diag_str_tbl()
 
@@ -88,7 +84,7 @@ M.get_icon = function(status_bg)
     local buf = vim.fn.expand("%:t")
     local ext = vim.fn.expand("%:e")
 
-    local sym, color = icon.get_icon_color(buf, ext)
+    local sym, color = require("nvim-web-devicons").get_icon_color(buf, ext)
 
     if sym ~= nil then
         local icon_hi = hi.create_hi_grp_str({
@@ -97,7 +93,7 @@ M.get_icon = function(status_bg)
             fg = color,
         })
 
-        return " " .. icon_hi .. sym .. "%*"
+        return table.concat({ " ", icon_hi, sym, "%*" }, "")
     end
 
     return nil

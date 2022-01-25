@@ -17,7 +17,6 @@ end
 
 --[[
     news:
-    Lua user-exposed keymappings: https://github.com/neovim/neovim/pull/16591
     merging filetype.nvim:
         -- https://www.reddit.com/r/neovim/comments/rvwsl3/introducing_filetypelua_and_a_call_for_help/
         -- https://github.com/nathom/filetype.nvim/issues/36

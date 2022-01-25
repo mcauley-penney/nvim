@@ -3,7 +3,7 @@ local signs = require("lsp.utils").signs
 
 -- define signs and highlights for diag types
 for diag_type, cfg in pairs(signs) do
-    local hl = "DiagnosticSign" .. diag_type
+    local hl = table.concat({ "DiagnosticSign", diag_type }, "")
     vim.fn.sign_define(hl, {
         text = cfg.sym,
         texthl = hl,

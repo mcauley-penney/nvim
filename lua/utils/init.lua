@@ -1,5 +1,9 @@
 local M = {}
 
+-- Return a highlight group property as rgb.
+-- @param hi: name of a highlight group, e.g. "Normal"
+-- @param out_type: which property of hi grp to get; "bg" or else
+-- @return hexadecimal value str or empty str
 M.get_hl_by_name = function(hi, out_type)
     -- retrieve table of hi info from hl name param
     local color_tbl = vim.api.nvim_get_hl_by_name(hi, true)
