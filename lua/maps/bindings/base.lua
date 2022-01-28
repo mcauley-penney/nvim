@@ -1,5 +1,5 @@
-local func = require("mappings.functions")
-local utils = require("mappings.bindings.utils")
+local func = require("maps.functions")
+local utils = require("maps.bindings.utils")
 
 local na = {}
 

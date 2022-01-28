@@ -10,6 +10,7 @@ local str = {
 
 local ft_match_table = {
     ["c"] = str.c_sl,
+    ["cpp"] = str.c_sl,
     ["css"] = "/*  */",
     ["cuda"] = str.c_sl,
     ["gitcommit"] = str.text,

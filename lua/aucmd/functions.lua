@@ -1,5 +1,7 @@
 local tw_tbl = {
     ["c"] = 88,
+    ["cpp"] = 88,
+    ["__default"] = 120,
     ["gitcommit"] = 50,
     ["lua"] = 88,
     ["python"] = 88,
@@ -25,11 +27,11 @@ local M = {
         end
     end,
 
-    set_textwidth = function(default)
+    set_textwidth = function()
         local tw = tw_tbl[vim.api.nvim_buf_get_option(0, "filetype")]
 
         if tw == nil then
-            tw = default
+            tw = tw_tbl["__default"]
         end
 
         vim.api.nvim_buf_set_option(0, "textwidth", tw)

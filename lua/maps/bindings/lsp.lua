@@ -1,4 +1,4 @@
-local utils = require("mappings.bindings.utils")
+local utils = require("maps.bindings.utils")
 
 -- jump diagnostics
 utils.map(

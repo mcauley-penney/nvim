@@ -14,6 +14,7 @@ STATUS_PARTS = {
 
 EXCLUDED = {
     "OUTLINE",
+    "packer",
     "Trouble",
     "[startuptime]",
 }
@@ -36,10 +37,13 @@ _G.get_active_status = function()
         return table.concat(str_table, " ")
     end
 
-    local function _is_acceptable_buf(exclude_dict)
+    -- Predicate function that checks if current buffer is one that we want status for.
+    -- @param exclude_list: list of buf names to exclude from applying status to
+    -- @return boolean indictating if current buf is in list of bufs to exclude
+    local function _is_acceptable_buf(exclude_list)
         local buf = vim.fn.expand("%:t")
 
-        for _, file_name in ipairs(exclude_dict) do
+        for _, file_name in ipairs(exclude_list) do
             if buf == file_name then
                 return false
             end

@@ -15,7 +15,6 @@ require("options.status")
 local o = vim.opt
 
 o.breakindent = true
-o.breakindentopt = "shift:-4"
 o.colorcolumn = "+0"
 o.cindent = true
 o.clipboard = "unnamedplus"

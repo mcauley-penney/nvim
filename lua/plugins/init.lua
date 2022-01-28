@@ -20,6 +20,14 @@ require("packer").startup({
 
         use({ "nvim-lua/plenary.nvim", module = "plenary" })
 
+        -- scheme
+        use("/home/m/files/nonwork/still_light.nvim")
+
+        use({
+            "kyazdani42/nvim-web-devicons",
+            config = [[ require "plugins.cfgs.icons" ]],
+        })
+
         use({
             "hrsh7th/nvim-cmp",
             config = [[ require "plugins.cfgs.cmp" ]],
@@ -66,53 +74,7 @@ require("packer").startup({
 
         use({
             "williamboman/nvim-lsp-installer",
-            config = function()
-                require("nvim-lsp-installer").on_server_ready(function(server)
-                    local default_opts = {
-                        on_attach = require("lsp.utils").onAttach,
-                    }
-                    local server_opts = {
-                        ["clangd"] = function()
-                            default_opts.settings = {
-                                "clangd",
-                                "--completion-style=detailed",
-                                "--cross-file-rename",
-                                "--header-insertion=iwyu",
-                                "--header-insertion-decorators",
-                                "--limit-results=10",
-                                "--pch-storage=memory",
-                            }
-                        end,
-
-                        ["sumneko_lua"] = function()
-                            default_opts.settings = {
-                                Lua = {
-                                    diagnostics = { globals = { "vim" } },
-                                    runtime = {
-                                        version = "LuaJIT",
-                                        path = vim.split(package.path, ";"),
-                                    },
-                                    telemetry = { enable = false },
-                                    workspace = {
-                                        library = {
-                                            library = vim.api.nvim_get_runtime_file(
-                                                "",
-                                                true
-                                            ),
-                                        },
-                                    },
-                                    format = { enable = true },
-                                },
-                            }
-                        end,
-                    }
-
-                    local server_options = server_opts[server.name]
-                            and server_opts[server.name]()
-                        or default_opts
-                    server:setup(server_options)
-                end)
-            end,
+            config = [[ require "plugins.cfgs.lsp_installer" ]],
         })
 
         -- treesitter
@@ -139,21 +101,24 @@ require("packer").startup({
         -- end core
 
         --luxuries
-
-        -- scheme
-        use("/home/m/files/nonwork/still_light.nvim")
-
-        use({
-            "kyazdani42/nvim-web-devicons",
-            config = [[ require "plugins.cfgs.icons" ]],
-        })
-
         -- vim.cmd("packadd! cfilter")
 
         use({
             "akinsho/bufferline.nvim",
             config = [[ require "plugins.cfgs.bufferline" ]],
             event = "BufHidden",
+        })
+
+        use({
+            "j-hui/fidget.nvim",
+            config = function()
+                require("fidget").setup({
+                    text = {
+                        done = " ",
+                        spinner = "noise",
+                    },
+                })
+            end,
         })
 
         use({

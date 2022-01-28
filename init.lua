@@ -4,7 +4,7 @@ vim.cmd("colorscheme still_light")
 
 local modules = {
     "options",
-    "mappings",
+    "maps",
     "aucmd",
     "plugins",
     "cmd",

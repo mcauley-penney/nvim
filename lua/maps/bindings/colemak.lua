@@ -1,4 +1,4 @@
-local utils = require("mappings.bindings.utils")
+local utils = require("maps.bindings.utils")
 
 local colemak_maps = {
     { "n", "j" },
