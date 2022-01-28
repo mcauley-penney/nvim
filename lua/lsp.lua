@@ -1,9 +1,14 @@
--- get table of sign symbols we want to define
-local signs = require("lsp.utils").signs
+local signs = {
+    Error = { sym = "" },
+    Warn = { sym = "" },
+    Hint = { sym = "" },
+    Info = { sym = "" },
+}
 
 -- define signs and highlights for diag types
 for diag_type, cfg in pairs(signs) do
     local hl = table.concat({ "DiagnosticSign", diag_type }, "")
+
     vim.fn.sign_define(hl, {
         text = cfg.sym,
         texthl = hl,
@@ -22,3 +27,5 @@ vim.diagnostic.config({
         source = "if_many",
     },
 })
+
+return signs

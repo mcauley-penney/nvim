@@ -1,5 +1,5 @@
 -- get our onAttach fn inside a table
-local onAttach = { on_attach = require("lsp.utils").onAttach }
+local onAttach = { on_attach = require("plugins.cfgs.lsp_config").onAttach }
 
 -- define servers and the settings that we want to use with them
 local servers = {

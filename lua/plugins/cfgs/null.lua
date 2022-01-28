@@ -1,7 +1,7 @@
 local null = require("null-ls")
 
 null.setup({
-    on_attach = require("lsp.utils").onAttach,
+    on_attach = require("plugins.cfgs.lsp_config").onAttach,
     sources = {
         -- c
         -- json

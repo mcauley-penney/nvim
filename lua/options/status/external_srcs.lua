@@ -16,14 +16,15 @@ M.get_diagnostics = function(status_bg)
         local cur_hi = nil
         local diag_fg = nil
         local diag_tbl = {}
+        local lsp_signs = require("lsp")
 
-        -- for signs in LSP signs
-        for type, cfg in pairs(require("lsp.utils").signs) do
+        -- for signs and their configurations in LSP signs
+        for diag_type, cfg in pairs(lsp_signs) do
             -- get count
-            count = #vim.diagnostic.get(0, { severity = string.upper(type) })
+            count = #vim.diagnostic.get(0, { severity = string.upper(diag_type) })
 
             -- create diagnostic group name from diag type
-            diag_fg = "Diagnostic" .. type
+            diag_fg = "Diagnostic" .. diag_type
 
             -- create highlight
             cur_hi = hi.create_hi_grp_str({
@@ -39,7 +40,10 @@ M.get_diagnostics = function(status_bg)
                 lsp.lua, is an associative array, meaning that it cannot guarantee
                 ordered access. Therefore, we must order it ourselves
             ]]
-            diag_tbl[type] = table.concat({ cur_hi, cfg.sym, "%*:", count, "  " }, "")
+            diag_tbl[diag_type] = table.concat(
+                { cur_hi, cfg.sym, "%*:", count, "  " },
+                ""
+            )
         end
 
         -- return associative table of diagnostic str; diag_type = diag_count_str
