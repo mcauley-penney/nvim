@@ -111,14 +111,7 @@ require("packer").startup({
 
         use({
             "j-hui/fidget.nvim",
-            config = function()
-                require("fidget").setup({
-                    text = {
-                        done = " ",
-                        spinner = "noise",
-                    },
-                })
-            end,
+            config = [[ require "plugins.cfgs.fidget" ]],
         })
 
         use({

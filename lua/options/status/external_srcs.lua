@@ -3,6 +3,7 @@ local hi = require("options.status.highlight")
 local M = {}
 
 -- Create strings of diagnostic information and concatenate them into one string
+-- @param status_bg: background highlight of StatusLine
 -- @return string of diagnostic info to place into statusline
 M.get_diagnostics = function(status_bg)
     -- Return an associative table of strings for each type of diagnostic.
@@ -16,10 +17,9 @@ M.get_diagnostics = function(status_bg)
         local cur_hi = nil
         local diag_fg = nil
         local diag_tbl = {}
-        local lsp_signs = require("lsp")
 
-        -- for signs and their configurations in LSP signs
-        for diag_type, cfg in pairs(lsp_signs) do
+        -- for each user-chosen sign and its configurations
+        for diag_type, cfg in pairs(require("lsp").signs) do
             -- get count
             count = #vim.diagnostic.get(0, { severity = string.upper(diag_type) })
 
@@ -84,6 +84,11 @@ M.get_diagnostics = function(status_bg)
     end
 end
 
+-- retrieve and return filetype icon from nvim-web-devicons.
+-- gets icon from nvim-web-devicons, applies the proper background highlight to it, and
+-- returns it as a string.
+-- @param status_bg: background highlight of StatusLine
+-- @return str of icon with proper highlights or nil
 M.get_icon = function(status_bg)
     local buf = vim.fn.expand("%:t")
     local ext = vim.fn.expand("%:e")

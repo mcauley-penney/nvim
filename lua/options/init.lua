@@ -1,5 +1,3 @@
--- options --
-
 --[[
     https://neovim.io/doc/user/options.html
 
@@ -48,7 +46,7 @@ o.showcmd = false
 o.showmode = false
 o.signcolumn = "yes:1"
 o.softtabstop = 4
-vim.wo.statusline = "%!v:lua.get_active_status()"
+o.statusline = "%!v:lua.get_active_status()"
 o.swapfile = false
 o.synmaxcol = 1000
 o.termguicolors = true

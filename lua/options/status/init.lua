@@ -2,19 +2,18 @@ local srcs = require("options.status.external_srcs")
 
 -- see https://vimhelp.org/options.txt.html#%27statusline%27 for part fmt strs
 STATUS_PARTS = {
-    ab_path = " %F",
+    ab_path = " %<%F",
     diag = nil,
     file_name = " %t",
     icon = nil,
     indent = "%=",
-    lines = "%l/%L ",
+    lines = "%4l/%-4L ", -- give ints precision of 4, left align second val with %-
     mod = "%m",
     ro = "%r",
 }
 
 EXCLUDED = {
     "OUTLINE",
-    "packer",
     "Trouble",
     "[startuptime]",
 }
@@ -52,21 +51,35 @@ _G.get_active_status = function()
         return true
     end
 
-    local status_tbl = { "file_name" }
-
-    -- if the current buffer name is not in the table of buffer names that we do not
-    -- want a statusline for, proceed
-    if _is_acceptable_buf(EXCLUDED) then
-        local status_bg = require("utils").get_hl_by_name("StatusLine", "bg")
-
-        -- init tables of keys used to access statusline fmt strs
-        status_tbl = { "icon", "ab_path", "mod", "ro", "indent", "diag", "lines" }
-
-        -- store diagnostics and icons, always accessed
-        STATUS_PARTS["diag"] = srcs.get_diagnostics(status_bg)
-        STATUS_PARTS["icon"] = srcs.get_icon(status_bg)
+    -- Predicate fn to check if the current window is where the statusline is being
+    -- drawn.
+    -- Notes:
+    --  should avoid autocommands to track current statusline, see
+    --  https://github.com/vim/vim/issues/4406#issuecomment-495496763 .
+    --  can track via global vars, see
+    --  https://www.reddit.com/r/vim/comments/dxcgtm/comment/f7p12hr/?utm_source=share&utm_medium=web2x&context=3
+    local function _is_active_win()
+        return vim.g.statusline_winid == vim.api.nvim_get_current_win()
     end
 
-    -- concatenate desired status components into str
-    return _concat_status(status_tbl, STATUS_PARTS)
+    if _is_active_win() then
+        if _is_acceptable_buf(EXCLUDED) then
+            local status_tbl = nil
+            local status_bg = require("utils").get_hl_by_name("StatusLine", "bg")
+
+            -- init tables of keys used to access statusline fmt strs
+            status_tbl = { "icon", "ab_path", "mod", "ro", "indent", "diag", "lines" }
+
+            -- store diagnostics and icons, always accessed
+            STATUS_PARTS["diag"] = srcs.get_diagnostics(status_bg)
+            STATUS_PARTS["icon"] = srcs.get_icon(status_bg)
+
+            -- concatenate desired status components into str
+            return _concat_status(status_tbl, STATUS_PARTS)
+        else
+            return _concat_status({ "file_name" }, STATUS_PARTS)
+        end
+    else
+        return "%#StatusLineNC#"
+    end
 end

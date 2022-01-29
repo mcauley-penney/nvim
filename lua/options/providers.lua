@@ -15,8 +15,8 @@ vim.g.loaded_ruby_provider = 0
 vim.g.python3_host_prog = "/usr/bin/python3"
 
 --[[
-    Define clipboard commands here to preempt clipboard.vim runtime
-    execution; Same concept as defining providers to speed up.
+    Define clipboard commands here to preempt clipboard.vim runtime execution; Same
+    concept as defining providers to speed up.
     See https://github.com/neovim/neovim/blob/master/runtime/autoload/provider/clipboard.vim
 ]]
 vim.cmd([[
