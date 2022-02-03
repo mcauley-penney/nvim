@@ -4,6 +4,8 @@ null.setup({
     on_attach = require("plugins.cfgs.lsp_config").onAttach,
     sources = {
         -- c
+        -- clangformat does the formatting for us
+
         -- json
         null.builtins.formatting.fixjson,
 
@@ -18,8 +20,6 @@ null.setup({
                 "4",
             },
         }),
-
-        -- markdown
 
         -- python
         null.builtins.diagnostics.pylint.with({

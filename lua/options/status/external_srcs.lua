@@ -84,13 +84,26 @@ M.get_diagnostics = function(status_bg)
     end
 end
 
--- retrieve and return filetype icon from nvim-web-devicons.
+M.get_fileinfo = function(ft)
+    -- give ints precision of 4, left align total lines (second val) with %-
+    local info_str = "%4l/%-4L "
+
+    if ft == "text" then
+        local wc = vim.api.nvim_eval("wordcount()")["words"]
+
+        info_str = table.concat({ "\\w:", wc, "  ", info_str }, "")
+    end
+
+    return info_str
+end
+
+--- retrieve and return filetype icon from nvim-web-devicons.
 -- gets icon from nvim-web-devicons, applies the proper background highlight to it, and
 -- returns it as a string.
 -- @param status_bg: background highlight of StatusLine
 -- @return str of icon with proper highlights or nil
 M.get_icon = function(status_bg)
-    local buf = vim.fn.expand("%:t")
+    local buf = vim.api.nvim_buf_get_name(0)
     local ext = vim.fn.expand("%:e")
 
     local sym, color = require("nvim-web-devicons").get_icon_color(buf, ext)
@@ -106,6 +119,18 @@ M.get_icon = function(status_bg)
     end
 
     return nil
+end
+
+M.get_mod = function(bg_hi)
+    local mod_str = "%m"
+
+    local mod_hi = hi.create_hi_grp_str({
+        grp = "StatusMod",
+        bg = bg_hi,
+        fg = require("utils").get_hl_by_name("Error"),
+    })
+
+    return table.concat({ mod_hi, mod_str, "%* " }, "")
 end
 
 return M

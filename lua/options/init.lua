@@ -13,6 +13,7 @@ require("options.status")
 local o = vim.opt
 
 o.breakindent = true
+o.breakindentopt = "shift:-1"
 o.colorcolumn = "+0"
 o.cindent = true
 o.clipboard = "unnamedplus"
@@ -30,7 +31,8 @@ o.guicursor = "n-v-sm:block,c-ci-cr-i-ve:ver30,r-o:hor20"
 o.hlsearch = false
 o.lazyredraw = true
 o.list = true
-o.listchars = { trail = "•", eol = "↴" }
+o.listchars = { eol = "↴", trail = "•" }
+o.linebreak = true
 o.modeline = false
 o.modelines = 0
 o.nrformats = "alpha"
@@ -42,11 +44,12 @@ o.shada = "'0,:30,/30"
 o.shiftround = true
 o.shiftwidth = 4
 o.shortmess = "acstFOW"
+o.showbreak = "↳"
 o.showcmd = false
 o.showmode = false
 o.signcolumn = "yes:1"
 o.softtabstop = 4
-o.statusline = "%!v:lua.get_active_status()"
+o.statusline = "%!v:lua.get_statusline()"
 o.swapfile = false
 o.synmaxcol = 1000
 o.termguicolors = true

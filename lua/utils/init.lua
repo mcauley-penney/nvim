@@ -21,8 +21,6 @@ local M = {
             -- return it formatted as RGB in a str that the statusline understands
             return "#" .. string.format("%06x", field)
         else
-            -- return empty str
-            -- TODO: not exactly useful
             return ""
         end
     end,

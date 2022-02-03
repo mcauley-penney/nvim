@@ -1,6 +1,6 @@
 require("fidget").setup({
     text = {
-        commenced = "INIT", -- message shown when task starts
+        commenced = "INIT",
         completed = "DONE",
         done = " ",
         spinner = "noise",
@@ -9,5 +9,8 @@ require("fidget").setup({
         fidget_decay = 1000,
         spinner_rate = 100,
         task_decay = 1000,
+    },
+    window = {
+        relative = "editor",
     },
 })

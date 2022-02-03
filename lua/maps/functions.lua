@@ -61,11 +61,6 @@ local M = {
     end,
 
     -- Send comments to buffer at cursor position.
-    -- Initializes a table of comment strings,
-    -- a dictionary of filetype keys and their
-    -- associated comment string, and returns
-    -- the correct comment string for the current
-    -- filetype.
     send_comment = function()
         local ft = vim.api.nvim_buf_get_option(0, "filetype")
 

@@ -14,7 +14,7 @@ utils.map("i", "<F1>", "= ", na)
 -- fold
 utils.map("n", "<F2>", "za", na)
 
--- CR to enter utils.cmd
+-- CR to enter cmd mode
 utils.map("n", "<CR>", ":", utils.nore)
 utils.map("v", "<CR>", ":", utils.nore)
 

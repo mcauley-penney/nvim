@@ -48,10 +48,7 @@ local diag_signs = {
 for diag_type, cfg in pairs(diag_signs) do
     local hl = table.concat({ "DiagnosticSign", diag_type }, "")
 
-    vim.fn.sign_define(hl, {
-        text = cfg.sym,
-        texthl = hl,
-    })
+    vim.fn.sign_define(hl, { text = cfg.sym, texthl = hl })
 end
 
 -- configure
@@ -61,9 +58,6 @@ vim.diagnostic.config({
     update_in_insert = false,
     virtual_text = {
         prefix = "",
-
-        -- TODO: test
-        source = "if_many",
     },
 })
 

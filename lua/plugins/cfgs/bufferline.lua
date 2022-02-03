@@ -1,17 +1,18 @@
-local get_hl = require("utils").get_hl_by_name
+local bg_hi = require("utils").get_hl_by_name("__termbg", "bg")
+local err_hi = require("utils").get_hl_by_name("Error")
 
 require("bufferline").setup({
     highlights = {
         modified = {
-            guifg = get_hl("Error"),
+            guifg = err_hi,
         },
         modified_selected = {
-            guifg = get_hl("Error"),
+            guifg = err_hi,
         },
 
         separator = {
-            guifg = get_hl("__termbg", "bg"),
-            guibg = get_hl("__termbg", "bg"),
+            guifg = bg_hi,
+            guibg = bg_hi,
         },
     },
 

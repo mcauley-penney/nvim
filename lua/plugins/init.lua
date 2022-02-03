@@ -87,7 +87,7 @@ require("packer").startup({
         -- formatting
         use({
             "jose-elias-alvarez/null-ls.nvim",
-            config = [[ require "plugins.cfgs.null" ]],
+            config = [[ require "plugins.cfgs.null_ls" ]],
 
             -- Note:
             -- 1. keep an eye out for vim.format:
@@ -171,9 +171,8 @@ require("packer").startup({
         })
 
         use({
-            "kkoomen/vim-doge",
-            ft = lsp_langs,
-            run = ":call doge#install()",
+            "danymat/neogen",
+            config = [[require "plugins.cfgs.neogen" ]],
         })
 
         use({ "itchyny/vim-highlighturl" })

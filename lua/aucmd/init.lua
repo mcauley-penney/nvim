@@ -13,7 +13,6 @@ local aucmds = {
         augroup EnterBuffer
             au!
             au BufEnter * lua require( "aucmd.functions" ).set_textwidth()
-            au BufEnter * lua require( "aucmd.functions" ).hi_long_lines()
             au BufEnter * setlocal fo-=oql"
         augroup END
     ]],
