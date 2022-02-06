@@ -29,7 +29,7 @@ local M = {
         -- get filetype
         local ft = vim.api.nvim_buf_get_option(0, "filetype")
 
-        -- get text width from filetype
+        -- get desired textwidth from filetype
         local tw = tw_tbl[ft] or tw_tbl["__default"]
 
         -- set textwidth

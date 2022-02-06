@@ -5,11 +5,11 @@ require("plugins.disable")
 require("plugins.cfgs.global_cfgs")
 require("impatient")
 
+local lsp_langs = require("lsp").langs
+
 -- putting compiled path in lua folder allows impatient to cache it
 local compiled_path = "/lua/plugins/packer/packer_compiled.lua"
 compiled_path = vim.fn.stdpath("config") .. compiled_path
-
-local lsp_langs = { "c", "lua", "python", "sh" }
 
 require("packer").startup({
     function(use)
@@ -153,8 +153,6 @@ require("packer").startup({
             config = [[ require "plugins.cfgs.scroll_bar" ]],
             event = "CursorMoved",
         })
-
-        -- use({ "simrat39/symbols-outline.nvim", ft = lsp_langs })
 
         use("wellle/targets.vim")
 

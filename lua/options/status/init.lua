@@ -1,7 +1,8 @@
+local get_hi = require("utils").get_hi_grp_rgb
 local srcs = require("options.status.external_srcs")
 
 -- see https://vimhelp.org/options.txt.html#%27statusline%27 for part fmt strs
-STATUS_STRS = {
+local status_parts = {
     ab_path = " %<%F",
     diag = nil,
     file_name = " %t",
@@ -12,7 +13,7 @@ STATUS_STRS = {
     ro = "%r",
 }
 
-STATUS_PARTS = {
+local status_order = {
     "icon",
     "ab_path",
     "mod",
@@ -22,8 +23,8 @@ STATUS_PARTS = {
     "file_info",
 }
 
-EXCLUDED = {
-    trouble = true,
+local excluded = {
+    Trouble = true,
     startuptime = true,
 }
 
@@ -60,18 +61,18 @@ _G.get_statusline = function()
 
     if _is_inactive_win() then
         return "%#StatusLineNC#"
-    elseif EXCLUDED[ft] then
-        return _concat_status({ "file_name" }, STATUS_STRS)
+    elseif excluded[ft] then
+        return status_parts["file_name"]
     else
-        local status_bg = require("utils").get_hl_by_name("StatusLine", "bg")
+        local status_bg = get_hi("StatusLine").background
 
         -- store diagnostics and icons, always accessed
-        STATUS_STRS["diag"] = srcs.get_diagnostics(status_bg)
-        STATUS_STRS["file_info"] = srcs.get_fileinfo(ft)
-        STATUS_STRS["icon"] = srcs.get_icon(status_bg)
-        STATUS_STRS["mod"] = srcs.get_mod(status_bg)
+        status_parts["diag"] = srcs.get_diagnostics(status_bg)
+        status_parts["file_info"] = srcs.get_fileinfo(ft)
+        status_parts["icon"] = srcs.get_icon(status_bg)
+        status_parts["mod"] = srcs.get_mod(status_bg)
 
         -- concatenate desired status components into str
-        return _concat_status(STATUS_PARTS, STATUS_STRS)
+        return _concat_status(status_order, status_parts)
     end
 end

@@ -1,3 +1,4 @@
+local get_hi = require("utils").get_hi_grp_rgb
 local hi = require("options.status.highlight")
 
 local M = {}
@@ -15,7 +16,7 @@ M.get_diagnostics = function(status_bg)
     local function _get_diag_str_tbl()
         local count = nil
         local cur_hi = nil
-        local diag_fg = nil
+        local diag_grp = nil
         local diag_tbl = {}
 
         -- for each user-chosen sign and its configurations
@@ -24,13 +25,13 @@ M.get_diagnostics = function(status_bg)
             count = #vim.diagnostic.get(0, { severity = string.upper(diag_type) })
 
             -- create diagnostic group name from diag type
-            diag_fg = "Diagnostic" .. diag_type
+            diag_grp = "Diagnostic" .. diag_type
 
             -- create highlight
             cur_hi = hi.create_hi_grp_str({
-                grp = "Status" .. diag_fg,
+                grp = "Status" .. diag_grp,
                 bg = status_bg,
-                fg = require("utils").get_hl_by_name(diag_fg),
+                fg = get_hi(diag_grp).foreground,
             })
 
             --[[
@@ -127,7 +128,7 @@ M.get_mod = function(bg_hi)
     local mod_hi = hi.create_hi_grp_str({
         grp = "StatusMod",
         bg = bg_hi,
-        fg = require("utils").get_hl_by_name("Error"),
+        fg = get_hi("Error").foreground,
     })
 
     return table.concat({ mod_hi, mod_str, "%* " }, "")

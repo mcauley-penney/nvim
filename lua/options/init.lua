@@ -40,6 +40,7 @@ o.numberwidth = 1
 o.redrawtime = 150
 o.ruler = false
 o.scrolloff = 60
+o.sessionoptions = "buffers"
 o.shada = "'0,:30,/30"
 o.shiftround = true
 o.shiftwidth = 4

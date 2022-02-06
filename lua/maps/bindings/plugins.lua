@@ -2,7 +2,7 @@ local utils = require("maps.bindings.utils")
 local na = {}
 
 -- outline
--- utils.map("n", "<F14>", "<cmd>SymbolsOutline<cr>", utils.cmd)
+utils.map("n", "<F14>", "<cmd>SymbolsOutline<cr>", utils.cmd)
 
 -- trouble
 utils.map("n", "<leader>q", "<cmd>TroubleToggle quickfix<cr>", na)

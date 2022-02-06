@@ -57,7 +57,7 @@ utils.map("n", "<leader>o", "<cmd>!xdg-open <cWORD> &<CR><CR>", utils.cmd)
 -- buffers --
 utils.map("n", "<C-t>", ":e ", na)
 utils.map("n", "<C-Pageup>", "<cmd>BufferLineCyclePrev<CR>", utils.cmd)
-utils.map("n", "<C-Pagedown>", "<cmd>BufferLineCycleNext<CR>", utils.cmd)
 utils.map("n", "<C-S-Pageup>", "<cmd>BufferLineMovePrev<CR>", utils.cmd)
+utils.map("n", "<C-Pagedown>", "<cmd>BufferLineCycleNext<CR>", utils.cmd)
 utils.map("n", "<C-S-Pagedown>", "<cmd>BufferLineMoveNext<CR>", utils.cmd)
 utils.map("n", "<C-w>", "<cmd>bd<CR>", utils.cmd)

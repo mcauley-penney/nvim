@@ -1,3 +1,5 @@
+local lsp_src_langs = { "c", "lua", "python", "sh" }
+
 local lsp_servers = {
     -- see https://manpages.debian.org/experimental/clangd-13/clangd-13.1.en.html
     clangd = {
@@ -62,6 +64,7 @@ vim.diagnostic.config({
 })
 
 return {
+    langs = lsp_src_langs,
     signs = diag_signs,
     servers = lsp_servers,
 }
