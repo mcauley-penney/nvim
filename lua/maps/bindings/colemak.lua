@@ -1,10 +1,10 @@
 local utils = require("maps.bindings.utils")
 
 local colemak_maps = {
-    { "n", "j" },
-    { "e", "k" },
-    { "s", "h" },
-    { "t", "l" },
+    { "n", "j" }, -- down
+    { "e", "k" }, -- up
+    { "s", "h" }, -- left
+    { "t", "l" }, -- right
 }
 
 for _, pairs in ipairs(colemak_maps) do

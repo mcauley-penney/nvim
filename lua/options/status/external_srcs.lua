@@ -3,81 +3,78 @@ local hi = require("options.status.highlight")
 
 local M = {}
 
+-- Return an associative table of strings for each type of diagnostic.
+-- This function loops through all diagnostic groups found in "lsp.lua",
+-- uses their base highlight groups and associated symbols to create strings
+-- of diagnostic info to put in the statusline.
+-- @return associative array; key = diagnostic type name, val = string for
+-- that type that will be inserted into statusline
+local function _get_diag_str_tbl(diag_signs, bg_hl)
+    local count = nil
+    local cur_hi = nil
+    local diag_grp = nil
+    local diag_tbl = {}
+
+    -- for each user-chosen sign and its configurations
+    for diag_type, cfg in pairs(diag_signs) do
+        -- get count
+        count = #vim.diagnostic.get(0, { severity = string.upper(diag_type) })
+
+        -- create diagnostic group name from diag type
+        diag_grp = "Diagnostic" .. diag_type
+
+        -- create highlight
+        cur_hi = hi.make_hi_grp_str({
+            grp = "Status" .. diag_grp,
+            bg = bg_hl,
+            fg = get_hi(diag_grp, "fg"),
+        })
+
+        --[[
+                create str for each type.
+                We must create an associative array so that the strings can be
+                accessed by name later. The array where the diagnostic symbols
+                are defined, in lsp.lua, is an associative array, meaning that
+                it cannot guarantee ordered access. Therefore, we must order it
+                ourselves
+            ]]
+        diag_tbl[diag_type] = table.concat({ cur_hi, cfg.sym, "%*:", count, "  " }, "")
+    end
+
+    -- return associative table of diagnostic str; diag_type = diag_count_str
+    return diag_tbl
+end
+
+local function _get_diag_success_str(bg_hl)
+    -- create hl grp for when there are no diagnostics
+    local success_hi = hi.make_hi_grp_str({
+        grp = "DiagnosticSuccess",
+        bg = bg_hl,
+        fg = "#347d39",
+    })
+
+    local sym = "[]"
+
+    return table.concat({ success_hi, sym, "%* " }, "")
+end
+
 -- Create strings of diagnostic information and concatenate them into one string
 -- @param status_bg: background highlight of StatusLine
 -- @return string of diagnostic info to place into statusline
-M.get_diagnostics = function(status_bg)
-    -- Return an associative table of strings for each type of diagnostic.
-    -- This function loops through all diagnostic groups found in "lsp.lua", uses their
-    -- base highlight groups and associated symbols to create strings of diagnostic info
-    -- to put in the statusline.
-    -- @return associative array; key = diagnostic type name, val = string for that type
-    -- that will be inserted into statusline
-    local function _get_diag_str_tbl()
-        local count = nil
-        local cur_hi = nil
-        local diag_grp = nil
-        local diag_tbl = {}
-
-        -- for each user-chosen sign and its configurations
-        for diag_type, cfg in pairs(require("lsp").signs) do
-            -- get count
-            count = #vim.diagnostic.get(0, { severity = string.upper(diag_type) })
-
-            -- create diagnostic group name from diag type
-            diag_grp = "Diagnostic" .. diag_type
-
-            -- create highlight
-            cur_hi = hi.create_hi_grp_str({
-                grp = "Status" .. diag_grp,
-                bg = status_bg,
-                fg = get_hi(diag_grp).foreground,
-            })
-
-            --[[
-                create str for each type.
-                We must create an associative array so that the strings can be accessed
-                by name later. The array where the diagnostic symbols are defined, in
-                lsp.lua, is an associative array, meaning that it cannot guarantee
-                ordered access. Therefore, we must order it ourselves
-            ]]
-            diag_tbl[diag_type] = table.concat(
-                { cur_hi, cfg.sym, "%*:", count, "  " },
-                ""
-            )
-        end
-
-        -- return associative table of diagnostic str; diag_type = diag_count_str
-        return diag_tbl
-    end
-
-    -- START: check for LSP availability
-    local cur_lsp = vim.lsp.get_client_by_id(1)
-
-    -- if lsp is available, include diagnostic info in status
-    if cur_lsp ~= nil then
-        -- get total diagnostic count
-        local total_count = #vim.diagnostic.get(0)
-
-        -- if we have no diagnostics, return a nice little symbol
-        if total_count < 1 then
-            local success_hi = hi.create_hi_grp_str({
-                grp = "DiagnosticSuccess",
-                bg = status_bg,
-                fg = "#347d39",
-            })
-
-            local sym = "[]"
-
-            return table.concat({ success_hi, sym, "%* " }, "")
+M.get_diag_str = function(lsp_signs, bg_hl)
+    -- if lsp is not available, get word count
+    if vim.lsp.get_client_by_id(1) ~= nil then
+        -- if we have an lsp client but no diagnostics, return confirmation
+        if #vim.diagnostic.get(0) < 1 then
+            return _get_diag_success_str(bg_hl)
         else
-            local diag_tbl = _get_diag_str_tbl()
+            local diag_str_tbl = _get_diag_str_tbl(lsp_signs, bg_hl)
 
             local ordered_diag_str_tbl = {
-                diag_tbl["Error"],
-                diag_tbl["Warn"],
-                diag_tbl["Hint"],
-                diag_tbl["Info"],
+                diag_str_tbl["Error"],
+                diag_str_tbl["Warn"],
+                diag_str_tbl["Hint"],
+                diag_str_tbl["Info"],
             }
 
             return table.concat(ordered_diag_str_tbl, "")
@@ -85,34 +82,20 @@ M.get_diagnostics = function(status_bg)
     end
 end
 
-M.get_fileinfo = function(ft)
-    -- give ints precision of 4, left align total lines (second val) with %-
-    local info_str = "%4l/%-4L "
-
-    if ft == "text" then
-        local wc = vim.api.nvim_eval("wordcount()")["words"]
-
-        info_str = table.concat({ "\\w:", wc, "  ", info_str }, "")
-    end
-
-    return info_str
-end
-
 --- retrieve and return filetype icon from nvim-web-devicons.
--- gets icon from nvim-web-devicons, applies the proper background highlight to it, and
--- returns it as a string.
+-- gets icon from nvim-web-devicons, applies the proper background highlight
+-- to it, and returns it as a string.
 -- @param status_bg: background highlight of StatusLine
 -- @return str of icon with proper highlights or nil
-M.get_icon = function(status_bg)
+M.get_ft_icon = function(ft, bg_hl)
     local buf = vim.api.nvim_buf_get_name(0)
-    local ext = vim.fn.expand("%:e")
 
-    local sym, color = require("nvim-web-devicons").get_icon_color(buf, ext)
+    local sym, color = require("nvim-web-devicons").get_icon_color(buf, ft)
 
     if sym ~= nil then
-        local icon_hi = hi.create_hi_grp_str({
+        local icon_hi = hi.make_hi_grp_str({
             grp = "StatusIcon",
-            bg = status_bg,
+            bg = bg_hl,
             fg = color,
         })
 
@@ -122,16 +105,24 @@ M.get_icon = function(status_bg)
     return nil
 end
 
-M.get_mod = function(bg_hi)
-    local mod_str = "%m"
-
-    local mod_hi = hi.create_hi_grp_str({
+M.get_mod_str = function(mod_str, bg_hl)
+    local mod_hi = hi.make_hi_grp_str({
         grp = "StatusMod",
-        bg = bg_hi,
-        fg = get_hi("Error").foreground,
+        bg = bg_hl,
+        fg = get_hi("Error", "fg"),
     })
 
     return table.concat({ mod_hi, mod_str, "%* " }, "")
+end
+
+M.get_wordcount_str = function(loc_str, ft)
+    local wc = vim.api.nvim_eval("wordcount()")["words"]
+
+    if ft == "text" then
+        loc_str = table.concat({ "\\w:", wc, "  ", loc_str }, "")
+    end
+
+    return loc_str
 end
 
 return M

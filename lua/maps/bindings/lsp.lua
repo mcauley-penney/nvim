@@ -21,6 +21,14 @@ utils.map("n", "<leader>r", "<cmd>lua vim.lsp.buf.rename()<cr>", utils.cmd)
 utils.map(
     "n",
     "<leader>vd",
-    '<cmd>lua vim.diagnostic.open_float(0, { header="", severity_sort=true })<cr>',
+    '<cmd>lua vim.diagnostic.open_float({header="", max_width = 50, severity_sort=true})<cr>',
     {}
 )
+
+utils.fmap("n", "<leader>h", function()
+    vim.lsp.buf.hover()
+end, {})
+
+utils.fmap("i", "<c-s>", function()
+    vim.lsp.buf.signature_help()
+end, { buffer = true })

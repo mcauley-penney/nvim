@@ -1,6 +1,8 @@
 local get_hi = require("utils").get_hi_grp_rgb
-local bg_hi = get_hi("__termbg").background
-local err_hi = get_hi("Error").foreground
+
+local bg_hi = get_hi("__termbg", "bg")
+local err_hi = get_hi("Error", "fg")
+
 local grp_hi = { guisp = bg_hi }
 
 local opt_tbl = {

@@ -8,7 +8,7 @@ g.Illuminate_delay = 300
 g.Illuminate_highlightUnderCursor = 0
 
 -- vsnip
-g.vsnip_snippet_dir = "$HOME/.config/nvim/utils/snips"
+g.vsnip_snippet_dir = vim.fn.stdpath("config") .. "/utils/snips"
 g.vsnip_filetyes = {}
 
 -- markdown preview

@@ -1,25 +1,26 @@
 local get_hi = require("utils").get_hi_grp_rgb
 
+local mark_text = { "-", "=" }
 local priority_index = 1
 
-local scroll_marks = {
+local marks_tbl = {
     Error = {},
     Warn = {},
     Info = {},
     Hint = {},
 }
 
-for type, cfg in pairs(scroll_marks) do
+for type, cfg in pairs(marks_tbl) do
+    cfg.color = get_hi("Diagnostic" .. type, "fg")
     cfg.priority = priority_index
-    cfg.text = { "-", "=" }
-    cfg.color = get_hi("Diagnostic" .. type).foreground
+    cfg.text = mark_text
 
     priority_index = priority_index + 1
 end
 
 require("scrollbar").setup({
     handle = {
-        color = get_hi("StatusLine").background,
+        color = get_hi("StatusLine", "bg"),
     },
-    marks = scroll_marks,
+    marks = marks_tbl,
 })

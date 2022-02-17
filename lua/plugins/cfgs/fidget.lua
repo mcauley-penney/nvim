@@ -11,6 +11,7 @@ require("fidget").setup({
         task_decay = 1000,
     },
     window = {
+        blend = 0,
         relative = "editor",
     },
 })

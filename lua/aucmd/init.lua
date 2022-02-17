@@ -30,7 +30,7 @@ local aucmds = {
     [[
         augroup Ft
             au!
-            au FileType tex,txt set spell
+            au FileType txt set spell
             au FileType help,lspinfo,qf,startuptime nnoremap <buffer><silent> q <cmd>close<CR>
         augroup END
     ]],

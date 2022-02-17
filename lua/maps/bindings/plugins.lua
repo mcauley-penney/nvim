@@ -15,6 +15,14 @@ utils.map("x", "r", "<cmd>lua require('substitute').visual()<cr>", utils.nore)
 
 utils.map("n", "<leader>id", "<cmd>lua require('neogen').generate()<CR>", utils.cmd)
 
+-- venn.nvim
+utils.map("n", "<S-down>", "<C-v>j:VBox<CR>", { noremap = true })
+utils.map("n", "<S-up>", "<C-v>k:VBox<CR>", { noremap = true })
+utils.map("n", "<S-left>", "<C-v>h:VBox<CR>", { noremap = true })
+utils.map("n", "<S-right>", "<C-v>l:VBox<CR>", { noremap = true })
+-- draw a box by pressing "f" with visual selection
+utils.map("v", "f", ":VBox<CR>", { noremap = true })
+
 -- vim-swap
 utils.map("n", "<left>", "g<", na)
 utils.map("n", "<right>", "g>", na)

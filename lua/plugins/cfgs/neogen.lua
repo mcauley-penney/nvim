@@ -6,5 +6,10 @@ require("neogen").setup({
                 annotation_convention = "ldoc",
             },
         },
+        python = {
+            template = {
+                annotation_convention = "reST",
+            },
+        },
     },
 })

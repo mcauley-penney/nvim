@@ -5,10 +5,6 @@ cmp.setup({
         border = "rounded",
     },
 
-    experimental = {
-        native_menu = true,
-    },
-
     formatting = {
         format = function(entry, vim_item)
             vim_item.menu = ({
@@ -52,5 +48,9 @@ cmp.setup({
         { name = "emoji", max_item_count = 10 },
         { name = "latex_symbols" },
         { name = "vsnip" },
+    },
+
+    view = {
+        entries = "native",
     },
 })

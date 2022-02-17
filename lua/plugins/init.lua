@@ -1,5 +1,4 @@
--- sources
---  1. packer events: https://neovim.io/doc/user/autocmd.html#events
+--  aucmds: https://neovim.io/doc/user/autocmd.html#events
 
 require("plugins.disable")
 require("plugins.cfgs.global_cfgs")
@@ -8,7 +7,7 @@ require("impatient")
 local lsp_langs = require("lsp").langs
 
 -- putting compiled path in lua folder allows impatient to cache it
-local compiled_path = "/lua/plugins/packer/packer_compiled.lua"
+local compiled_path = "/lua/plugins/packer_compiled.lua"
 compiled_path = vim.fn.stdpath("config") .. compiled_path
 
 require("packer").startup({
@@ -16,7 +15,7 @@ require("packer").startup({
         -- core
         use("wbthomason/packer.nvim")
 
-        use({ "lewis6991/impatient.nvim", rocks = "mpack" })
+        use("lewis6991/impatient.nvim")
 
         use({ "nvim-lua/plenary.nvim", module = "plenary" })
 
@@ -25,12 +24,12 @@ require("packer").startup({
 
         use({
             "kyazdani42/nvim-web-devicons",
-            config = [[ require "plugins.cfgs.icons" ]],
+            config = [[ require "plugins.cfgs.icons"]],
         })
 
         use({
             "hrsh7th/nvim-cmp",
-            config = [[ require "plugins.cfgs.cmp" ]],
+            config = [[ require "plugins.cfgs.cmp"]],
             module = "cmp",
             event = "InsertEnter",
             requires = {
@@ -74,24 +73,20 @@ require("packer").startup({
 
         use({
             "williamboman/nvim-lsp-installer",
-            config = [[ require "plugins.cfgs.lsp_installer" ]],
+            config = [[ require "plugins.cfgs.lsp_installer"]],
         })
 
         -- treesitter
         use({
             "nvim-treesitter/nvim-treesitter",
-            config = [[ require "plugins.cfgs.ts" ]],
+            config = [[ require "plugins.cfgs.ts"]],
             run = ":TSUpdate",
         })
 
-        -- formatting
+        -- formatting and linting
         use({
             "jose-elias-alvarez/null-ls.nvim",
-            config = [[ require "plugins.cfgs.null_ls" ]],
-
-            -- Note:
-            -- 1. keep an eye out for vim.format:
-            -- https://www.reddit.com/r/neovim/comments/roixc6/comment/hpzfnss/?utm_source=share&utm_medium=web2x&context=3
+            config = [[ require "plugins.cfgs.null_ls"]],
         })
 
         use({
@@ -101,34 +96,23 @@ require("packer").startup({
         -- end core
 
         --luxuries
-        -- vim.cmd("packadd! cfilter")
-
         use({
             "akinsho/bufferline.nvim",
-            config = [[ require "plugins.cfgs.bufferline" ]],
+            config = [[ require "plugins.cfgs.bufferline"]],
             event = "BufHidden",
         })
 
         use({
             "j-hui/fidget.nvim",
-            config = [[ require "plugins.cfgs.fidget" ]],
+            config = [[ require "plugins.cfgs.fidget"]],
         })
 
         use({
             "lukas-reineke/indent-blankline.nvim",
-            config = [[ require "plugins.cfgs.indent_blankline" ]],
+            config = [[ require "plugins.cfgs.indent_blankline"]],
         })
 
         use({ "pedro757/indentInsert.nvim", module = "indentInsert" })
-
-        use({
-            "ray-x/lsp_signature.nvim",
-            event = "InsertEnter",
-            ft = lsp_langs,
-            -- Note
-            -- 1. keep an eye on anticonceal
-            -- 2. for config, see lsp_init
-        })
 
         use({
             "iamcco/markdown-preview.nvim",
@@ -137,20 +121,25 @@ require("packer").startup({
         })
 
         use({
+            "danymat/neogen",
+            config = [[require "plugins.cfgs.neogen"]],
+        })
+
+        use({
             "windwp/nvim-autopairs",
-            config = [[ require "plugins.cfgs.pairs" ]],
+            config = [[ require "plugins.cfgs.pairs"]],
             event = "InsertEnter",
         })
 
         use({
             "norcalli/nvim-colorizer.lua",
-            config = [[ require "plugins.cfgs.colorizer" ]],
+            config = [[ require "plugins.cfgs.colorizer"]],
             ft = { "lua", "css" },
         })
 
         use({
             "petertriho/nvim-scrollbar",
-            config = [[ require "plugins.cfgs.scroll_bar" ]],
+            config = [[ require "plugins.cfgs.scroll_bar"]],
             event = "CursorMoved",
         })
 
@@ -158,19 +147,14 @@ require("packer").startup({
 
         use({
             "akinsho/toggleterm.nvim",
-            config = [[ require "plugins.cfgs.toggleterm" ]],
+            config = [[ require "plugins.cfgs.toggleterm"]],
             keys = "<C-space>",
         })
 
         use({
             "folke/trouble.nvim",
-            config = [[ require "plugins.cfgs.trouble" ]],
+            config = [[ require "plugins.cfgs.trouble"]],
             cmd = "TroubleToggle",
-        })
-
-        use({
-            "danymat/neogen",
-            config = [[require "plugins.cfgs.neogen" ]],
         })
 
         use({ "itchyny/vim-highlighturl" })
@@ -204,6 +188,14 @@ require("packer").startup({
         })
 
         -- Testing
+        use({ "jbyuki/venn.nvim", cmd = "VBox" })
+
+        use({
+            "ahmedkhalf/project.nvim",
+            config = function()
+                require("project_nvim").setup({})
+            end,
+        })
     end,
 
     -- Packer configuration

@@ -1,6 +1,6 @@
 local M = {
 
-    create_hi_grp_str = function(hi_tbl)
+    make_hi_grp_str = function(hi_tbl)
         local hi_cmd = string.format(
             "hi %s gui=%s guibg=%s guifg=%s",
             hi_tbl.grp,
