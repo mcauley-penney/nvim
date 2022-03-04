@@ -25,9 +25,12 @@ o.foldenable = false
 o.foldlevel = 99
 o.foldmethod = "indent"
 o.foldtext = "v:lua.get_fold_text()"
+o.formatoptions = { -- still doesn't work
+    o = false,
+}
 o.gdefault = true
 o.grepprg = [[ rg --ignore-case --glob "!.git" --trim --vimgrep ]]
-o.guicursor = "n-v-sm:block,c-ci-cr-i-ve:ver30,r-o:hor20"
+o.guicursor = "n-v-sm:block-Cursor,c-ci-cr-i-ve:ver20-Cursor,r-o:hor20-Cursor"
 o.hlsearch = false
 o.lazyredraw = true
 o.list = true
@@ -54,6 +57,7 @@ o.softtabstop = 4
 o.statusline = "%!v:lua.get_statusline()"
 o.swapfile = false
 o.synmaxcol = 1000
+o.tabline = "%=" .. vim.fn.tabpagenr()
 o.termguicolors = true
 o.timeout = false
 o.undodir = vim.fn.stdpath("data") .. "/undo/"

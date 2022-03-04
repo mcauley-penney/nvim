@@ -4,7 +4,6 @@ null.setup({
     on_attach = require("plugins.cfgs.lsp_config").onAttach,
     sources = {
         -- c
-        -- clangformat does the formatting for us
 
         -- json
         null.builtins.formatting.fixjson,
@@ -13,7 +12,7 @@ null.setup({
         null.builtins.formatting.stylua.with({
             extra_args = {
                 "--column-width",
-                "88",
+                "80",
                 "--indent-type",
                 "Spaces",
                 "--indent-width",

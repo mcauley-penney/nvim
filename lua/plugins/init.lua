@@ -161,7 +161,7 @@ require("packer").startup({
 
         use({ "rrethy/vim-illuminate", event = "CursorHold" })
 
-        use("sickill/vim-pasta")
+        use({ "tpope/vim-obsession", event = "BufHidden" })
 
         use({ "dstein64/vim-startuptime", cmd = "StartupTime" })
 
@@ -187,15 +187,10 @@ require("packer").startup({
             event = "InsertEnter",
         })
 
-        -- Testing
+        -- Temporary?
         use({ "jbyuki/venn.nvim", cmd = "VBox" })
 
-        use({
-            "ahmedkhalf/project.nvim",
-            config = function()
-                require("project_nvim").setup({})
-            end,
-        })
+        use("simrat39/symbols-outline.nvim")
     end,
 
     -- Packer configuration

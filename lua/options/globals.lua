@@ -1,3 +1,18 @@
+-- clipboard
+-- see https://github.com/neovim/neovim/blob/master/runtime/autoload/provider/clipboard.vim
+vim.g.clipboard = {
+    name = "xsel",
+    copy = {
+        ["+"] = "xsel --nodetach -i -b",
+        ["*"] = "xsel --nodetach -i -p",
+    },
+    paste = {
+        ["+"] = "xsel -o -b",
+        ["*"] = "xsel -o -p",
+    },
+    cache_enabled = 1,
+}
+
 -- filetype
 vim.g.python_recommended_style = 0
 vim.g.did_load_filetypes = 0
@@ -13,23 +28,3 @@ vim.g.loaded_python_provider = 0 -- disables Python2 support
 vim.g.loaded_ruby_provider = 0
 
 vim.g.python3_host_prog = "/usr/bin/python3"
-
---[[
-    Define clipboard commands here to preempt clipboard.vim runtime execution; Same
-    concept as defining providers to speed up.
-    See https://github.com/neovim/neovim/blob/master/runtime/autoload/provider/clipboard.vim
-]]
-vim.cmd([[
-    let g:clipboard = {
-        \ 'name': 'xsel',
-        \ 'copy': {
-        \    '+': 'xsel --nodetach -i -b',
-        \    '*': 'xsel --nodetach -i -p',
-        \  },
-        \ 'paste': {
-        \    '+': 'xsel -o -b',
-        \    '*': 'xsel -o -p',
-        \ },
-        \ 'cache_enabled': 1,
-        \ }
-]])

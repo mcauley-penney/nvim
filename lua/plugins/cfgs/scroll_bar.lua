@@ -1,4 +1,4 @@
-local get_hi = require("utils").get_hi_grp_rgb
+local get_hi = require("utils").get_hl_grp_rgb
 
 local mark_text = { "-", "=" }
 local priority_index = 1

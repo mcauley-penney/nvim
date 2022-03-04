@@ -17,9 +17,6 @@ end
 
 --[[
     todo:
-        • give neovim ability to choose Python interpreter
-            • see https://github.com/danielnehrig/nvim/blob/master/lua/plugins/lspconfig/python.lua
-
         • keep an eye on evolving diagnostics situation. The authors don't
           like null
             • https://github.com/nvim-lua/wishlist/issues/9#issuecomment-1025087308
@@ -27,7 +24,6 @@ end
             • https://www.reddit.com/r/neovim/comments/roixc6/comment/hpzfnss/?utm_source=share&utm_medium=web2x&context=3
 
     news:
-        • lua aucmds: https://github.com/neovim/neovim/pull/14661
         • CursorHold bug (legendary):
             • original issue: https://github.com/neovim/neovim/issues/12587
             • Shougo's PR: https://github.com/neovim/neovim/pull/16929

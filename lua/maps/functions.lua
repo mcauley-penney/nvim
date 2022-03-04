@@ -48,7 +48,7 @@ local M = {
             set_opt(0, "number", true)
 
             -- if number is on but relnum is off, turn on relnum
-        elseif num_on and not relnum_on then
+        elseif not relnum_on then
             set_opt(0, "relativenumber", true)
 
             -- if relnum is on, turn all off

@@ -2,7 +2,7 @@ local utils = require("maps.bindings.utils")
 local na = {}
 
 -- outline
-utils.map("n", "<F14>", "<cmd>SymbolsOutline<cr>", utils.cmd)
+utils.map("n", "<F1>", "<cmd>SymbolsOutline<cr>", utils.cmd)
 
 -- trouble
 utils.map("n", "<leader>q", "<cmd>TroubleToggle quickfix<cr>", na)
@@ -13,7 +13,12 @@ utils.map("n", "rr", "<cmd>lua require('substitute').line()<cr>", utils.nore)
 utils.map("n", "R", "<cmd>lua require('substitute').eol()<cr>", utils.nore)
 utils.map("x", "r", "<cmd>lua require('substitute').visual()<cr>", utils.nore)
 
-utils.map("n", "<leader>id", "<cmd>lua require('neogen').generate()<CR>", utils.cmd)
+utils.map(
+    "n",
+    "<leader>id",
+    "<cmd>lua require('neogen').generate()<CR>",
+    utils.cmd
+)
 
 -- venn.nvim
 utils.map("n", "<S-down>", "<C-v>j:VBox<CR>", { noremap = true })

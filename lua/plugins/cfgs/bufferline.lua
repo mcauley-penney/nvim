@@ -1,4 +1,4 @@
-local get_hi = require("utils").get_hi_grp_rgb
+local get_hi = require("utils").get_hl_grp_rgb
 
 local bg_hi = get_hi("__termbg", "bg")
 local err_hi = get_hi("Error", "fg")
@@ -6,6 +6,7 @@ local err_hi = get_hi("Error", "fg")
 local grp_hi = { guisp = bg_hi }
 
 local opt_tbl = {
+    enforce_regular_tabs = true,
     highlights = {
         buffer = {
             gui = "none",
@@ -22,7 +23,9 @@ local opt_tbl = {
         modified_selected = {
             guifg = err_hi,
         },
-
+        modified_visible = {
+            guifg = err_hi,
+        },
         separator = {
             guifg = bg_hi,
             guibg = bg_hi,
@@ -31,19 +34,15 @@ local opt_tbl = {
 
     options = {
         always_show_bufferline = false,
-        indicator_icon = "",
-        separator_style = "thin",
-        show_tab_indicators = false,
-        show_buffer_icons = true,
-        show_buffer_close_icons = false,
-        show_close_icon = false,
         groups = {
             items = {
                 {
                     name = "[src]:",
                     matcher = function(buf)
                         local t = buf.filename
-                        return t:match("%.c") or t:match("%.cpp") or t:match("%.lua")
+                        return t:match("%.c")
+                            or t:match("%.cpp")
+                            or t:match("%.lua")
                     end,
                 },
                 {
@@ -57,12 +56,21 @@ local opt_tbl = {
                     name = "[data]:",
                     matcher = function(buf)
                         local t = buf.filename
-                        return t:match("%.json") or t:match("%.md") or t:match("%.txt")
+                        return t:match("%.json")
+                            or t:match("%.md")
+                            or t:match("%.txt")
                     end,
                 },
                 require("bufferline.groups").builtin.ungrouped,
             },
         },
+        indicator_icon = "",
+        modified_icon = "%m",
+        separator_style = "thin",
+        show_tab_indicators = true,
+        show_buffer_icons = true,
+        show_buffer_close_icons = false,
+        show_close_icon = false,
     },
 }
 

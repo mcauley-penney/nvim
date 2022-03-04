@@ -1,77 +1,93 @@
--- aucmds
---  event types: https://neovim.io/doc/user/autocmd.html#events
+local new_cmds = {
 
-local aucmds = {
+    BufEnter = {
+        {
+            callback = function()
+                require("aucmd.functions").set_textwidth()
+            end,
+        },
+    },
 
-    -- use a template file if one exists for that filetype. See templates dir
-    "au BufNewFile * silent! 0r $HOME/.config/nvim/utils/templates/skeleton.%:e",
+    BufNewFile = {
+        {
+            command = "silent! 0r $HOME/.config/nvim/utils/templates/skeleton.%:e",
+        },
+    },
 
-    -- favorite formatoptions
-    --  default is 1jcroql
-    --  see https://vimhelp.org/change.txt.html#fo-table
-    [[
-        augroup EnterBuffer
-            au!
-            au BufEnter * lua require( "aucmd.functions" ).set_textwidth()
-            au BufEnter * setlocal fo-=oql"
-        augroup END
-    ]],
+    BufWinEnter = {
+        { command = "silent! loadview" },
+    },
 
-    -- remember folds
-    [[
-        augroup Views
-            au!
-            au BufWinEnter * silent! loadview
-            au BufWinLeave * silent! mkview
-        augroup END
-    ]],
+    BufWinLeave = {
+        { command = "silent! mvview" },
+    },
 
-    -- ft options
-    [[
-        augroup Ft
-            au!
-            au FileType txt set spell
-            au FileType help,lspinfo,qf,startuptime nnoremap <buffer><silent> q <cmd>close<CR>
-        augroup END
-    ]],
+    CmdlineLeave = {
+        {
 
-    -- clear cmd line
-    [[
-        augroup CmdMsgCl
-            au!
-            au CmdlineLeave * :call timer_start( 1500, { -> execute( "echo ' ' ", "" )})
-        augroup END
-    ]],
+            callback = function()
+                vim.fn.timer_start(1500, function()
+                    print(" ")
+                end)
+            end,
+        },
+    },
 
-    -- turn off numbers when entering Insert
-    [[
-        augroup IEnter
-            au!
-            au InsertEnter * set nonumber | set norelativenumber
-        augroup END
-    ]],
+    ExitPre = {
+        {
 
-    -- highlight on yank
-    [[ au TextYankPost * silent! lua vim.highlight.on_yank{ higroup="Yank", timeout=165 }]],
+            callback = function()
+                vim.api.nvim_set_option("guicursor", "a:ver90")
+            end,
+        },
+    },
 
-    -- automatically open qf after grep
-    [[
-        augroup Quickfix
-            au!
-            au QuickFixCmdPost * TroubleToggle quickfix
-        augroup END
-    ]],
+    FileType = {
+        {
+            pattern = "txt",
+            callback = function()
+                vim.api.nvim_set_option("spell", true)
+            end,
+        },
+        {
+            pattern = "help,lspinfo,qf,startuptime",
+            callback = function()
+                vim.api.nvim_set_keymap(
+                    "n",
+                    "q",
+                    "<cmd>close<CR>",
+                    { noremap = true, silent = true }
+                )
+            end,
+        },
+    },
 
-    -- change cursor back to beam when leaving neovim
-    --  see https://github.com/neovim/neovim/issues/6005
-    [[
-        augroup ChangeCursor
-            au!
-            au ExitPre * set guicursor=a:ver90
-        augroup END
-    ]],
+    InsertEnter = {
+        {
+            callback = function()
+                vim.api.nvim_set_option("number", false)
+                vim.api.nvim_set_option("relativenumber", false)
+            end,
+        },
+    },
+
+    QuickFixCmdPost = {
+        {
+            command = "TroubleToggle quickfix",
+        },
+    },
+
+    TextYankPost = {
+        {
+            callback = function()
+                vim.highlight.on_yank({ higroup = "Yank", timeout = 165 })
+            end,
+        },
+    },
 }
 
-for _, au in ipairs(aucmds) do
-    vim.cmd(au)
+for event, opt_tbls in pairs(new_cmds) do
+    for _, opt_tbl in pairs(opt_tbls) do
+        vim.api.nvim_create_autocmd(event, opt_tbl)
+    end
 end

@@ -59,7 +59,7 @@ vim.diagnostic.config({
     underline = true,
     update_in_insert = false,
     virtual_text = {
-        prefix = "",
+        -- prefix = "",
         source = "if_many",
     },
 })
