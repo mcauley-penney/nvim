@@ -1,93 +1,98 @@
-local new_cmds = {
+local aucmd_tbl = {
 
-    BufEnter = {
-        {
-            callback = function()
-                require("aucmd.functions").set_textwidth()
-            end,
+    enter_buf = {
+        BufEnter = {
+            {
+                -- set textwidth depending on ft
+                callback = function()
+                    require("aucmd.functions").set_textwidth()
+                end,
+            },
+
+            {
+                callback = function()
+                    vim.api.nvim_buf_set_option(0, "formatoptions", "2cjnpq")
+                end,
+            },
+        },
+
+        BufNewFile = {
+            {
+                -- source templates
+                command = "silent! 0r $HOME/.config/nvim/utils/templates/skeleton.%:e",
+            },
+        },
+
+        -- load view, such as cursor position
+        BufWinEnter = { { command = "silent! loadview" } },
+
+        FileType = {
+            {
+                pattern = "markdown,txt",
+                callback = function()
+                    vim.api.nvim_win_set_option(0, "spell", true)
+                end,
+            },
+            {
+                -- allow us to close various buffers with just 'q'
+                pattern = "help,lspinfo,qf,startuptime",
+                callback = function()
+                    vim.api.nvim_set_keymap(
+                        "n",
+                        "q",
+                        "<cmd>close<CR>",
+                        { noremap = true, silent = true }
+                    )
+                end,
+            },
         },
     },
 
-    BufNewFile = {
-        {
-            command = "silent! 0r $HOME/.config/nvim/utils/templates/skeleton.%:e",
+    leave_buf = {
+        -- update view upon leaving
+        BufWinLeave = { { command = "silent! mkview" } },
+
+        -- set cursor back to beam, Alacritty doesn't do this
+        ExitPre = {
+            {
+                callback = function()
+                    vim.api.nvim_set_option("guicursor", "a:ver90")
+                end,
+            },
         },
     },
 
-    BufWinEnter = {
-        { command = "silent! loadview" },
-    },
-
-    BufWinLeave = {
-        { command = "silent! mvview" },
-    },
-
-    CmdlineLeave = {
-        {
-
-            callback = function()
-                vim.fn.timer_start(1500, function()
-                    print(" ")
-                end)
-            end,
+    editing = {
+        -- clear commandline
+        CmdlineLeave = {
+            {
+                callback = function()
+                    vim.fn.timer_start(1750, function()
+                        print(" ")
+                    end)
+                end,
+            },
         },
-    },
 
-    ExitPre = {
-        {
+        -- after grep, open qf
+        QuickFixCmdPost = { { command = "TroubleToggle quickfix" } },
 
-            callback = function()
-                vim.api.nvim_set_option("guicursor", "a:ver90")
-            end,
-        },
-    },
-
-    FileType = {
-        {
-            pattern = "txt",
-            callback = function()
-                vim.api.nvim_set_option("spell", true)
-            end,
-        },
-        {
-            pattern = "help,lspinfo,qf,startuptime",
-            callback = function()
-                vim.api.nvim_set_keymap(
-                    "n",
-                    "q",
-                    "<cmd>close<CR>",
-                    { noremap = true, silent = true }
-                )
-            end,
-        },
-    },
-
-    InsertEnter = {
-        {
-            callback = function()
-                vim.api.nvim_set_option("number", false)
-                vim.api.nvim_set_option("relativenumber", false)
-            end,
-        },
-    },
-
-    QuickFixCmdPost = {
-        {
-            command = "TroubleToggle quickfix",
-        },
-    },
-
-    TextYankPost = {
-        {
-            callback = function()
-                vim.highlight.on_yank({ higroup = "Yank", timeout = 165 })
-            end,
+        TextYankPost = {
+            {
+                callback = function()
+                    vim.highlight.on_yank({ higroup = "Yank", timeout = 165 })
+                end,
+            },
         },
     },
 }
 
-for event, opt_tbls in pairs(new_cmds) do
-    for _, opt_tbl in pairs(opt_tbls) do
-        vim.api.nvim_create_autocmd(event, opt_tbl)
+for group, event_tbls in pairs(aucmd_tbl) do
+    vim.api.nvim_create_augroup(group, { clear = true })
+
+    for event, aucmd_tbls in pairs(event_tbls) do
+        for _, aucmd in pairs(aucmd_tbls) do
+            vim.api.nvim_create_autocmd(event, aucmd)
+        end
     end
 end

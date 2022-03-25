@@ -13,10 +13,15 @@ vim.g.clipboard = {
     cache_enabled = 1,
 }
 
--- filetype
+-- filetype --
 vim.g.python_recommended_style = 0
-vim.g.did_load_filetypes = 0
-vim.g.do_filetype_lua = 1
+
+-- To use filetype.nvim:
+vim.g.did_load_filetypes = 1
+
+-- To use new builtin filetype detection:
+-- vim.g.did_load_filetypes = 0
+-- vim.g.do_filetype_lua = 1
 
 --[[
     providers

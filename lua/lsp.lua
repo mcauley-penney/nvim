@@ -16,6 +16,7 @@ local lsp = {
                 "--suggest-missing-includes",
             },
         },
+        -- https://github.com/sumneko/lua-language-server/blob/f7e0e7a4245578af8cef9eb5e3ec9ce65113684e/locale/en-us/setting.lua
         sumneko_lua = {
             settings = {
                 Lua = {
@@ -59,7 +60,6 @@ vim.diagnostic.config({
     underline = true,
     update_in_insert = false,
     virtual_text = {
-        -- prefix = "",
         source = "if_many",
     },
 })

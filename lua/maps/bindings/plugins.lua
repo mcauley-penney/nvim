@@ -1,7 +1,10 @@
 local utils = require("maps.bindings.utils")
 local na = {}
 
--- outline
+-- nvim-tree, ↑◼ ◻
+utils.map("n", "<F13>", "<cmd>NvimTreeToggle<cr>", utils.cmd)
+
+-- outline ↑◼ ◻
 utils.map("n", "<F1>", "<cmd>SymbolsOutline<cr>", utils.cmd)
 
 -- trouble
@@ -19,6 +22,15 @@ utils.map(
     "<cmd>lua require('neogen').generate()<CR>",
     utils.cmd
 )
+
+-- vim-mundo
+utils.map("n", "<C-u>", "<cmd>MundoToggle<cr>", utils.nore)
+vim.g.mundo_mappings = {
+    ["<cr>"] = "preview",
+    e = "mode_newer",
+    n = "mode_older",
+    q = "quit",
+}
 
 -- venn.nvim
 utils.map("n", "<S-down>", "<C-v>j:VBox<CR>", { noremap = true })

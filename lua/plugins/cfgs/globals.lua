@@ -1,15 +1,8 @@
 local g = vim.g
 
--- doge
-g.doge_comment_jump_modes = { "n" }
-
 -- illuminate
 g.Illuminate_delay = 300
 g.Illuminate_highlightUnderCursor = 0
-
--- vsnip
-g.vsnip_snippet_dir = vim.fn.stdpath("config") .. "/utils/snips"
-g.vsnip_filetyes = {}
 
 -- markdown preview
 g.mkdp_auto_start = 1
@@ -56,3 +49,7 @@ g.symbols_outline = {
     },
     width = 60,
 }
+
+-- vim-mundo
+g.mundo_preview_bottom = 1
+g.mundo_right = 1

@@ -5,9 +5,9 @@
     opt syntax:     https://github.com/neovim/neovim/pull/13479#event-4813249467
 ]]
 
-require("options.functions")
-require("options.globals")
-require("options.status")
+for _, module in pairs({ "functions", "globals", "status" }) do
+    require("options." .. module)
+end
 
 -- alias syntax
 local o = vim.opt
@@ -20,21 +20,27 @@ o.clipboard = "unnamedplus"
 o.confirm = true
 o.emoji = false
 o.expandtab = true
-o.fillchars = { eob = " ", fold = " " }
+o.fileignorecase = true
+o.fillchars = {
+    eob = " ",
+    fold = " ",
+}
 o.foldenable = false
 o.foldlevel = 99
 o.foldmethod = "indent"
 o.foldtext = "v:lua.get_fold_text()"
-o.formatoptions = { -- still doesn't work
-    o = false,
-}
 o.gdefault = true
 o.grepprg = [[ rg --ignore-case --glob "!.git" --trim --vimgrep ]]
-o.guicursor = "n-v-sm:block-Cursor,c-ci-cr-i-ve:ver20-Cursor,r-o:hor20-Cursor"
+o.guicursor = {
+    "n-sm-v:block-Cursor",
+    "c-ci-cr-i-ve:ver20-Cursor",
+    "o-r:hor20-Cursor",
+}
 o.hlsearch = false
+o.laststatus = 3
 o.lazyredraw = true
 o.list = true
-o.listchars = { eol = "↴", trail = "•" }
+o.listchars = { eol = "⬎", trail = "•" }
 o.linebreak = true
 o.modeline = false
 o.modelines = 0
@@ -63,7 +69,7 @@ o.timeout = false
 o.undodir = vim.fn.stdpath("data") .. "/undo/"
 o.undofile = true
 o.updatetime = 350 -- used for swap file and cursorhold
-o.viewoptions = "cursor,folds"
+o.viewoptions = { "cursor", "folds" }
 o.virtualedit = "all"
 o.wildmode = "longest:full"
 o.wildoptions = "pum"

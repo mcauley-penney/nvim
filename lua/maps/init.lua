@@ -5,6 +5,6 @@
 
 local files = { "colemak", "base", "lsp", "plugins" }
 
-for _, file in ipairs(files) do
+for _, file in pairs(files) do
     require(table.concat({ "maps.bindings.", file }, ""))
 end

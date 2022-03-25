@@ -1,8 +1,8 @@
 --  aucmds: https://neovim.io/doc/user/autocmd.html#events
 
-require("plugins.disable")
-require("plugins.cfgs.global_cfgs")
-require("impatient")
+for _, module in pairs({ "globals", "cfgs.globals" }) do
+    require("plugins." .. module)
+end
 
 local lsp_langs = require("lsp").langs
 
@@ -17,9 +17,10 @@ require("packer").startup({
 
         use("lewis6991/impatient.nvim")
 
+        use("nathom/filetype.nvim")
+
         use({ "nvim-lua/plenary.nvim", module = "plenary" })
 
-        -- scheme
         use("/home/m/files/nonwork/still_light.nvim")
 
         use({
@@ -36,12 +37,11 @@ require("packer").startup({
                 { "hrsh7th/cmp-buffer", event = "InsertEnter" },
                 { "hrsh7th/cmp-emoji", event = "InsertEnter", keys = ":" },
 
-                {
-                    "petertriho/cmp-git",
-                    ft = "gitcommit",
-                    event = "InsertEnter",
-                    requires = "nvim-lua/plenary.nvim",
-                },
+                -- {
+                --     "petertriho/cmp-git",
+                --     config = require("cmp_git").setup(),
+                --     requires = "nvim-lua/plenary.nvim",
+                -- },
 
                 { "kdheepak/cmp-latex-symbols", event = "InsertEnter" },
 
@@ -62,9 +62,8 @@ require("packer").startup({
                     event = "InsertEnter",
                 },
 
-                { "hrsh7th/vim-vsnip", event = "InsertEnter" },
-                { "hrsh7th/vim-vsnip-integ", event = "InsertEnter" },
-                { "hrsh7th/cmp-vsnip", event = "InsertEnter" },
+                { "L3MON4D3/LuaSnip", event = "InsertEnter" },
+                { "saadparwaiz1/cmp_luasnip", event = "InsertEnter" },
             },
         })
 
@@ -103,16 +102,9 @@ require("packer").startup({
         })
 
         use({
-            "j-hui/fidget.nvim",
-            config = [[ require "plugins.cfgs.fidget"]],
-        })
-
-        use({
             "lukas-reineke/indent-blankline.nvim",
             config = [[ require "plugins.cfgs.indent_blankline"]],
         })
-
-        use({ "pedro757/indentInsert.nvim", module = "indentInsert" })
 
         use({
             "iamcco/markdown-preview.nvim",
@@ -161,7 +153,7 @@ require("packer").startup({
 
         use({ "rrethy/vim-illuminate", event = "CursorHold" })
 
-        use({ "tpope/vim-obsession", event = "BufHidden" })
+        use({ "tpope/vim-obsession", cmd = "Obsess" })
 
         use({ "dstein64/vim-startuptime", cmd = "StartupTime" })
 
@@ -190,7 +182,24 @@ require("packer").startup({
         -- Temporary?
         use({ "jbyuki/venn.nvim", cmd = "VBox" })
 
-        use("simrat39/symbols-outline.nvim")
+        use({ "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" })
+
+        use({ "simnalamburt/vim-mundo", cmd = "MundoToggle" })
+
+        use({
+            "kyazdani42/nvim-tree.lua",
+            config = function()
+                require("nvim-tree").setup({
+                    view = {
+                        height = 40,
+                        width = 40,
+                        signcolumn = "yes",
+                    },
+                })
+            end,
+            requires = { "kyazdani42/nvim-web-devicons" },
+            cmd = "NvimTreeToggle",
+        })
     end,
 
     -- Packer configuration

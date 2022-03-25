@@ -3,6 +3,7 @@
 vim.cmd("colorscheme still_light")
 
 local modules = {
+    "impatient",
     "options",
     "maps",
     "aucmd",
@@ -17,6 +18,20 @@ end
 
 --[[
     todo:
+        • to fix:
+            - markdown hl doesn't work
+            - split line is weird looking, change it
+
+        • plugins
+            • consider:
+                • vim-projectionist
+                • need a git tool, still
+
+        • options
+            • add cinoptions
+
+        • add git info in statusline?
+
         • keep an eye on evolving diagnostics situation. The authors don't
           like null
             • https://github.com/nvim-lua/wishlist/issues/9#issuecomment-1025087308
@@ -24,6 +39,8 @@ end
             • https://www.reddit.com/r/neovim/comments/roixc6/comment/hpzfnss/?utm_source=share&utm_medium=web2x&context=3
 
     news:
+        • winbar: https://github.com/neovim/neovim/pull/17336
+
         • CursorHold bug (legendary):
             • original issue: https://github.com/neovim/neovim/issues/12587
             • Shougo's PR: https://github.com/neovim/neovim/pull/16929

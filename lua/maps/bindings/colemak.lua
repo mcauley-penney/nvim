@@ -14,7 +14,7 @@ for _, pairs in ipairs(colemak_maps) do
     local upper_lhs = string.upper(lhs)
     local upper_rhs = string.upper(rhs)
 
-    -- map for lowercase
+    -- lowercase swap
     utils.map("", lhs, rhs, utils.nore)
 
     -- map for uppercase

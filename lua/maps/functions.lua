@@ -30,36 +30,6 @@ local ft_match_table = {
 
 local M = {
 
-    -- Toggles number and relativenumber.
-    -- Checks the current state of the number and
-    -- relativenumber settings and adjusts settings
-    -- accordingly: if number isn't on, turn it on;
-    -- if it is, turn on relativenumber; if relativenumber
-    -- is on, turn off all numbering.
-    num_toggle = function()
-        local set_opt = vim.api.nvim_win_set_option
-
-        -- determine what settings are on
-        local num_on = vim.api.nvim_win_get_option(0, "number")
-        local relnum_on = vim.api.nvim_win_get_option(0, "relativenumber")
-
-        -- if number is off, turn it on
-        if not num_on then
-            set_opt(0, "number", true)
-
-            -- if number is on but relnum is off, turn on relnum
-        elseif not relnum_on then
-            set_opt(0, "relativenumber", true)
-
-            -- if relnum is on, turn all off
-        else
-            set_opt(0, "number", false)
-            set_opt(0, "relativenumber", false)
-        end
-
-        return ""
-    end,
-
     -- Send comments to buffer at cursor position.
     send_comment = function()
         local ft = vim.api.nvim_buf_get_option(0, "filetype")

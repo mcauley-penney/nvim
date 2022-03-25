@@ -1,14 +1,10 @@
 local M = {}
 
+local lsp = require("lsp")
+
 local get_hl = require("utils").get_hl_grp_rgb
 local set_hl = require("options.status.hl").make_hl_def_bg
 local srcs = require("options.status.external_srcs")
-
-local excluded = {
-    OUTLINE = true,
-    trouble = true,
-    startuptime = true,
-}
 
 local hl_mtbl = {
     Info = set_hl({ grp = "StatusBlu", fg = get_hl("DiagnosticInfo", "fg") }),
@@ -68,26 +64,24 @@ end
 _G.get_statusline = function()
     local buf = vim.api.nvim_buf_get_name(0)
     local ft = vim.api.nvim_buf_get_option(0, "filetype")
+    local is_supported
 
-    if vim.api.nvim_get_current_win() ~= vim.g.statusline_winid then
-        return "%#StatusLineNC#"
-    elseif excluded[buf] then
-        return stl_str["file_name"]
-    else
-        stl_str["icon"] = srcs.get_ft_icon(buf, ft)
+    stl_str["icon"] = srcs.get_ft_icon(buf, ft)
 
-        if vim.lsp.get_client_by_id(1) ~= nil then
-            stl_str["buf_info"] = srcs.get_diag_str(
-                require("lsp").signs,
-                hl_mtbl
-            )
-        else
-            stl_str["buf_info"] = srcs.get_wordcount_str()
+    for _, lang in pairs(lsp.langs) do
+        if lang == ft then
+            is_supported = true
         end
-
-        -- concatenate desired status components into str
-        return _concat_status(stl_order, stl_str)
     end
+
+    if is_supported then
+        stl_str["buf_info"] = srcs.get_diag_str(lsp.signs, hl_mtbl)
+    else
+        stl_str["buf_info"] = srcs.get_wordcount_str()
+    end
+
+    -- concatenate desired status components into str
+    return _concat_status(stl_order, stl_str)
 end
 
 return M

@@ -9,9 +9,9 @@ _G.get_fold_text = function()
         true
     )[1]
 
-    -- if the text of the first line preview if longer than 70 chars
+    -- if the text of the first line preview if longer than x chars
     if #first_line_str >= 60 then
-        -- get only the first 60 chars
+        -- get only the first x chars
         first_line_str = string.sub(first_line_str, 1, 60) .. "… "
     end
 

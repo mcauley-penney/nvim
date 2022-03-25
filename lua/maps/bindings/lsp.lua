@@ -1,34 +1,32 @@
 local utils = require("maps.bindings.utils")
 
 -- jump diagnostics
-utils.map(
-    "n",
-    "<up>",
-    "<cmd>lua vim.diagnostic.goto_prev{ float = false }<cr>",
-    utils.cmd
-)
-utils.map(
-    "n",
-    "<down>",
-    "<cmd>lua vim.diagnostic.goto_next{ float = false }<cr>",
-    utils.cmd
-)
+utils.fmap("n", "<up>", function()
+    vim.diagnostic.goto_prev({ float = false })
+end, {})
+
+utils.fmap("n", "<down>", function()
+    vim.diagnostic.goto_next({ float = false })
+end, {})
 
 -- rename
-utils.map("n", "<leader>r", "<cmd>lua vim.lsp.buf.rename()<cr>", utils.cmd)
+utils.fmap("n", "<leader>r", function()
+    vim.lsp.buf.rename()
+end, {})
 
 -- show line diagnostics
-utils.map(
-    "n",
-    "<leader>vd",
-    '<cmd>lua vim.diagnostic.open_float({header="", max_width = 50, severity_sort=true})<cr>',
-    {}
-)
+utils.fmap("n", "<leader>vd", function()
+    vim.diagnostic.open_float({
+        header = "",
+        max_width = 50,
+        severity_sort = true,
+    })
+end, {})
 
 utils.fmap("n", "<leader>h", function()
     vim.lsp.buf.hover()
 end, {})
 
-utils.fmap("i", "<c-s>", function()
+utils.fmap("i", "<leader>s", function()
     vim.lsp.buf.signature_help()
 end, { buffer = true })

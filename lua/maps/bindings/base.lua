@@ -3,8 +3,10 @@ local utils = require("maps.bindings.utils")
 
 local na = {}
 
--- comments
+-- comments, ◻ ◼
 utils.fmap("i", "<F2>", func.send_comment, utils.expr)
+
+-- ◻ ◼ ↑
 utils.map("i", "<F14>", "• ", na)
 utils.map("i", "!!", "!=", utils.nore)
 
@@ -23,8 +25,7 @@ utils.map("n", "i", "a", utils.nore)
 utils.map("n", "a", "i", utils.nore)
 
 -- space for insert mode
--- original: utils.map( 'n', '<Space>', 'a', utils.expr )
-utils.map("n", "<Space>", "v:lua.require'indentInsert'.indent('i')", utils.expr)
+utils.map("n", "<Space>", "a", utils.nore)
 utils.map("v", "<Space>", "I", utils.nore)
 
 -- make case change more accessible
@@ -39,14 +40,8 @@ utils.map("n", "<bs>", "<<", na)
 utils.map("", "<home>", "^", na)
 utils.map("i", "<home>", "<esc>^a", na)
 
--- toggle numbers
-utils.fmap("n", "<C-n>", func.num_toggle, utils.expr)
-
 -- make '/' default to custom ripgrep
 utils.map("n", "/", ":LOOK ", na)
-
--- undo to last save
-utils.map("n", "<C-u>", "<cmd>earlier 1f<CR>", utils.cmd)
 
 --[[
     open URLs, taken from source 1

@@ -26,6 +26,6 @@ local to_disable = {
     "zipPlugin",
 }
 
-for _, plug in ipairs(to_disable) do
+for _, plug in pairs(to_disable) do
     vim.g["loaded_" .. plug] = 1
 end
