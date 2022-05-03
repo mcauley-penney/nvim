@@ -1,10 +1,6 @@
 local cmp = require("cmp")
 
 cmp.setup({
-    documentation = {
-        border = "rounded",
-    },
-
     formatting = {
         format = function(entry, vim_item)
             vim_item.menu = ({

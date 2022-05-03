@@ -1,4 +1,15 @@
+-- https://neovim.io/doc/user/autocmd.html
+
 local aucmd_tbl = {
+
+    diagnostics = {
+        BufWritePost = {
+            { command = "lua require('lint').try_lint()" }
+        },
+        VimEnter = {
+            { command = "lua require('lint').try_lint()" }
+        }
+    },
 
     enter_buf = {
         BufEnter = {
@@ -11,14 +22,13 @@ local aucmd_tbl = {
 
             {
                 callback = function()
-                    vim.api.nvim_buf_set_option(0, "formatoptions", "2cjnpq")
+                    vim.api.nvim_buf_set_option(0, "formatoptions", "2cjnpqr")
                 end,
             },
         },
 
         BufNewFile = {
             {
-                -- source templates
                 command = "silent! 0r $HOME/.config/nvim/utils/templates/skeleton.%:e",
             },
         },
@@ -48,22 +58,7 @@ local aucmd_tbl = {
         },
     },
 
-    leave_buf = {
-        -- update view upon leaving
-        BufWinLeave = { { command = "silent! mkview" } },
-
-        -- set cursor back to beam, Alacritty doesn't do this
-        ExitPre = {
-            {
-                callback = function()
-                    vim.api.nvim_set_option("guicursor", "a:ver90")
-                end,
-            },
-        },
-    },
-
     editing = {
-        -- clear commandline
         CmdlineLeave = {
             {
                 callback = function()
@@ -75,12 +70,24 @@ local aucmd_tbl = {
         },
 
         -- after grep, open qf
-        QuickFixCmdPost = { { command = "TroubleToggle quickfix" } },
+        QuickFixCmdPost = { { command = "copen" } },
 
         TextYankPost = {
             {
+                command = [[ silent! lua vim.highlight.on_yank{ higroup="Yank", timeout=165 }]],
+            },
+        },
+    },
+
+    leave_buf = {
+        -- update view upon leaving
+        BufWinLeave = { { command = "silent! mkview" } },
+
+        -- set cursor back to beam, Alacritty doesn't do this
+        ExitPre = {
+            {
                 callback = function()
-                    vim.highlight.on_yank({ higroup = "Yank", timeout = 165 })
+                    vim.api.nvim_set_option("guicursor", "a:ver90")
                 end,
             },
         },

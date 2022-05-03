@@ -1,37 +1,51 @@
 local M = {}
 
-local lsp = require("lsp")
-
 local get_hl = require("utils").get_hl_grp_rgb
-local set_hl = require("options.status.hl").make_hl_def_bg
+local lsp = require("lsp")
+local set_stl_hl = require("options.status.hl").make_hl_def_bg
 local srcs = require("options.status.external_srcs")
 
 local hl_mtbl = {
-    Info = set_hl({ grp = "StatusBlu", fg = get_hl("DiagnosticInfo", "fg") }),
-    Success = set_hl({ grp = "StatusGrn", fg = "#347d39" }),
-    Error = set_hl({ grp = "StatusRed", fg = get_hl("DiagnosticError", "fg") }),
-    Warn = set_hl({ grp = "StatusYlw", fg = get_hl("DiagnosticWarn", "fg") }),
-    Hint = set_hl({ grp = "StatusWht", fg = get_hl("DiagnosticHint", "fg") }),
+    Info = set_stl_hl({
+        grp = "StatusBlu",
+        fg = get_hl("DiagnosticInfo", "fg"),
+    }),
+    Success = set_stl_hl({
+        grp = "StatusGrn",
+        fg = get_hl("__success", "fg"),
+    }),
+    Error = set_stl_hl({
+        grp = "StatusRed",
+        fg = get_hl("DiagnosticError", "fg"),
+    }),
+    Warn = set_stl_hl({
+        grp = "StatusYlw",
+        fg = get_hl("DiagnosticWarn", "fg"),
+    }),
+    Hint = set_stl_hl({
+        grp = "StatusWht",
+        fg = get_hl("DiagnosticHint", "fg"),
+    }),
 }
 
 -- see https://vimhelp.org/options.txt.html#%27statusline%27 for part fmt strs
 local stl_str = {
-    ab_path = " %<%F",
     buf_info = nil,
     file_name = " %t",
-    icon = nil,
-    indent = "%=",
-    loc = "%4l/%-4L ",
+    git_branch = nil,
+    sep = "%=",
+    loc = "%-4L ",
     mod = table.concat({ hl_mtbl.Error, "%m", "%* " }, ""),
+    path = " %<%F",
     ro = table.concat({ hl_mtbl.Error, "%r", "%* " }, ""),
 }
 
 local stl_order = {
-    "icon",
-    "ab_path",
+    "git_branch",
+    "path",
     "mod",
     "ro",
-    "indent",
+    "sep",
     "buf_info",
     "loc",
 }
@@ -56,25 +70,20 @@ end
 --
 -- NOTES:
 --  • tracking window status
---  1. Should avoid autocommands to track current statusline, see
---  https://github.com/vim/vim/issues/4406#issuecomment-495496763 .
---  2. Can track via global vars, see
---  https://www.reddit.com/r/vim/comments/dxcgtm/comment/f7p12hr/?utm_source=share&utm_medium=web2x&context=3
+--      1. Should avoid autocommands to track current statusline, see
+--      https://github.com/vim/vim/issues/4406#issuecomment-495496763 .
+--
+--      2. Can track via global vars, see
+--      https://www.reddit.com/r/vim/comments/dxcgtm/comment/f7p12hr/?utm_source=share&utm_medium=web2x&context=3
 --
 _G.get_statusline = function()
-    local buf = vim.api.nvim_buf_get_name(0)
-    local ft = vim.api.nvim_buf_get_option(0, "filetype")
-    local is_supported
-
-    stl_str["icon"] = srcs.get_ft_icon(buf, ft)
-
-    for _, lang in pairs(lsp.langs) do
-        if lang == ft then
-            is_supported = true
-        end
+    if vim.bo.buftype == "terminal" then
+        return "%#StatusLineNC#"
     end
 
-    if is_supported then
+    stl_str["git_branch"] = srcs.get_git_branch()
+
+    if #vim.lsp.buf_get_clients() > 0 then
         stl_str["buf_info"] = srcs.get_diag_str(lsp.signs, hl_mtbl)
     else
         stl_str["buf_info"] = srcs.get_wordcount_str()

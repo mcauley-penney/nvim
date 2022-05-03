@@ -20,10 +20,6 @@ null.setup({
             },
         }),
 
-        -- python
-        null.builtins.diagnostics.pylint.with({
-            method = null.methods.DIAGNOSTICS_ON_SAVE,
-        }),
         null.builtins.formatting.black,
 
         -- sh

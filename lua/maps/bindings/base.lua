@@ -40,14 +40,14 @@ utils.map("n", "<bs>", "<<", na)
 utils.map("", "<home>", "^", na)
 utils.map("i", "<home>", "<esc>^a", na)
 
--- make '/' default to custom ripgrep
-utils.map("n", "/", ":LOOK ", na)
+-- make '/' default to custom ripgrep command
+utils.map("n", "\\", ":LOOK ", na)
 
---[[
-    open URLs, taken from source 1
-    uses xdg-open shell command (!) to open word under cursor ( cWORD )
-]]
+-- open URLs
 utils.map("n", "<leader>o", "<cmd>!xdg-open <cWORD> &<CR><CR>", utils.cmd)
+
+-- qf
+utils.map("n", "<leader>q", "<cmd>copen<cr>", na)
 
 -- buffers --
 utils.map("n", "<C-t>", ":e ", na)

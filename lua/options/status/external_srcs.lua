@@ -1,7 +1,5 @@
 local M = {}
 
-local set_hl = require("options.status.hl").make_hl_def_bg
-
 -- Return an associative table of strings for each type of diagnostic.
 -- This function loops through all diagnostic groups found in "lsp.lua",
 -- uses their base highlight groups and associated symbols to create strings
@@ -56,28 +54,24 @@ M.get_diag_str = function(lsp_signs, hl_mtbl)
     end
 end
 
---- retrieve and return filetype icon from nvim-web-devicons.
--- gets icon from nvim-web-devicons, applies the proper background highlight
--- to it, and returns it as a string.
--- @param ft: current filetype
--- @return str of icon with proper highlights or nil
-M.get_ft_icon = function(buf, ft)
-    local sym, color = require("nvim-web-devicons").get_icon_color(buf, ft)
+M.get_git_branch = function()
+    local branch = vim.b.gitsigns_head or ""
+    local branch_icon = ""
 
-    if sym ~= nil then
-        local icon_hi = set_hl({
-            grp = "StatusIcon",
-            fg = color,
-        })
-
-        return table.concat({ " ", icon_hi, sym, "%*" }, "")
+    -- conditional is necessary because changes aren't available at first
+    -- statusline drawing, resulting in a null error when statusline attempts
+    -- to access the status dictionary
+    if branch == "" then
+        return "[No Repo]"
+    else
+        return table.concat({ "  ", branch_icon, " ", branch }, "")
     end
 end
 
 M.get_wordcount_str = function()
     local wc = vim.api.nvim_eval("wordcount()")["words"]
 
-    return table.concat({ "\\w:", wc, "  " }, "")
+    return table.concat({ "words:", wc, "  " }, "")
 end
 
 return M

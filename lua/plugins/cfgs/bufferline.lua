@@ -53,10 +53,17 @@ local opt_tbl = {
                     end,
                 },
                 {
-                    name = "[make]:",
+                    name = "[header]:",
                     matcher = function(buf)
                         local t = buf.filename
                         return t:match("%.h")
+                    end,
+                },
+                {
+                    name = "[make]:",
+                    matcher = function(buf)
+                        local t = buf.filename
+                        return t:match("makefile") or t:match("Makefile")
                     end,
                 },
                 {

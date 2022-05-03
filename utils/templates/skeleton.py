@@ -1,12 +1,12 @@
-"""TODO:"""
+"""TODO."""
 
 
 def main():
-    """[TODO:description]"""
+    """TODO."""
 
 
 def test():
-    """[TODO:description]"""
+    """TODO."""
 
 
 if __name__ == "__main__":

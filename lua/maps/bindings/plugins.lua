@@ -1,14 +1,19 @@
 local utils = require("maps.bindings.utils")
 local na = {}
 
+-- gitsigns
+utils.map("n", "<leader>gt", "<cmd>Gitsigns toggle_signs<cr>", utils.cmd)
+utils.map("n", "<leader>gs", "<cmd>Gitsigns stage_hunk<cr>", utils.cmd)
+utils.map("n", "<leader>gu", "<cmd>Gitsigns undo_stage_hunk<cr>", utils.cmd)
+
+-- hop.nvim
+utils.map("n", "/", "<cmd>HopChar1<cr>", utils.cmd)
+
 -- nvim-tree, ↑◼ ◻
 utils.map("n", "<F13>", "<cmd>NvimTreeToggle<cr>", utils.cmd)
 
 -- outline ↑◼ ◻
 utils.map("n", "<F1>", "<cmd>SymbolsOutline<cr>", utils.cmd)
-
--- trouble
-utils.map("n", "<leader>q", "<cmd>TroubleToggle quickfix<cr>", na)
 
 -- substitute.nvim
 utils.map("n", "r", "<cmd>lua require('substitute').operator()<cr>", utils.nore)

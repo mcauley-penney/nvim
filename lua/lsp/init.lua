@@ -1,4 +1,6 @@
 local lsp = {
+    langs = { "c", "cpp", "lua", "python", "sh" },
+
     servers = {
         clangd = {
             cmd = {
@@ -16,6 +18,9 @@ local lsp = {
                 "--suggest-missing-includes",
             },
         },
+
+        pyright = {},
+
         -- https://github.com/sumneko/lua-language-server/blob/f7e0e7a4245578af8cef9eb5e3ec9ce65113684e/locale/en-us/setting.lua
         sumneko_lua = {
             settings = {
@@ -37,8 +42,6 @@ local lsp = {
         },
     },
 
-    langs = { "c", "lua", "python", "sh" },
-
     signs = {
         Error = { sym = "" },
         Warn = { sym = "" },
@@ -56,6 +59,10 @@ end
 
 -- configure diagnostics
 vim.diagnostic.config({
+    float = {
+        header = "",
+        severity_sort = true,
+    },
     severity_sort = true,
     underline = true,
     update_in_insert = false,

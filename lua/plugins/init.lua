@@ -1,6 +1,6 @@
 --  aucmds: https://neovim.io/doc/user/autocmd.html#events
 
-for _, module in pairs({ "globals", "cfgs.globals" }) do
+for _, module in pairs({ "standard", "cfgs.globals" }) do
     require("plugins." .. module)
 end
 
@@ -12,7 +12,23 @@ compiled_path = vim.fn.stdpath("config") .. compiled_path
 
 require("packer").startup({
     function(use)
+        --------------------------------------------------
+        -- testing
+        --------------------------------------------------
+        use({
+            "kyazdani42/nvim-tree.lua",
+            config = function()
+                require("nvim-tree").setup({})
+            end,
+            requires = {
+                "kyazdani42/nvim-web-devicons", -- optional, for file icon
+            },
+            cmd = "NvimTreeToggle",
+        })
+
+        --------------------------------------------------
         -- core
+        --------------------------------------------------
         use("wbthomason/packer.nvim")
 
         use("lewis6991/impatient.nvim")
@@ -21,11 +37,55 @@ require("packer").startup({
 
         use({ "nvim-lua/plenary.nvim", module = "plenary" })
 
-        use("/home/m/files/nonwork/still_light.nvim")
+        use({ "dstein64/vim-startuptime", cmd = "StartupTime" })
+
+        --------------------------------------------------
+        -- LSP
+        --------------------------------------------------
+        use({
+            "neovim/nvim-lspconfig",
+            config = [[require "plugins.cfgs.lsp_config"]],
+        })
 
         use({
-            "kyazdani42/nvim-web-devicons",
-            config = [[ require "plugins.cfgs.icons"]],
+            "williamboman/nvim-lsp-installer",
+            config = require("nvim-lsp-installer").setup({
+                ui = {
+                    icons = {
+                        server_installed = "✓",
+                        server_pending = "─►",
+                        server_uninstalled = "✗",
+                    },
+                },
+            }),
+        })
+
+        --------------------------------------------------
+        -- treesitter
+        --------------------------------------------------
+        use({
+            "nvim-treesitter/nvim-treesitter",
+            config = [[ require "plugins.cfgs.ts"]],
+            run = ":TSUpdate",
+        })
+
+        --------------------------------------------------
+        -- editing support
+        --------------------------------------------------
+        use({
+            "lewis6991/gitsigns.nvim",
+            config = [[ require "plugins.cfgs.gitsigns"]],
+        })
+
+        use({
+            "danymat/neogen",
+            config = [[require "plugins.cfgs.neogen"]],
+        })
+
+        use({
+            "windwp/nvim-autopairs",
+            config = [[ require "plugins.cfgs.pairs"]],
+            event = "InsertEnter",
         })
 
         use({
@@ -37,11 +97,14 @@ require("packer").startup({
                 { "hrsh7th/cmp-buffer", event = "InsertEnter" },
                 { "hrsh7th/cmp-emoji", event = "InsertEnter", keys = ":" },
 
-                -- {
-                --     "petertriho/cmp-git",
-                --     config = require("cmp_git").setup(),
-                --     requires = "nvim-lua/plenary.nvim",
-                -- },
+                {
+                    "petertriho/cmp-git",
+                    config = function()
+                        require("cmp_git").setup()
+                    end,
+                    requires = "nvim-lua/plenary.nvim",
+                    ft = "gitcommit",
+                },
 
                 { "kdheepak/cmp-latex-symbols", event = "InsertEnter" },
 
@@ -67,60 +130,113 @@ require("packer").startup({
             },
         })
 
-        -- LSP
-        use("neovim/nvim-lspconfig")
+        use({ "tpope/vim-obsession", cmd = "Obsess" })
 
         use({
-            "williamboman/nvim-lsp-installer",
-            config = [[ require "plugins.cfgs.lsp_installer"]],
+            "gbprod/substitute.nvim",
+            config = function()
+                require("substitute").setup()
+            end,
         })
 
-        -- treesitter
+        use({ "machakann/vim-swap", keys = { "g<", "g>" } })
+
+        use({ "jbyuki/venn.nvim", cmd = "VBox" })
+
+        --------------------------------------------------
+        -- quickfix
+        --------------------------------------------------
+        vim.cmd("packadd! cfilter")
+
         use({
-            "nvim-treesitter/nvim-treesitter",
-            config = [[ require "plugins.cfgs.ts"]],
-            run = ":TSUpdate",
+            "kevinhwang91/nvim-bqf",
+            config = function()
+                require("bqf").setup({
+                    preview = {
+                        border_chars = { "", "", "", "", "", "", "", "", "" },
+                        win_height = 999,
+                    },
+                })
+            end,
+            ft = "qf",
         })
 
+        use({
+            "https://gitlab.com/yorickpeterse/nvim-pqf",
+            config = function()
+                require("pqf").setup({})
+            end,
+            ft = "qf",
+        })
+
+        --------------------------------------------------
         -- formatting and linting
+        --------------------------------------------------
         use({
             "jose-elias-alvarez/null-ls.nvim",
             config = [[ require "plugins.cfgs.null_ls"]],
         })
 
         use({
+            "mfussenegger/nvim-lint",
+            config = function()
+                require("lint").linters_by_ft = {
+                    c = { "flawfinder" },
+                    python = { "pydocstyle", "pylint" },
+                }
+            end,
+        })
+
+        use({
             "mcauley-penney/tidy.nvim",
             event = "BufWritePre",
         })
-        -- end core
 
-        --luxuries
+        --------------------------------------------------
+        -- motions and textobjects
+        --------------------------------------------------
+        use({
+            "chaoren/vim-wordmotion",
+            keys = { "b", "c", "d", "k", "w", "y" },
+        })
+
+        use("wellle/targets.vim")
+
+        --------------------------------------------------
+        -- navigation
+        --------------------------------------------------
+        use({
+            "phaazon/hop.nvim",
+            branch = "v1", -- optional but strongly recommended
+            config = function()
+                -- you can configure Hop the way you like here; see :h hop-config
+                require("hop").setup({
+                    keys = "etovxqpdygfblzhckisuran",
+                })
+            end,
+            cmd = "HopChar1",
+        })
+
+        use({ "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" })
+
+        use({ "simnalamburt/vim-mundo", cmd = "MundoToggle" })
+
+        --------------------------------------------------
+        -- UI
+        --------------------------------------------------
+        use("/home/m/files/nonwork/still_light.nvim")
+
         use({
             "akinsho/bufferline.nvim",
             config = [[ require "plugins.cfgs.bufferline"]],
             event = "BufHidden",
+            -- TODO: update when things are more stable
+            tag = "v1.*",
         })
 
         use({
             "lukas-reineke/indent-blankline.nvim",
             config = [[ require "plugins.cfgs.indent_blankline"]],
-        })
-
-        use({
-            "iamcco/markdown-preview.nvim",
-            ft = "markdown",
-            run = ":call mkdp#util#install()",
-        })
-
-        use({
-            "danymat/neogen",
-            config = [[require "plugins.cfgs.neogen"]],
-        })
-
-        use({
-            "windwp/nvim-autopairs",
-            config = [[ require "plugins.cfgs.pairs"]],
-            event = "InsertEnter",
         })
 
         use({
@@ -135,41 +251,17 @@ require("packer").startup({
             event = "CursorMoved",
         })
 
-        use("wellle/targets.vim")
-
         use({
-            "akinsho/toggleterm.nvim",
-            config = [[ require "plugins.cfgs.toggleterm"]],
-            keys = "<C-space>",
-        })
-
-        use({
-            "folke/trouble.nvim",
-            config = [[ require "plugins.cfgs.trouble"]],
-            cmd = "TroubleToggle",
+            "kyazdani42/nvim-web-devicons",
+            config = function()
+                require("nvim-web-devicons").set_icon({})
+            end,
+            module = "nvim-web-devicons",
         })
 
         use({ "itchyny/vim-highlighturl" })
 
         use({ "rrethy/vim-illuminate", event = "CursorHold" })
-
-        use({ "tpope/vim-obsession", cmd = "Obsess" })
-
-        use({ "dstein64/vim-startuptime", cmd = "StartupTime" })
-
-        use({
-            "gbprod/substitute.nvim",
-            config = function()
-                require("substitute").setup()
-            end,
-        })
-
-        use({ "machakann/vim-swap", keys = { "g<", "g>" } })
-
-        use({
-            "chaoren/vim-wordmotion",
-            keys = { "b", "c", "d", "k", "w", "y" },
-        })
 
         use({
             "lukas-reineke/virt-column.nvim",
@@ -179,30 +271,35 @@ require("packer").startup({
             event = "InsertEnter",
         })
 
-        -- Temporary?
-        use({ "jbyuki/venn.nvim", cmd = "VBox" })
-
-        use({ "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" })
-
-        use({ "simnalamburt/vim-mundo", cmd = "MundoToggle" })
+        --------------------------------------------------
+        -- filetype support
+        --------------------------------------------------
 
         use({
-            "kyazdani42/nvim-tree.lua",
+            "iamcco/markdown-preview.nvim",
+            ft = "markdown",
+            run = ":call mkdp#util#install()",
+        })
+
+        use({
+            "nvim-orgmode/orgmode",
             config = function()
-                require("nvim-tree").setup({
-                    view = {
-                        height = 40,
-                        width = 40,
-                        signcolumn = "yes",
-                    },
+                require("orgmode").setup_ts_grammar()
+                require("orgmode").setup({
+                    org_agenda_files = "~/files/org/agenda/*",
+                    org_default_notes_file = "~/files/org/notes/*",
                 })
             end,
-            requires = { "kyazdani42/nvim-web-devicons" },
-            cmd = "NvimTreeToggle",
+        })
+
+        use({
+            "akinsho/toggleterm.nvim",
+            config = [[ require "plugins.cfgs.toggleterm"]],
+            keys = "<C-space>",
         })
     end,
 
-    -- Packer configuration
+    -- packer configuration --------------------------------------------------
     config = {
         compile_path = compiled_path,
         display = {

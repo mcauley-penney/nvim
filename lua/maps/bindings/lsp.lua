@@ -17,9 +17,8 @@ end, {})
 -- show line diagnostics
 utils.fmap("n", "<leader>vd", function()
     vim.diagnostic.open_float({
-        header = "",
-        max_width = 50,
-        severity_sort = true,
+        height = 15,
+        width = 50,
     })
 end, {})
 
@@ -27,6 +26,6 @@ utils.fmap("n", "<leader>h", function()
     vim.lsp.buf.hover()
 end, {})
 
-utils.fmap("i", "<leader>s", function()
-    vim.lsp.buf.signature_help()
-end, { buffer = true })
+-- utils.fmap("n", "<leader>s", function()
+--     vim.lsp.buf.signature_help()
+-- end, { buffer = true })

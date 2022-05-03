@@ -14,6 +14,9 @@ g.mkdp_preview_options = {
     disable_filename = 1,
 }
 
+-- nvim-tree
+g.nvim_tree_add_trailing = 1
+
 -- symbol outline
 g.symbols_outline = {
     auto_preview = true,
