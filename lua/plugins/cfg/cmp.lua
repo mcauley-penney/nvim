@@ -6,7 +6,7 @@ cmp.setup({
             vim_item.menu = ({
                 buffer = "[Buffer]",
                 cmp_git = "[Git]",
-                latex_symbols = "[LaTeX]",
+                latex_symbols = "[TeX]",
                 emoji = "[Emoji]",
                 nvim_lsp = "[LSP]",
                 nvim_lua = "[Lua]",

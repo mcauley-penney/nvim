@@ -5,8 +5,8 @@ require("nvim-treesitter.configs").setup({
         "comment",
         "cpp",
         "lua",
+        "make",
         "markdown",
-        "org",
         "python",
     },
 

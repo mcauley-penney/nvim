@@ -1,43 +1,16 @@
-local M = {}
-
-local get_hl = require("utils").get_hl_grp_rgb
-local lsp = require("lsp")
-local set_stl_hl = require("options.status.hl").make_hl_def_bg
+local hl_dict = require("options.status.hl")
 local srcs = require("options.status.external_srcs")
 
-local hl_mtbl = {
-    Info = set_stl_hl({
-        grp = "StatusBlu",
-        fg = get_hl("DiagnosticInfo", "fg"),
-    }),
-    Success = set_stl_hl({
-        grp = "StatusGrn",
-        fg = get_hl("__success", "fg"),
-    }),
-    Error = set_stl_hl({
-        grp = "StatusRed",
-        fg = get_hl("DiagnosticError", "fg"),
-    }),
-    Warn = set_stl_hl({
-        grp = "StatusYlw",
-        fg = get_hl("DiagnosticWarn", "fg"),
-    }),
-    Hint = set_stl_hl({
-        grp = "StatusWht",
-        fg = get_hl("DiagnosticHint", "fg"),
-    }),
-}
-
 -- see https://vimhelp.org/options.txt.html#%27statusline%27 for part fmt strs
-local stl_str = {
+local stl_parts = {
     buf_info = nil,
-    file_name = " %t",
+    diag = nil,
     git_branch = nil,
-    sep = "%=",
-    loc = "%-4L ",
-    mod = table.concat({ hl_mtbl.Error, "%m", "%* " }, ""),
+    loc = "%l/%-4L ",
+    mod = table.concat({ hl_dict.Error, "%m", "%* " }, ""),
     path = " %<%F",
-    ro = table.concat({ hl_mtbl.Error, "%r", "%* " }, ""),
+    ro = table.concat({ hl_dict.Error, "%r", "%* " }, ""),
+    sep = "%=",
 }
 
 local stl_order = {
@@ -46,7 +19,8 @@ local stl_order = {
     "mod",
     "ro",
     "sep",
-    "buf_info",
+    "diag",
+    "wordcount",
     "loc",
 }
 
@@ -81,16 +55,16 @@ _G.get_statusline = function()
         return "%#StatusLineNC#"
     end
 
-    stl_str["git_branch"] = srcs.get_git_branch()
+    stl_parts["git_branch"] = srcs.get_git_branch()
 
     if #vim.lsp.buf_get_clients() > 0 then
-        stl_str["buf_info"] = srcs.get_diag_str(lsp.signs, hl_mtbl)
-    else
-        stl_str["buf_info"] = srcs.get_wordcount_str()
+        stl_parts["diag"] = srcs.get_diag_str(require("lsp").signs, hl_dict)
+    end
+
+    if vim.api.nvim_buf_get_option(0, "filetype") == "txt" then
+        stl_parts["wordcount"] = srcs.get_wordcount_str()
     end
 
     -- concatenate desired status components into str
-    return _concat_status(stl_order, stl_str)
+    return _concat_status(stl_order, stl_parts)
 end
-
-return M

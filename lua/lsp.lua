@@ -43,10 +43,10 @@ local lsp = {
     },
 
     signs = {
-        Error = { sym = "" },
-        Warn = { sym = "" },
-        Hint = { sym = "" },
-        Info = { sym = "" },
+        Error = { sym = "" },
+        Warn = { sym = "" },
+        Hint = { sym = "" },
+        Info = { sym = "" },
     },
 }
 
@@ -67,6 +67,10 @@ vim.diagnostic.config({
     underline = true,
     update_in_insert = false,
     virtual_text = {
+        format = function(diag)
+            return string.format(" %s", diag.message)
+        end,
+        prefix = "",
         source = "if_many",
     },
 })
@@ -84,7 +88,7 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
 
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
     vim.lsp.handlers.hover,
-    { border = "single" }
+    { border = "none" }
 )
 
 return lsp

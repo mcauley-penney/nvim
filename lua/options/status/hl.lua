@@ -1,11 +1,20 @@
-local M = {}
 local utils = require("utils")
-local stl_bg = utils.get_hl_grp_rgb("StatusLine", "bg")
+local hl_mtbl = {}
 
-M.make_hl_def_bg = function(hi_tbl)
-    hi_tbl["bg"] = stl_bg
+local statusbg = utils.get_hl_grp_rgb("StatusLine", "bg")
 
-    return utils.make_hl_grp_str(hi_tbl)
+for type, _ in pairs(require("lsp").signs) do
+    hl_mtbl[type] = utils.make_hl_grp_str({
+        grp = "Status" .. type,
+        fg = utils.get_hl_grp_rgb("Diagnostic" .. type, "fg"),
+        bg = statusbg,
+    })
 end
 
-return M
+hl_mtbl["Success"] = utils.make_hl_grp_str({
+    grp = "StatusSuccess",
+    fg = utils.get_hl_grp_rgb("__success", "fg"),
+    bg = statusbg,
+})
+
+return hl_mtbl

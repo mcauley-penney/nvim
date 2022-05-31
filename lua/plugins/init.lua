@@ -1,14 +1,13 @@
 --  aucmds: https://neovim.io/doc/user/autocmd.html#events
-
-for _, module in pairs({ "standard", "cfgs.globals" }) do
-    require("plugins." .. module)
-end
-
 local lsp_langs = require("lsp").langs
 
 -- putting compiled path in lua folder allows impatient to cache it
-local compiled_path = "/lua/plugins/packer_compiled.lua"
-compiled_path = vim.fn.stdpath("config") .. compiled_path
+local compiled = "/lua/plugins/packer_compiled.lua"
+compiled = vim.fn.stdpath("config") .. compiled
+
+local function cfg(name)
+    return string.format([[require 'plugins.cfg.%s']], name)
+end
 
 require("packer").startup({
     function(use)
@@ -18,7 +17,11 @@ require("packer").startup({
         use({
             "kyazdani42/nvim-tree.lua",
             config = function()
-                require("nvim-tree").setup({})
+                require("nvim-tree").setup({
+                    renderer = {
+                        add_trailing = true,
+                    },
+                })
             end,
             requires = {
                 "kyazdani42/nvim-web-devicons", -- optional, for file icon
@@ -44,7 +47,7 @@ require("packer").startup({
         --------------------------------------------------
         use({
             "neovim/nvim-lspconfig",
-            config = [[require "plugins.cfgs.lsp_config"]],
+            config = cfg("lspconfig"),
         })
 
         use({
@@ -53,7 +56,7 @@ require("packer").startup({
                 ui = {
                     icons = {
                         server_installed = "✓",
-                        server_pending = "─►",
+                        server_pending = "►",
                         server_uninstalled = "✗",
                     },
                 },
@@ -65,7 +68,7 @@ require("packer").startup({
         --------------------------------------------------
         use({
             "nvim-treesitter/nvim-treesitter",
-            config = [[ require "plugins.cfgs.ts"]],
+            config = cfg("treesitter"),
             run = ":TSUpdate",
         })
 
@@ -74,23 +77,23 @@ require("packer").startup({
         --------------------------------------------------
         use({
             "lewis6991/gitsigns.nvim",
-            config = [[ require "plugins.cfgs.gitsigns"]],
+            config = cfg("gitsigns"),
         })
 
         use({
             "danymat/neogen",
-            config = [[require "plugins.cfgs.neogen"]],
+            config = cfg("neogen"),
         })
 
         use({
             "windwp/nvim-autopairs",
-            config = [[ require "plugins.cfgs.pairs"]],
+            config = cfg("pairs"),
             event = "InsertEnter",
         })
 
         use({
             "hrsh7th/nvim-cmp",
-            config = [[ require "plugins.cfgs.cmp"]],
+            config = cfg("cmp"),
             module = "cmp",
             event = "InsertEnter",
             requires = {
@@ -130,7 +133,7 @@ require("packer").startup({
             },
         })
 
-        use({ "tpope/vim-obsession", cmd = "Obsess" })
+        --use({ "tpope/vim-obsession", cmd = "Obsess" })
 
         use({
             "gbprod/substitute.nvim",
@@ -174,17 +177,7 @@ require("packer").startup({
         --------------------------------------------------
         use({
             "jose-elias-alvarez/null-ls.nvim",
-            config = [[ require "plugins.cfgs.null_ls"]],
-        })
-
-        use({
-            "mfussenegger/nvim-lint",
-            config = function()
-                require("lint").linters_by_ft = {
-                    c = { "flawfinder" },
-                    python = { "pydocstyle", "pylint" },
-                }
-            end,
+            config = cfg("null_ls"),
         })
 
         use({
@@ -209,7 +202,6 @@ require("packer").startup({
             "phaazon/hop.nvim",
             branch = "v1", -- optional but strongly recommended
             config = function()
-                -- you can configure Hop the way you like here; see :h hop-config
                 require("hop").setup({
                     keys = "etovxqpdygfblzhckisuran",
                 })
@@ -217,9 +209,34 @@ require("packer").startup({
             cmd = "HopChar1",
         })
 
-        use({ "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" })
+        use({
+            "simrat39/symbols-outline.nvim",
+            setup = function()
+                vim.g.symbols_outline = {
+                    auto_preview = true,
+                    highlight_hovered_item = true,
+                    show_guides = false,
+                    width = 60,
+                }
+            end,
+            cmd = "SymbolsOutline",
+        })
 
-        use({ "simnalamburt/vim-mundo", cmd = "MundoToggle" })
+        use({
+            "simnalamburt/vim-mundo",
+            setup = function()
+                vim.g.mundo_header = 0
+                vim.g.mundo_preview_bottom = 1
+                vim.g.mundo_right = 1
+                vim.g.mundo_mappings = {
+                    ["<cr>"] = "preview",
+                    e = "mode_newer",
+                    n = "mode_older",
+                    q = "quit",
+                    ["<esc>"] = "quit",
+                }
+            end,
+        })
 
         --------------------------------------------------
         -- UI
@@ -228,26 +245,24 @@ require("packer").startup({
 
         use({
             "akinsho/bufferline.nvim",
-            config = [[ require "plugins.cfgs.bufferline"]],
+            config = cfg("bufferline"),
             event = "BufHidden",
-            -- TODO: update when things are more stable
-            tag = "v1.*",
         })
 
         use({
             "lukas-reineke/indent-blankline.nvim",
-            config = [[ require "plugins.cfgs.indent_blankline"]],
+            config = cfg("indent_blankline"),
         })
 
         use({
             "norcalli/nvim-colorizer.lua",
-            config = [[ require "plugins.cfgs.colorizer"]],
+            config = cfg("colorizer"),
             ft = { "lua", "css" },
         })
 
         use({
             "petertriho/nvim-scrollbar",
-            config = [[ require "plugins.cfgs.scroll_bar"]],
+            config = cfg("scrollbar"),
             event = "CursorMoved",
         })
 
@@ -261,7 +276,14 @@ require("packer").startup({
 
         use({ "itchyny/vim-highlighturl" })
 
-        use({ "rrethy/vim-illuminate", event = "CursorHold" })
+        use({
+            "rrethy/vim-illuminate",
+            setup = function()
+                vim.g.Illuminate_delay = 300
+                vim.g.Illuminate_highlightUnderCursor = 0
+            end,
+            event = "CursorHold",
+        })
 
         use({
             "lukas-reineke/virt-column.nvim",
@@ -274,34 +296,39 @@ require("packer").startup({
         --------------------------------------------------
         -- filetype support
         --------------------------------------------------
-
         use({
             "iamcco/markdown-preview.nvim",
-            ft = "markdown",
-            run = ":call mkdp#util#install()",
-        })
-
-        use({
-            "nvim-orgmode/orgmode",
-            config = function()
-                require("orgmode").setup_ts_grammar()
-                require("orgmode").setup({
-                    org_agenda_files = "~/files/org/agenda/*",
-                    org_default_notes_file = "~/files/org/notes/*",
-                })
+            run = function()
+                vim.fn["mkdp#util#install"]()
             end,
+            setup = function()
+                vim.g.mkdp_auto_start = 1
+                vim.g.mkdp_auto_close = 1
+                vim.g.mkdp_browser = "firefox"
+                vim.g.mkdp_page_title = "${name}.md"
+                vim.g.mkdp_preview_options = {
+                    disable_sync_scroll = 0,
+                    disable_filename = 1,
+                }
+            end,
+            ft = "markdown",
         })
 
         use({
             "akinsho/toggleterm.nvim",
-            config = [[ require "plugins.cfgs.toggleterm"]],
-            keys = "<C-space>",
+            config = function()
+                require("toggleterm").setup({
+                    direction = "float",
+                    open_mapping = [[<C-space>]],
+                })
+            end,
+            keys = [[<C-space>]],
         })
     end,
 
-    -- packer configuration --------------------------------------------------
+    -- packer configuration ------------------------------
     config = {
-        compile_path = compiled_path,
+        compile_path = compiled,
         display = {
             header_sym = "",
             open_fn = function()
@@ -313,6 +340,6 @@ require("packer").startup({
 
 -- load plugins from chosen location
 if not vim.g.packer_compiled_loaded then
-    vim.cmd(string.format("source %s", compiled_path))
+    vim.cmd(string.format("source %s", compiled))
     vim.g.packer_compiled_loaded = true
 end

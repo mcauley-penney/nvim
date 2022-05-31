@@ -1,8 +1,5 @@
 local utils = require("utils")
 
--- get hl rgb, create new hl group tbls, create hl groups from the tbls, then
--- assign those groups to their Gitsigns type
-
 local bg = utils.get_hl_grp_rgb("__termbg", "bg")
 local grn = utils.get_hl_grp_rgb("__success", "fg")
 local red = utils.get_hl_grp_rgb("DiagnosticError", "fg")

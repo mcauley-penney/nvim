@@ -1,15 +1,9 @@
 -- https://neovim.io/doc/user/autocmd.html
+-- https://www.youtube.com/watch?v=ekMIIAqTZ34
+
+local grp
 
 local aucmd_tbl = {
-
-    diagnostics = {
-        BufWritePost = {
-            { command = "lua require('lint').try_lint()" }
-        },
-        VimEnter = {
-            { command = "lua require('lint').try_lint()" }
-        }
-    },
 
     enter_buf = {
         BufEnter = {
@@ -55,6 +49,12 @@ local aucmd_tbl = {
                     )
                 end,
             },
+            {
+                pattern = "html",
+                callback = function()
+                    vim.cmd("silent !xdg-open %")
+                end,
+            },
         },
     },
 
@@ -62,7 +62,7 @@ local aucmd_tbl = {
         CmdlineLeave = {
             {
                 callback = function()
-                    vim.fn.timer_start(1750, function()
+                    vim.fn.timer_start(3000, function()
                         print(" ")
                     end)
                 end,
@@ -74,7 +74,7 @@ local aucmd_tbl = {
 
         TextYankPost = {
             {
-                command = [[ silent! lua vim.highlight.on_yank{ higroup="Yank", timeout=165 }]],
+                command = [[ silent! lua vim.highlight.on_yank{ higroup="Yank", timeout=130 }]],
             },
         },
     },
@@ -94,11 +94,14 @@ local aucmd_tbl = {
     },
 }
 
-for group, event_tbls in pairs(aucmd_tbl) do
-    vim.api.nvim_create_augroup(group, { clear = true })
+for group_nm, event_tbls in pairs(aucmd_tbl) do
+    grp = vim.api.nvim_create_augroup(group_nm, { clear = true })
 
     for event, aucmd_tbls in pairs(event_tbls) do
         for _, aucmd in pairs(aucmd_tbls) do
+            -- add group name to aucmd tbl
+            aucmd = vim.tbl_extend("force", aucmd, { group = grp })
+
             vim.api.nvim_create_autocmd(event, aucmd)
         end
     end
