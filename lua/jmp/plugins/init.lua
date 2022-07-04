@@ -22,6 +22,14 @@ local plugins = {
         requires = { "nvim-lua/plenary.nvim" },
     },
 
+    -- using packer.nvim
+    {
+        "nmac427/guess-indent.nvim",
+        config = function()
+            require("guess-indent").setup({})
+        end,
+    },
+
     --------------------------------------------------
     -- core
     --------------------------------------------------
@@ -57,18 +65,12 @@ local plugins = {
     },
 
     {
-        "amrbashir/nvim-docs-view",
-        config = function()
-            require("docs-view").setup({
-                position = "bottom",
-            })
-        end,
-    },
-
-    {
         "j-hui/fidget.nvim",
         config = function()
             require("fidget").setup({
+                align = {
+                    bottom = false,
+                },
                 text = {
                     spinner = { "", "", "", "" },
                 },
@@ -79,6 +81,15 @@ local plugins = {
                     relative = "editor",
                     blend = 0,
                 },
+            })
+        end,
+    },
+
+    {
+        "amrbashir/nvim-docs-view",
+        config = function()
+            require("docs-view").setup({
+                position = "bottom",
             })
         end,
     },
@@ -123,7 +134,6 @@ local plugins = {
         requires = "nvim-treesitter/nvim-treesitter",
     },
 
-    -- TODO: want manual pair wrapping ability
     {
         "windwp/nvim-autopairs",
         config = cfg("pairs"),
@@ -167,47 +177,24 @@ local plugins = {
     {
         "gbprod/substitute.nvim",
         config = function()
-            vim.keymap.set("n", "r", require("substitute").operator, {})
-            vim.keymap.set("n", "rr", require("substitute").line, {})
-            vim.keymap.set("n", "R", require("substitute").eol, {})
-            vim.keymap.set("x", "r", require("substitute").visual, {})
-
             require("substitute").setup()
         end,
     },
 
-    {
-        "machakann/vim-swap",
-        config = function()
-            vim.keymap.set("n", "<left>", "g<", {})
-            vim.keymap.set("n", "<right>", "g>", {})
-        end,
-    },
+    "machakann/vim-swap",
 
     "jbyuki/venn.nvim",
 
     --------------------------------------------------
     -- quickfix
     --------------------------------------------------
-    --TODO:
-    -- 1. go back to trouble, I hate how this leaves buffers out
-    -- 2. just replace with telescope if we like it?
     {
-        "kevinhwang91/nvim-bqf",
+        "folke/trouble.nvim",
+        requires = "kyazdani42/nvim-web-devicons",
         config = function()
-            require("bqf").setup({
-                preview = {
-                    border_chars = { "", "", "", "", "", "", "", "", "" },
-                    win_height = 999,
-                },
+            require("trouble").setup({
+                indent_lines = false,
             })
-        end,
-    },
-
-    {
-        "https://gitlab.com/yorickpeterse/nvim-pqf",
-        config = function()
-            require("pqf").setup({})
         end,
     },
 
@@ -259,14 +246,6 @@ local plugins = {
                 width = 60,
             }
         end,
-        setup = function()
-            vim.keymap.set(
-                "n",
-                "<F13>",
-                "<cmd>SymbolsOutline<cr>",
-                { silent = true }
-            )
-        end,
     },
 
     {
@@ -282,14 +261,6 @@ local plugins = {
                 q = "quit",
                 ["<esc>"] = "quit",
             }
-        end,
-        setup = function()
-            vim.keymap.set(
-                "n",
-                "<leader>u",
-                "<cmd>MundoToggle<cr>",
-                { noremap = true }
-            )
         end,
         cmd = "MundoToggle",
     },

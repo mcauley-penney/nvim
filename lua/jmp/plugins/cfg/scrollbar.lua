@@ -1,5 +1,4 @@
-local lsp_ui = require("jmp.style")
-local palette = lsp_ui["palette"]
+local palette = require("jmp.style").palette
 
 local mark_text = { "-", "=" }
 local priority = 1
@@ -21,7 +20,7 @@ end
 
 require("scrollbar").setup({
     handle = {
-        color = lsp_ui["bg_hi"],
+        color = palette["bg"],
     },
     marks = marks_tbl,
 })

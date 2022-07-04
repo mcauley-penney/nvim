@@ -9,7 +9,7 @@ local gap = "  "
 M.get_diag_str = function(lsp_signs, hl_dict)
     if #vim.diagnostic.get(0) < 1 then
         local success_sym = ""
-        return table.concat({ hl_dict["Success"], success_sym, "%* " })
+        return table.concat({ hl_dict["Success"].hl_str, success_sym, "%* " })
     end
 
     local count = nil
@@ -19,7 +19,7 @@ M.get_diag_str = function(lsp_signs, hl_dict)
         count = #vim.diagnostic.get(0, { severity = string.upper(type) })
 
         vim.list_extend(diag_tbl, {
-            hl_dict[type],
+            hl_dict[type].hl_str,
             lsp_signs[type],
             "%*:",
             count,

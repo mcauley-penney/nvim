@@ -3,7 +3,7 @@ local M = {}
 --- Wrapper around lsp rename that echoes instances of renaming.
 -- Original: https://www.reddit.com/r/neovim/comments/um3epn/what_are_your_prizedfavorite_lua_functions/i8140hi/?utm_source=share&utm_medium=ios_app&utm_name=iossmf&context=3
 -- Credit: Rafat913
-M.rename = function()
+M.exe_rename = function()
     local curr_name = vim.fn.expand("<cword>")
     local opts = {
         prompt = "Rename: ",

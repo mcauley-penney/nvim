@@ -16,6 +16,7 @@ return function(client, bufnr)
             buffer = bufnr,
             callback = function()
                 vim.lsp.buf.format()
+                -- vim.lsp.buf.formatting()
             end,
         })
     end
@@ -32,7 +33,13 @@ return function(client, bufnr)
     map("n", "gd", vim.lsp.buf.definition, opts("Go To Definition"))
     map("n", "gi", vim.lsp.buf.implementation, opts("Go To Implementation"))
     map("n", "<leader>gr", lsp.references, opts("Go To References"))
-    map("n", "<leader>r", require(tools .. "functions").rename, opts("Rename"))
+
+    map(
+        "n",
+        "<leader>r",
+        require(tools .. "rename").exe_rename,
+        opts("LSP Rename")
+    )
 
     map("n", "<up>", function()
         vim.diagnostic.goto_prev({ buffer = 0, float = false })

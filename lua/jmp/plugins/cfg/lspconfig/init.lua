@@ -1,5 +1,6 @@
 local lspcfg = "jmp.plugins.cfg.lspconfig."
 local on_attach = require(lspcfg .. "on_attach")
+
 local servers = {
     clangd = {
         cmd = {
@@ -41,7 +42,7 @@ local servers = {
     },
 }
 
-for _, mod in ipairs({ "diagnostic", "handlers" }) do
+for _, mod in ipairs({ "handlers" }) do
     require(lspcfg .. mod)
 end
 

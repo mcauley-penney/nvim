@@ -1,33 +1,38 @@
 ### Todo
     • feats
-        • try out highlighted put
-            • https://www.reddit.com/r/neovim/comments/vh5p42/how_to_highlight_the_put_region_with_autocmd_like/
-            • https://github.com/gbprod/yanky.nvim/blob/cb656868828f772ce807fe61fd3476dfa8cab1b7/lua/yanky/highlight.lua#L35
-            • make yank and put hl darker, like a transparent gray
-
         • dockerize so we can run anywhere
 
+        • try out highlighted put?
+            • https://www.reddit.com/r/neovim/comments/vh5p42/how_to_highlight_the_put_region_with_autocmd_like/
+            • https://github.com/gbprod/yanky.nvim/blob/cb656868828f772ce807fe61fd3476dfa8cab1b7/lua/yanky/highlight.lua#L35
+
+
     • scheme
+        • make yank hl more neutral
+        • change hop.nvim highlights
         • add light theme and make it toggle via cmd
         • make colorscheme prettier
             • base16 is always a good plan
             • see blackmetal base16
             • https://siduck.github.io/hex-tools/
 
+
     • plugins
-        • add whichkey
         • learn to work with telescope
-        • markdown TS is broken, fix it
         • try out winbar for GPS?
 
+
     • to fix
-        • refactor autocommands, its gross
         • clangd cross file rename
-            • function renaming is fucking annoying
-        • continue reorganization, its fucking gross
+            • function renaming as it is now is annoying
+
+        • consider using cursorline
 
         • see https://www.reddit.com/r/neovim/comments/vgxvow/comment/id63m9x/?utm_source=share&utm_medium=web2x&context=3
             and attempt to find docs for [Cland](https://clangd.llvm.org/installation)
+
+        • put common symbols (or all symbols?) in styles
+            • eg branch, save icon
 
 
 
@@ -46,6 +51,10 @@
 
 ##### vim lua functionality
 1. [docs](https://neovim.io/doc/user/lua.html)
+
+##### options
+1. [defaults](https://neovim.io/doc/user/vim_diff.html)
+2. [docs](https://neovim.io/doc/user/options.html)
 
 
 ### News

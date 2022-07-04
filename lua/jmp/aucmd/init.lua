@@ -1,105 +1,82 @@
 local grp
 
-local aucmd_tbl = {
+----------------------------------------
+-- Upon entering a buffer
+----------------------------------------
+grp = vim.api.nvim_create_augroup("entering", { clear = true })
 
-    enter_buf = {
-        BufEnter = {
-            {
-                -- set textwidth depending on ft
-                callback = function()
-                    require("jmp.aucmd.functions").set_textwidth()
-                end,
-            },
+vim.api.nvim_create_autocmd("BufEnter", {
+    group = grp,
+    callback = function()
+        require("jmp.aucmd.functions").set_textwidth()
+        vim.api.nvim_buf_set_option(0, "formatoptions", "2cjnpqr")
+    end,
+})
 
-            {
-                callback = function()
-                    vim.api.nvim_buf_set_option(0, "formatoptions", "2cjnpqr")
-                end,
-            },
-        },
+vim.api.nvim_create_autocmd("BufNewFile", {
+    group = grp,
+    command = "silent! 0r $HOME/.config/nvim/utils/templates/skeleton.%:e",
+})
 
-        BufNewFile = {
-            {
-                command = "silent! 0r $HOME/.config/nvim/utils/templates/skeleton.%:e",
-            },
-        },
+vim.api.nvim_create_autocmd("BufWinEnter", {
+    group = grp,
+    command = "silent! loadview",
+})
 
-        -- load view, such as cursor position
-        BufWinEnter = { { command = "silent! loadview" } },
+vim.api.nvim_create_autocmd("FileType", {
+    group = grp,
+    pattern = "markdown,txt",
+    callback = function()
+        vim.api.nvim_win_set_option(0, "spell", true)
+    end,
+})
 
-        FileType = {
-            {
-                pattern = "markdown,txt",
-                callback = function()
-                    vim.api.nvim_win_set_option(0, "spell", true)
-                end,
-            },
-            {
-                -- allow us to close various buffers with just 'q'
-                pattern = "help,lspinfo,qf,startuptime",
-                callback = function()
-                    vim.api.nvim_set_keymap(
-                        "n",
-                        "q",
-                        "<cmd>close<CR>",
-                        { noremap = true, silent = true }
-                    )
-                end,
-            },
-            {
-                pattern = "html",
-                callback = function()
-                    vim.cmd("silent !xdg-open %")
-                end,
-            },
-        },
-    },
+-- allow us to close various buffers with just 'q'
+vim.api.nvim_create_autocmd("FileType", {
+    group = grp,
+    pattern = "help,lspinfo,qf,startuptime",
+    callback = function()
+        vim.api.nvim_set_keymap("n", "q", "<cmd>close<CR>", { silent = true })
+    end,
+})
 
-    editing = {
-        CmdlineLeave = {
-            {
-                callback = function()
-                    vim.fn.timer_start(3000, function()
-                        print(" ")
-                    end)
-                end,
-            },
-        },
+----------------------------------------
+-- During editing
+----------------------------------------
+grp = vim.api.nvim_create_augroup("editing", { clear = true })
 
-        -- after grep, open qf
-        QuickFixCmdPost = { { command = "copen" } },
+vim.api.nvim_create_autocmd("CmdlineLeave", {
+    group = grp,
+    callback = function()
+        vim.fn.timer_start(3000, function()
+            print(" ")
+        end)
+    end,
+})
 
-        TextYankPost = {
-            {
-                command = [[ silent! lua vim.highlight.on_yank{ higroup="Yank", timeout=130 }]],
-            },
-        },
-    },
+vim.api.nvim_create_autocmd("QuickFixCmdPost", {
+    group = grp,
+    command = "TroubleToggle quickfix",
+})
 
-    leave_buf = {
-        -- update view upon leaving
-        BufWinLeave = { { command = "silent! mkview" } },
+vim.api.nvim_create_autocmd("TextYankPost", {
+    group = grp,
+    command = [[ silent! lua vim.highlight.on_yank{ higroup="Yank", timeout=130 }]],
+})
 
-        -- set cursor back to beam, Alacritty doesn't do this
-        ExitPre = {
-            {
-                callback = function()
-                    vim.api.nvim_set_option("guicursor", "a:ver90")
-                end,
-            },
-        },
-    },
-}
+----------------------------------------
+-- Upon leaving a buffer
+----------------------------------------
+grp = vim.api.nvim_create_augroup("leaving", { clear = true })
 
-for group_nm, event_tbls in pairs(aucmd_tbl) do
-    grp = vim.api.nvim_create_augroup(group_nm, { clear = true })
+vim.api.nvim_create_autocmd("BufWinLeave", {
+    group = grp,
+    command = "silent! makeview",
+})
 
-    for event, aucmd_tbls in pairs(event_tbls) do
-        for _, aucmd in pairs(aucmd_tbls) do
-            -- add group name to aucmd tbl
-            aucmd = vim.tbl_extend("force", aucmd, { group = grp })
-
-            vim.api.nvim_create_autocmd(event, aucmd)
-        end
-    end
-end
+vim.api.nvim_create_autocmd("ExitPre", {
+    group = grp,
+    callback = function()
+        vim.api.nvim_set_option("guicursor", "a:ver90")
+    end,
+})

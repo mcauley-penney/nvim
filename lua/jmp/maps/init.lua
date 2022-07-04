@@ -7,16 +7,14 @@ local func = require("jmp.maps.functions")
 local map = vim.keymap.set
 local silent = { silent = true }
 local expr = { expr = true, silent = true }
-local na = {}
-local nore = { noremap = true }
 
 vim.g.mapleader = "m"
 
 --------------------------------------------------
 -- Plugins
 --------------------------------------------------
-map("n", "<F1>", "<cmd>DocsViewToggle<cr>", silent)
 
+-- Gitsigns
 map("n", "<leader>gt", "<cmd>Gitsigns toggle_signs<cr>", silent)
 map("n", "<leader>gs", "<cmd>Gitsigns stage_hunk<cr>", silent)
 map("n", "<leader>gu", "<cmd>Gitsigns undo_stage_hunk<cr>", silent)
@@ -27,8 +25,20 @@ map("n", "/", "<cmd>HopChar1<cr>", silent)
 -- neogen
 map("n", "<leader>id", "<cmd>lua require('neogen').generate()<CR>", {})
 
--- vim-mundo
-map("n", "<leader>u", "<cmd>MundoToggle<cr>", nore)
+-- nvim-docs-view
+map("n", "<F13>", "<cmd>DocsViewToggle<cr>", silent)
+
+-- Trouble
+map("n", "<leader>q", "<cmd>TroubleToggle quickfix<cr>", {})
+
+-- substitute.nvim
+map("n", "r", require("substitute").operator, {})
+map("n", "rr", require("substitute").line, {})
+map("n", "R", require("substitute").eol, {})
+map("x", "r", require("substitute").visual, {})
+
+-- symbols-outline
+map("n", "<F1>", "<cmd>SymbolsOutline<cr>", silent)
 
 -- venn.nvim
 map("n", "<S-down>", "<C-v>j:VBox<CR>", {})
@@ -36,7 +46,14 @@ map("n", "<S-up>", "<C-v>k:VBox<CR>", {})
 map("n", "<S-left>", "<C-v>h:VBox<CR>", {})
 map("n", "<S-right>", "<C-v>l:VBox<CR>", {})
 -- draw a box by pressing "f" with visual selection
-map("v", "b", ":VBox<CR>", nore)
+map("v", "b", ":VBox<CR>", {})
+
+-- vim-mundo
+map("n", "<leader>u", "<cmd>MundoToggle<cr>", {})
+
+-- vim-swap
+map("n", "<left>", "<Plug>(swap-prev)", {})
+map("n", "<right>", "<Plug>(swap-next)", {})
 
 -- vim-wordmotion
 vim.g.wordmotion_mappings = { e = "k", ge = "gk" }
@@ -44,56 +61,49 @@ vim.g.wordmotion_mappings = { e = "k", ge = "gk" }
 --------------------------------------------------
 -- Base
 --------------------------------------------------
-
 map("i", "<F2>", func.send_comment, expr)
 
 map("i", "<F2>", func.send_comment, expr)
 
-map("i", "<F14>", "• ", na)
-map("i", "!!", "!=", nore)
+map("i", "<F14>", "• ", {})
+map("i", "!!", "!=", {})
 
--- equation
-map("i", "<F1>", "= ", na)
-
--- fold
-map("n", "<F2>", "za", na)
+-- assignment operator
+map("i", "<F1>", "= ", {})
 
 -- CR to enter cmd mode
 for _, mode in pairs({ "n", "v" }) do
-    map(mode, "<CR>", ":", nore)
+    map(mode, "<CR>", ":", {})
 end
 
 -- swap i and a
-map("n", "i", "a", nore)
-map("n", "a", "i", nore)
+map("n", "i", "a", {})
+map("n", "a", "i", {})
 
 -- space for insert mode
-map("n", "<Space>", "a", nore)
-map("v", "<Space>", "I", nore)
+map("n", "<Space>", "a", {})
+map("v", "<Space>", "I", {})
 
 -- make single char case change more accessible
-map("n", "`", "~", na)
-map("v", "`", "~", na)
+map("n", "`", "~", {})
+map("v", "`", "~", {})
 
 -- tab and bs for indentation
-map("n", "<tab>", ">>", na)
-map("n", "<bs>", "<<", na)
+map("n", "<tab>", ">>", {})
+map("n", "<bs>", "<<", {})
 
 -- move to first non-blank char
-map("", "<home>", "^", na)
-map("i", "<home>", "<esc>^a", na)
+map("", "<home>", "^", {})
+map("i", "<home>", "<esc>^a", {})
 
 -- make '/' default to custom ripgrep command
-map("n", "<C-f>", ":LOOK ", na)
+map("n", "<C-f>", ":LOOK ", {})
 
 -- open URLs
 map("n", "<leader>o", "<cmd>!xdg-open <cWORD> > /dev/null & <CR><CR>", silent)
 
--- qf
-map("n", "<leader>q", "<cmd>copen<cr>", na)
-
 -- buffers --
-map("n", "<C-t>", ":e ", na)
+map("n", "<C-t>", ":e ", {})
 map("n", "<C-w>", "<cmd>bd<CR>", silent)
 
 --------------------------------------------------
@@ -114,16 +124,16 @@ for _, pairs in ipairs(colemak_maps) do
     local upper_rhs = string.upper(rhs)
 
     -- lowercase
-    map("", lhs, rhs, nore)
+    map("", lhs, rhs, {})
 
     -- uppercase
-    map("", upper_lhs, upper_rhs, nore)
+    map("", upper_lhs, upper_rhs, {})
 
     -- reverse lowercase
-    map("", rhs, lhs, nore)
+    map("", rhs, lhs, {})
 
     -- reverse uppercase
-    map("", upper_rhs, upper_lhs, nore)
+    map("", upper_rhs, upper_lhs, {})
 end
 
 for _, mode in pairs({ "n", "v" }) do
@@ -132,5 +142,5 @@ for _, mode in pairs({ "n", "v" }) do
 end
 
 -- split nav
-map("n", "<C-n>", "<C-W><C-J>", nore)
-map("n", "<C-e>", "<C-W><C-K>", nore)
+map("n", "<C-n>", "<C-W><C-J>", {})
+map("n", "<C-e>", "<C-W><C-K>", {})

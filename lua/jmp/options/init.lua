@@ -1,10 +1,3 @@
---[[
-    https://neovim.io/doc/user/options.html
-
-    nvim defaults:  https://neovim.io/doc/user/vim_diff.html
-    opt syntax:     https://github.com/neovim/neovim/pull/13479#event-4813249467
-]]
-
 --- Check if a cmd is executable
 --- @param exe_str string
 --- @return boolean
@@ -18,13 +11,16 @@ end
 
 local o = vim.opt
 
+for _, opt in ipairs({ "shiftwidth", "softtabstop", "tabstop" }) do
+    o[opt] = 4
+end
+
 o.breakindentopt = "shift:1"
 o.colorcolumn = "+0"
 o.cindent = true
 o.clipboard = "unnamedplus"
 o.confirm = true
-o.emoji = false
-o.expandtab = true
+o.emoji = true
 o.fileignorecase = true
 o.fillchars = { fold = " " }
 o.foldenable = false
@@ -46,28 +42,32 @@ o.guicursor = {
 }
 o.hlsearch = false
 o.laststatus = 3
-o.lazyredraw = true
 o.list = true
-o.listchars = { eol = "↴", trail = "•" }
+o.listchars = {
+    eol = "↴",
+    tab = "⇥ ",
+    trail = "•",
+}
 o.linebreak = true
 o.modeline = false
 o.modelines = 0
 o.nrformats = "alpha"
+o.number = true
 o.numberwidth = 1
 o.redrawtime = 150
+o.relativenumber = true
 o.ruler = false
 o.scrolloff = 60
 o.sessionoptions = "buffers,folds,skiprtp"
 o.shada = "'0,:30,/30"
 o.shiftround = true
-o.shiftwidth = 4
 o.shortmess = "acstFOW"
 o.showbreak = "↳"
 o.showcmd = false
 o.showmode = false
 o.showtabline = 1
+o.sidescrolloff = 5
 o.signcolumn = "yes:1"
-o.softtabstop = 4
 o.statusline = "%!v:lua.get_statusline()"
 o.swapfile = false
 o.synmaxcol = 1000

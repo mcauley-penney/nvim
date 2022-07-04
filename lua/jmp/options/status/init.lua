@@ -1,4 +1,5 @@
-local hl_dict = require("jmp.ui.statusline")
+local styles = require("jmp.style")
+local hl_dict = styles.palette_grps
 local srcs = require("jmp.options.status.external_srcs")
 
 -- see https://vimhelp.org/options.txt.html#%27statusline%27 for part fmt strs
@@ -26,13 +27,13 @@ local stl_order = {
 
 local function get_modified(buf)
     if vim.bo[buf].modified then
-        return table.concat({ hl_dict["Error"], "ﴖ", "%* " })
+        return table.concat({ hl_dict["Error"].hl_str, "ﴖ", "%* " })
     end
 end
 
 local function is_ro(buf)
     if vim.bo[buf].readonly then
-        return table.concat({ hl_dict["Warn"], "", "%* " })
+        return table.concat({ hl_dict["Warn"].hl_str, "", "%* " })
     end
 end
 
@@ -72,13 +73,10 @@ _G.get_statusline = function()
     stl_parts["mod"] = get_modified(curbuf)
     stl_parts["ro"] = is_ro(curbuf)
 
-    stl_parts["git_branch"] = srcs.get_git_branch(hl_dict["Success"])
+    stl_parts["git_branch"] = srcs.get_git_branch(hl_dict["Success"].hl_str)
 
     if #vim.lsp.buf_get_clients() > 0 then
-        stl_parts["diag"] = srcs.get_diag_str(
-            require("jmp.style").signs,
-            hl_dict
-        )
+        stl_parts["diag"] = srcs.get_diag_str(styles.signs, hl_dict)
     end
 
     if vim.api.nvim_buf_get_option(0, "filetype") == "txt" then

@@ -1,11 +1,9 @@
 local M = {}
 
-M.bootstrap = function()
+M.bootstrap_packer = function()
     local fn = vim.fn
     local install_path = fn.stdpath("data")
         .. "/site/pack/packer/start/packer.nvim"
-
-    vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e222a" })
 
     if fn.empty(fn.glob(install_path)) > 0 then
         print("Cloning packer ..")
@@ -18,10 +16,17 @@ M.bootstrap = function()
             install_path,
         })
 
-        -- install plugins + compile their configs
-        vim.cmd("packadd packer.nvim")
-        require("plugins")
-        vim.cmd("PackerSync")
+        vim.cmd("packadd! packer.nvim")
+
+        require("packer").startup({
+            function(use)
+                for _, plugin in ipairs(require("jmp.plugins")) do
+                    use(plugin)
+                end
+            end,
+        })
+        require("packer").sync()
+        return
     end
 end
 
