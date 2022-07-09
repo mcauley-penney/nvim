@@ -2,34 +2,28 @@ local null_ls = require("null-ls")
 local builtins = null_ls.builtins
 
 null_ls.setup({
-   debounce = 300,
-   on_attach = require("jmp.plugins.cfg.lspconfig.on_attach"),
-   sources = {
-      -- json
-      builtins.formatting.fixjson,
+  debounce = 300,
+  on_attach = require("jmp.plugins.cfg.lspconfig.on_attach"),
+  sources = {
+    -- json
+    -- builtins.formatting
 
-      -- lua
-      builtins.formatting.stylua.with({
-         extra_args = {
-            "--column-width",
-            "80",
-            "--indent-type",
-            "Spaces",
-            "--indent-width",
-            "4",
-         },
-      }),
+    null_ls.builtins.formatting.stylua.with({
+      condition = function(_utils)
+        return _utils.root_has_file({ "stylua.toml", ".stylua.toml" })
+      end,
+    }),
 
-      -- builtins.formatting.stylua,
+    -- python
+    builtins.diagnostics.flake8,
+    builtins.diagnostics.mypy,
+    builtins.diagnostics.pydocstyle,
+    builtins.diagnostics.pylint.with({
+      method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
+    }),
+    builtins.formatting.black,
 
-      -- python
-      builtins.formatting.black,
-      builtins.diagnostics.pydocstyle,
-      builtins.diagnostics.pylint.with({
-         method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
-      }),
-
-      -- sh
-      builtins.diagnostics.shellcheck,
-   },
+    -- sh
+    builtins.diagnostics.shellcheck,
+  },
 })

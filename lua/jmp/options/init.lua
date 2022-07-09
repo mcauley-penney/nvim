@@ -2,18 +2,14 @@
 --- @param exe_str string
 --- @return boolean
 local function is_exe(exe_str)
-    return vim.fn.executable(exe_str) > 0
+  return vim.fn.executable(exe_str) > 0
 end
 
 for _, module in pairs({ "functions", "globals", "status" }) do
-    require("jmp.options." .. module)
+  require("jmp.options." .. module)
 end
 
 local o = vim.opt
-
-for _, opt in ipairs({ "shiftwidth", "softtabstop", "tabstop" }) do
-    o[opt] = 4
-end
 
 o.breakindentopt = "shift:1"
 o.colorcolumn = "+0"
@@ -30,23 +26,25 @@ o.foldtext = "v:lua.get_fold_text()"
 o.gdefault = true
 
 if is_exe("rg") then
-    o.grepprg = [[rg --glob "!.git" --hidden --smart-case  --vimgrep]]
+  o.grepprg = [[rg --glob "!.git" --hidden --smart-case  --vimgrep]]
 else
-    o.grepprg = [[grep -nrH ]]
+  o.grepprg = [[grep -nrH ]]
 end
 
 o.guicursor = {
-    "n-sm-v:block-Cursor",
-    "c-ci-cr-i-ve:ver20-Cursor",
-    "o-r:hor20-Cursor",
+  "n-sm-v:block-Cursor",
+  "c-ci-cr-i-ve:ver20-Cursor",
+  "o-r:hor20-Cursor",
 }
 o.hlsearch = false
 o.laststatus = 3
+o.lazyredraw = true
 o.list = true
 o.listchars = {
-    eol = "↴",
-    tab = "⇥ ",
-    trail = "•",
+  eol = "↴",
+  nbsp = "◊",
+  tab = "  ",
+  trail = "·",
 }
 o.linebreak = true
 o.modeline = false
@@ -81,4 +79,5 @@ o.virtualedit = "all"
 o.wildignore = "*.o"
 o.wildmode = "longest:full"
 o.wildoptions = "pum"
+o.winbar = " "
 o.writebackup = false

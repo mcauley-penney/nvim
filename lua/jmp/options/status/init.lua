@@ -1,40 +1,41 @@
 local styles = require("jmp.style")
 local hl_dict = styles.palette_grps
+local icons = styles.icons
 local srcs = require("jmp.options.status.external_srcs")
 
 -- see https://vimhelp.org/options.txt.html#%27statusline%27 for part fmt strs
 local stl_parts = {
-    buf_info = nil,
-    diag = nil,
-    git_branch = nil,
-    loc = "%l/%-4L ",
-    mod = nil,
-    path = " %<%F",
-    ro = nil,
-    sep = "%=",
+  buf_info = nil,
+  diag = nil,
+  git_branch = nil,
+  loc = "%l/%-4L ",
+  mod = nil,
+  path = " %<%F",
+  ro = nil,
+  sep = "%=",
 }
 
 local stl_order = {
-    "git_branch",
-    "path",
-    "mod",
-    "ro",
-    "sep",
-    "diag",
-    "wordcount",
-    "loc",
+  "git_branch",
+  "path",
+  "mod",
+  "ro",
+  "sep",
+  "diag",
+  "wordcount",
+  "loc",
 }
 
-local function get_modified(buf)
-    if vim.bo[buf].modified then
-        return table.concat({ hl_dict["Error"].hl_str, "ﴖ", "%* " })
-    end
+local function get_modified(buf, hl, icon)
+  if vim.bo[buf].modified then
+    return table.concat({ hl, icon, "%* " })
+  end
 end
 
-local function is_ro(buf)
-    if vim.bo[buf].readonly then
-        return table.concat({ hl_dict["Warn"].hl_str, "", "%* " })
-    end
+local function is_ro(buf, hl, icon)
+  if vim.bo[buf].readonly then
+    return table.concat({ hl, icon, "%* " })
+  end
 end
 
 -- Get fmt strs from dict and concatenate them into one string.
@@ -43,13 +44,13 @@ end
 -- @return string of concatenated fmt strings and data that will create the
 -- statusline when evaluated
 local function _concat_status(order_tbl, stl_part_tbl)
-    local str_table = {}
+  local str_table = {}
 
-    for _, val in ipairs(order_tbl) do
-        table.insert(str_table, stl_part_tbl[val])
-    end
+  for _, val in ipairs(order_tbl) do
+    table.insert(str_table, stl_part_tbl[val])
+  end
 
-    return table.concat(str_table, " ")
+  return table.concat(str_table, " ")
 end
 
 -- Top level function called in options.init to get statusline.
@@ -64,25 +65,28 @@ end
 --      https://www.reddit.com/r/vim/comments/dxcgtm/comment/f7p12hr/?utm_source=share&utm_medium=web2x&context=3
 --
 _G.get_statusline = function()
-    if vim.bo.buftype == "terminal" then
-        return "%#StatusLineNC#"
-    end
+  if vim.bo.buftype == "terminal" then
+    return "%#StatusLineNC#"
+  end
 
-    local curbuf = vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
+  local curbuf = vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
 
-    stl_parts["mod"] = get_modified(curbuf)
-    stl_parts["ro"] = is_ro(curbuf)
+  stl_parts["mod"] = get_modified(curbuf, hl_dict["Error"].hl_str, icons["mod"])
+  stl_parts["ro"] = is_ro(curbuf, hl_dict["Warn"].hl_str, icons["ro"])
 
-    stl_parts["git_branch"] = srcs.get_git_branch(hl_dict["Success"].hl_str)
+  stl_parts["git_branch"] = srcs.get_git_branch(
+    hl_dict["Success"].hl_str,
+    icons["branch"]
+  )
 
-    if #vim.lsp.buf_get_clients() > 0 then
-        stl_parts["diag"] = srcs.get_diag_str(styles.signs, hl_dict)
-    end
+  if #vim.lsp.buf_get_clients() > 0 then
+    stl_parts["diag"] = srcs.get_diag_str(styles.signs, hl_dict)
+  end
 
-    if vim.api.nvim_buf_get_option(0, "filetype") == "txt" then
-        stl_parts["wordcount"] = srcs.get_wordcount_str()
-    end
+  if vim.api.nvim_buf_get_option(0, "filetype") == "txt" then
+    stl_parts["wordcount"] = srcs.get_wordcount_str()
+  end
 
-    -- concatenate desired status components into str
-    return _concat_status(stl_order, stl_parts)
+  -- concatenate desired status components into str
+  return _concat_status(stl_order, stl_parts)
 end
