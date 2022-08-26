@@ -1,23 +1,35 @@
 local lspcfg = "jmp.plugins.cfg.lspconfig."
 local on_attach = require(lspcfg .. "on_attach")
 
+for _, mod in ipairs({ "handlers" }) do
+  require(lspcfg .. mod)
+end
+
+-- TODO: would like to get all servers programatically
 local servers = {
+  bashls = {},
+
+  -- see $clangd -h, https://clangd.llvm.org/installation and
+  -- https://www.reddit.com/r/neovim/comments/vgxvow/comment/id63m9x/?utm_source=share&utm_medium=web2x&context=3
   clangd = {
     cmd = {
       "clangd",
+      "-j=6",
       "--all-scopes-completion",
+      "--background-index", -- should include a compile_commands.json or .txt
       "--clang-tidy",
       "--completion-style=detailed",
-      "--cross-file-rename",
       "--fallback-style=Microsoft",
-      "--header-insertion=never",
+      "--function-arg-placeholders",
       "--header-insertion-decorators",
-      "-j=6",
+      "--header-insertion=never",
       "--limit-results=10",
       "--pch-storage=memory",
+      "--query-driver=/usr/include/*", -- TODO: idk if I need this?
       "--suggest-missing-includes",
     },
   },
+  jsonls = {},
 
   pyright = {},
 
@@ -41,10 +53,6 @@ local servers = {
     },
   },
 }
-
-for _, mod in ipairs({ "handlers" }) do
-  require(lspcfg .. mod)
-end
 
 for name, cfg in pairs(servers) do
   cfg.on_attach = on_attach

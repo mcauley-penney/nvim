@@ -2,6 +2,7 @@ local std = 80
 
 local indent_tbl = {
   ["lua"] = 2,
+  ["org"] = 2,
 }
 
 local tw_tbl = {

@@ -17,19 +17,10 @@ local M = {
     end
   end,
 
-  make_hl_grp = function(hi_tbl)
-    local hi_cmd = string.format(
-      "hi %s gui=%s guibg=%s guifg=%s",
-      hi_tbl.grp,
-      hi_tbl.gui or "none",
-      hi_tbl.bg,
-      hi_tbl.fg
-    )
+  make_hl_grp = function(grp, hi)
+    vim.api.nvim_set_hl(0, grp, hi)
 
-    -- instantiate new hl group
-    vim.cmd(hi_cmd)
-
-    return table.concat({ "%#", hi_tbl.grp, "#" }, "")
+    return table.concat({ "%#", grp, "#" }, "")
   end,
 }
 

@@ -6,13 +6,7 @@ null_ls.setup({
   on_attach = require("jmp.plugins.cfg.lspconfig.on_attach"),
   sources = {
     -- json
-    -- builtins.formatting
-
-    null_ls.builtins.formatting.stylua.with({
-      condition = function(_utils)
-        return _utils.root_has_file({ "stylua.toml", ".stylua.toml" })
-      end,
-    }),
+    builtins.formatting.fixjson,
 
     -- python
     builtins.diagnostics.flake8,
@@ -21,9 +15,14 @@ null_ls.setup({
     builtins.diagnostics.pylint.with({
       method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
     }),
-    builtins.formatting.black,
+    builtins.formatting.black.with({
+      extra_args = { "--line-length", "79" },
+    }),
 
     -- sh
     builtins.diagnostics.shellcheck,
+
+    -- GitHub actions/yaml
+    builtins.diagnostics.actionlint,
   },
 })

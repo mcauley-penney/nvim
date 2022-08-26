@@ -2,20 +2,20 @@
 # Standard Targets: https://www.gnu.org/software/make/manual/make.html#Standard-Targets
 # Makefile Tutorial: https://www.youtube.com/watch?v=FfG-QqRK4cY
 
-
 # -------------------------------------------------------------------
 # files and directories
 # -------------------------------------------------------------------
-bin_name = mmv
-install_dir = /usr/bin/
+bin_name = <TEMPLATE>
 
+install_dir = /usr/bin
 src_dir = src
-# src files without dir prefix
-src_fnames := $(notdir $(wildcard $(src_dir)/*.c))
-
+inc_dir = inc
+test_dir = test
+debug_dir = debug
 build_dir = build
-obj_fnames := $(src_fnames:.c=.o)
-obj_fnames := $(addprefix $(build_dir)/, $(obj_fnames))
+
+src_files := $(wildcard $(src_dir)/*)
+test_src_files := $(wildcard $(test_dir)/*)
 
 
 # -------------------------------------------------------------------
@@ -29,38 +29,48 @@ w-fmt = -Wformat=2 -Wformat-overflow=2 -Wformat-truncation
 w-sgst = -Wsuggest-attribute=const -Wsuggest-attribute=malloc -Wsuggest-attribute=noreturn
 warn = $(w-basic) $(w-extra) $(w-arith) $(w-fmt) $(w-sgst)
 
-CFLAGS = $(warn) -c $(optim)
-LFLAGS = $(warn)
+CFLAGS = $(warn) $(optim)
 
 
 # -------------------------------------------------------------------
 #  targets
 # -------------------------------------------------------------------
-# tell make not to create files for these target names
-.PHONY: all clean clearscreen fresh install
+.PHONY: all test debug clean test_clean install uninstall
 
-# recurse down to create all needed items
-all: $(bin_name)
 
-$(bin_name): $(obj_fnames)
-	$(CC) $(LFLAGS) $^ -o $@
+all:
+	$(CC) $(CFLAGS) main.c $(src_files) -o $(bin_name)
 
-# general rule: construct all .o files from
-# the source files with the same file name
-$(obj_fnames): $(src_dir)/$(src_fnames)
-	mkdir -p $(build_dir)
-	$(CC) $(CFLAGS) $< -o $@
+
+test:
+	$(CC) $(CFLAGS) $(test_src_files) $(src_files) -o test_$(bin_name)
+
+
+debug:
+	$(CC) $(CFLAGS) -D DEBUG=1 main.c $(src_files) -o debug_$(bin_name)
+
 
 # clean target: remove all object files and binary
 clean:
 	rm -rf $(build_dir)
 	rm $(bin_name)
 
-clearscreen:
-	clear
 
-fresh: | clean clearscreen
+test_clean:
+	rm -rf $(build_dir)
+	rm test_$(bin_name)
+
+
+debug_clean:
+	rm -rf $(build_dir)
+	rm debug_$(bin_name)
 
 # install target for "sudo make install"
 install:
-	install -m 007 $(bin) $(bindir)
+	$(NORMAL_INSTALL)
+	install -m 007 $(bin_name) $(install_dir)/
+
+
+uninstall:
+	$(NORMAL_UNINSTALL)
+	rm $(install_dir)/$(bin_name)

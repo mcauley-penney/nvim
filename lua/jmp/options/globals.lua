@@ -24,7 +24,7 @@ for _, plug in pairs({
   "getscriptPlugin",
   "gzip",
   "logiPat",
-  "man",
+  -- "man",
   "matchit",
   "netrw",
   "netrwPlugin",

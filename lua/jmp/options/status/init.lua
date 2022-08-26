@@ -18,8 +18,8 @@ local stl_parts = {
 local stl_order = {
   "git_branch",
   "path",
-  "mod",
   "ro",
+  "mod",
   "sep",
   "diag",
   "wordcount",

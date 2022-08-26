@@ -1,4 +1,5 @@
 local utils = require("jmp.style.utils")
+local get_hi = utils.get_hl_grp_rgb
 
 local make_invisible_border = function()
   local border = {}
@@ -9,21 +10,6 @@ local make_invisible_border = function()
   end
 
   return border
-end
-
-local make_lsp_palette = function()
-  local get_hi = utils.get_hl_grp_rgb
-  local palette = {}
-
-  for _, sign_type in ipairs({ "Error", "Warn", "Hint", "Info" }) do
-    palette[sign_type] = get_hi("Diagnostic" .. sign_type, "fg")
-  end
-
-  palette["bg"] = get_hi("StatusLine", "bg")
-  palette["Failure"] = get_hi("Comment", "fg")
-  palette["Success"] = get_hi("__success", "fg")
-
-  return palette
 end
 
 local make_lsp_palette_groups = function(palette)
@@ -37,10 +23,9 @@ local make_lsp_palette_groups = function(palette)
 
     hl_dict[type].name = name
 
-    hl_dict[type].hl_str = utils.make_hl_grp({
-      grp = name,
+    hl_dict[type].hl_str = utils.make_hl_grp(name, {
       fg = hex_str,
-      bg = palette["bg"],
+      bg = palette["bg"]
     })
   end
 
@@ -49,15 +34,24 @@ end
 
 local style = {
   ["border"] = make_invisible_border(),
-  ["palette"] = make_lsp_palette(),
+  ["palette"] = {
+    Error = get_hi("DiagnosticError", "fg"),
+    Failure = get_hi("Comment", "fg"),
+    Hint = get_hi("DiagnosticHint", "fg"),
+    Info = get_hi("DiagnosticInfo", "fg"),
+    Success = get_hi("Success", "fg"),
+    Warn = get_hi("DiagnosticWarn", "fg"),
+    bg = get_hi("StatusLine", "bg"),
+  },
   ["signs"] = {
     Error = " ",
     Warn = " ",
-    Hint = " ",
-    Info = "",
+    Info = " ",
+    Hint = "",
   },
   ["icons"] = {
     ["branch"] = "",
+    ["diagnostic"] = "■",
     ["mod"] = "•",
     ["ro"] = "",
   },

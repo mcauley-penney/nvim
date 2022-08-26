@@ -14,6 +14,14 @@ vim.ui.input = function(opts, on_confirm)
     end, 10)
   end
 
+  -- create a "prompt" buffer that will be deleted once focus is lost
+  local buf = vim.api.nvim_create_buf(false, false)
+  vim.bo[buf].buftype = "prompt"
+  vim.bo[buf].bufhidden = "wipe"
+
+  local default_text = opts.default or ""
+  local prompt = (" " .. opts.prompt) or " "
+
   local win_opts = {
     border = "none",
     col = 0,
@@ -22,24 +30,17 @@ vim.ui.input = function(opts, on_confirm)
     relative = "cursor",
     row = 1,
     style = "minimal",
-    width = 30,
+    width = #prompt + #default_text + 15
   }
-
-  -- create a "prompt" buffer that will be deleted once focus is lost
-  local buf = vim.api.nvim_create_buf(false, false)
-  local prompt = " "
-  vim.bo[buf].buftype = "prompt"
-  vim.bo[buf].bufhidden = "wipe"
-
-  -- init buf text
-  if opts.prompt ~= nil then
-    prompt = prompt .. opts.prompt
-  end
-
-  local default_text = opts.default or ""
 
   -- set keymaps
   vim.keymap.set({ "i", "n" }, "<CR>", "<CR><Esc>:close!<CR>:stopinsert<CR>", {
+    silent = true,
+    buffer = buf,
+  })
+
+  -- TODO: janky. Figure out why 'u' doesn't work in prompt buf
+  vim.keymap.set("n", "u", ":undo<CR>", {
     silent = true,
     buffer = buf,
   })
@@ -49,14 +50,6 @@ vim.ui.input = function(opts, on_confirm)
       silent = true,
       buffer = buf,
     })
-  end
-
-  -- adjust window width so that there is always space
-  -- for prompt + default text
-  local adj_width = #prompt + #default_text + 15
-
-  if adj_width > win_opts.width then
-    win_opts.width = adj_width
   end
 
   -- set prompt and callback (CR) for prompt buffer

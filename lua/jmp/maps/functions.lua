@@ -5,6 +5,7 @@ local str = {
   dash = "-- ",
   latx = "% ",
   md = "* ",
+  semi = ";; ",
   text = "- ",
   octo = "# ",
 }
@@ -17,9 +18,11 @@ local ft_match_table = {
   ["gitcommit"] = str.text,
   ["gitconfig"] = str.octo,
   ["javascript"] = str.c_sl,
+  ["lisp"] = str.semi,
   ["lua"] = str.dash,
   ["make"] = str.octo,
   ["markdown"] = str.md,
+  ["org"] = str.octo,
   ["python"] = str.octo,
   ["sh"] = str.octo,
   ["tex"] = str.latx,
@@ -30,7 +33,6 @@ local ft_match_table = {
 }
 
 local M = {
-
   -- Send comments to buffer at cursor position.
   send_comment = function()
     local ft = vim.api.nvim_buf_get_option(0, "filetype")

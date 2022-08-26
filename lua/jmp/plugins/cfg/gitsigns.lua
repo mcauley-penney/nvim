@@ -1,4 +1,4 @@
-local grn = "__success"
+local grn = "Success"
 local red = "DiagnosticError"
 local ylw = "DiagnosticWarn"
 

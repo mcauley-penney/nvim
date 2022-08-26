@@ -3,6 +3,12 @@ local float_border = require("jmp.style").border
 local actions = require("fzf-lua.actions")
 require("fzf-lua").setup({
   files = {
+    prompt = "📂 ",
+    actions = {
+      ["default"] = actions.file_open_in_background,
+    },
+  },
+  quickfix = {
     prompt = "🔎 ",
     actions = {
       ["default"] = actions.file_open_in_background,
@@ -23,6 +29,7 @@ require("fzf-lua").setup({
 
   winopts = {
     border = float_border,
+    height = .90,
     hl = {
       normal = "Pmenu",
       border = "FloatBorder",
@@ -32,6 +39,7 @@ require("fzf-lua").setup({
       cursorlinenr = "NonText", -- cursor line number
       search = "IncSearch", -- search matches (ctags|help)
       scrollbar_f = "NonText",
+      title = "StatusLine"
     },
 
     preview = {
@@ -39,5 +47,6 @@ require("fzf-lua").setup({
       scrollbar = "border",
       vertical = "up:65%",
     },
+    width = .90,
   },
 })

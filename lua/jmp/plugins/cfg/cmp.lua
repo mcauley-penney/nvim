@@ -1,4 +1,5 @@
 local cmp = require("cmp")
+local compare = cmp.config.compare
 
 cmp.setup({
   formatting = {
@@ -33,6 +34,17 @@ cmp.setup({
     expand = function(args)
       require("luasnip").lsp_expand(args.body)
     end,
+  },
+
+  sorting = {
+    priority_weight = 1.0,
+    comparators = {
+      compare.locality,
+      compare.recently_used,
+      compare.score,
+      compare.offset,
+      compare.order,
+    },
   },
 
   sources = {

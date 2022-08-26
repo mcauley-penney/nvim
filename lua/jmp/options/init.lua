@@ -11,14 +11,15 @@ end
 
 local o = vim.opt
 
-o.breakindentopt = "shift:1"
+o.breakindent = true
+o.breakindentopt = "shift:2"
 o.colorcolumn = "+0"
 o.cindent = true
 o.clipboard = "unnamedplus"
 o.confirm = true
 o.emoji = true
 o.fileignorecase = true
-o.fillchars = { fold = " " }
+o.fillchars = { eob = "⌁", fold = " " }
 o.foldenable = false
 o.foldlevel = 99
 o.foldmethod = "indent"
@@ -33,9 +34,10 @@ end
 
 o.guicursor = {
   "n-sm-v:block-Cursor",
-  "c-ci-cr-i-ve:ver20-Cursor",
-  "o-r:hor20-Cursor",
+  "c-ci-cr-i-ver:ver10-Cursor",
+  "o-r:hor10-Cursor",
 }
+o.helpheight = 70
 o.hlsearch = false
 o.laststatus = 3
 o.lazyredraw = true
@@ -49,6 +51,7 @@ o.listchars = {
 o.linebreak = true
 o.modeline = false
 o.modelines = 0
+o.mouse = ""
 o.nrformats = "alpha"
 o.number = true
 o.numberwidth = 1
@@ -60,7 +63,6 @@ o.sessionoptions = "buffers,folds,skiprtp"
 o.shada = "'0,:30,/30"
 o.shiftround = true
 o.shortmess = "acstFOW"
-o.showbreak = "↳"
 o.showcmd = false
 o.showmode = false
 o.showtabline = 1
@@ -72,6 +74,7 @@ o.synmaxcol = 1000
 o.tabline = "%=" .. vim.fn.tabpagenr()
 o.termguicolors = true
 o.timeout = false
+o.title = true
 o.undofile = true
 o.updatetime = 350 -- used for swap file and cursorhold
 o.viewoptions = { "cursor", "folds" }

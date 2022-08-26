@@ -15,7 +15,7 @@ M.get_diag_str = function(lsp_signs, hl_dict)
   local count = nil
   local diag_tbl = {}
 
-  for _, type in pairs({ "Error", "Warn", "Hint", "Info" }) do
+  for _, type in pairs({ "Error", "Warn", "Info", "Hint" }) do
     count = #vim.diagnostic.get(0, { severity = string.upper(type) })
 
     vim.list_extend(diag_tbl, {

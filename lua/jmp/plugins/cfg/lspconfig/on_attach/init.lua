@@ -16,7 +16,6 @@ return function(client, bufnr)
       buffer = bufnr,
       callback = function()
         vim.lsp.buf.format()
-        -- vim.lsp.buf.formatting()
       end,
     })
   end

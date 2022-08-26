@@ -1,11 +1,13 @@
+local aucmd = vim.api.nvim_create_autocmd
+local augrp = vim.api.nvim_create_augroup
 local grp
 
 ----------------------------------------
 -- Upon entering a buffer
 ----------------------------------------
-grp = vim.api.nvim_create_augroup("entering", { clear = true })
+grp = augrp("entering", { clear = true })
 
-vim.api.nvim_create_autocmd("BufEnter", {
+aucmd("BufEnter", {
   group = grp,
   callback = function()
     vim.api.nvim_buf_set_option(0, "formatoptions", "2cjnpqr")
@@ -14,28 +16,33 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
 })
 
-vim.api.nvim_create_autocmd("BufNewFile", {
+aucmd({ "BufEnter", "BufNewFile", "BufRead" }, {
   group = grp,
-  command = "silent! 0r "
-    .. vim.fn.stdpath("config")
-    .. "/lua/jmp/utils/templates/skeleton.%:e",
+  pattern = "*.md,*.txt",
+  command = [[syn match parafirstword "\%(^$\n*\|\%^\)\@<=\%(^\s*\w\+\)"]],
+  desc = "Embolden the first word of a paragraph. See original at https://www.reddit.com/r/vim/comments/wg1rbl/embolden_first_word_in_each_new_paragraph/"
 })
 
-vim.api.nvim_create_autocmd("BufWinEnter", {
+aucmd("BufNewFile", {
+  group = grp,
+  command = "silent! 0r "
+      .. vim.fn.stdpath("config") .. "/templates/skeleton.%:e",
+  desc = "If one exists, use a template when opening a new file."
+})
+
+aucmd("BufWinEnter", {
   group = grp,
   command = "silent! loadview",
 })
 
-vim.api.nvim_create_autocmd("FileType", {
+aucmd("FileType", {
   group = grp,
-  pattern = "markdown,txt",
-  callback = function()
-    vim.api.nvim_win_set_option(0, "spell", true)
-  end,
+  pattern = "markdown,text",
+  command = "set spell"
 })
 
 -- allow us to close various buffers with just 'q'
-vim.api.nvim_create_autocmd("FileType", {
+aucmd("FileType", {
   group = grp,
   pattern = "help,lspinfo,qf,startuptime",
   callback = function()
@@ -46,9 +53,9 @@ vim.api.nvim_create_autocmd("FileType", {
 ----------------------------------------
 -- During editing
 ----------------------------------------
-grp = vim.api.nvim_create_augroup("editing", { clear = true })
+grp = augrp("editing", { clear = true })
 
-vim.api.nvim_create_autocmd("CmdlineLeave", {
+aucmd("CmdlineLeave", {
   group = grp,
   callback = function()
     vim.fn.timer_start(3000, function()
@@ -57,29 +64,28 @@ vim.api.nvim_create_autocmd("CmdlineLeave", {
   end,
 })
 
-vim.api.nvim_create_autocmd("QuickFixCmdPost", {
+aucmd("QuickFixCmdPost", {
   group = grp,
-  command = "TroubleToggle quickfix",
+  callback = require("fzf-lua").quickfix,
 })
 
-vim.api.nvim_create_autocmd("TextYankPost", {
+aucmd("TextYankPost", {
   group = grp,
-  command = [[ silent! lua vim.highlight.on_yank{ higroup="Yank", timeout=130 }]],
+  command = [[silent! lua vim.highlight.on_yank{higroup="Yank", timeout=150}]],
 })
 
 ----------------------------------------
 -- Upon leaving a buffer
 ----------------------------------------
-grp = vim.api.nvim_create_augroup("leaving", { clear = true })
+grp = augrp("leaving", { clear = true })
 
-vim.api.nvim_create_autocmd("BufWinLeave", {
+aucmd("BufWinLeave", {
   group = grp,
-  command = "silent! makeview",
+  command = "silent! mkview",
 })
 
-vim.api.nvim_create_autocmd("ExitPre", {
+aucmd("ExitPre", {
   group = grp,
-  callback = function()
-    vim.api.nvim_set_option("guicursor", "a:ver90")
-  end,
+  command = "set guicursor=a:ver90",
+  desc = "Set cursor back to beam when leaving Neovim."
 })

@@ -29,7 +29,7 @@ local open_signature = function(clients)
 
   for _, client in pairs(clients) do
     local triggers =
-      client.server_capabilities.signatureHelpProvider.triggerCharacters
+    client.server_capabilities.signatureHelpProvider.triggerCharacters
 
     local pos = vim.api.nvim_win_get_cursor(0)
     local line = vim.api.nvim_get_current_line()

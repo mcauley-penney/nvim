@@ -6,61 +6,42 @@ local diag_red = { attribute = "fg", highlight = "DiagnosticError" }
 local diag_yellow = { attribute = "fg", highlight = "DiagnosticWarn" }
 
 local opt_tbl = {
-  enforce_regular_tabs = true,
   highlights = {
-    -- background = {
-    --   gui = "italic",
-    --   guibg = termbg,
-    -- },
-    -- buffer = {
-    --   gui = "italic",
-    -- },
-    buffer_selected = {
-      gui = "none",
-    },
     buffer_visible = {
-      guibg = termdarken,
+      bg = termdarken,
     },
     fill = {
-      guibg = termbg,
-    },
-    duplicate_selected = {
-      guifg = diag_yellow,
+      bg = termbg,
     },
     duplicate = {
-      guifg = diag_yellow,
-      guibg = termbg,
+      fg = diag_yellow,
+    },
+    duplicate_selected = {
+      fg = diag_yellow,
+    },
+    duplicate_visible = {
+      fg = diag_yellow,
+      bg = termdarken,
     },
     indicator_selected = {
-      guifg = termbg,
-      guibg = termbg,
+      fg = termbg,
+      bg = termbg,
     },
     modified = {
-      guifg = diag_red,
-      guibg = termbg,
+      fg = diag_red,
     },
     modified_selected = {
-      guifg = diag_red,
+      fg = diag_red,
     },
     modified_visible = {
-      guifg = diag_red,
-      guibg = termbg,
+      fg = diag_red,
+      bg = termdarken,
     },
-    -- separator = {
-    --   guifg = termbg,
-    --   guibg = termbg,
-    -- },
-    -- separator_selected = {
-    --   guifg = termbg,
-    -- },
-    -- separator_visible = {
-    --   guifg = termbg,
-    --   guibg = termbg,
-    -- },
   },
 
   options = {
     always_show_bufferline = false,
+    enforce_regular_tabs = true,
     modified_icon = styles.icons["mod"],
     separator_style = "thin",
     show_buffer_close_icons = false,

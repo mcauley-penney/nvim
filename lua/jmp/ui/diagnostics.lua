@@ -19,11 +19,10 @@ vim.diagnostic.config({
   update_in_insert = false,
   virtual_text = {
     format = function(diag)
-      local prefix = ""
-
-      return string.format("%s %s", prefix, diag.message)
+      local prefix = style.icons.diagnostic
+      local msg = string.gsub(diag.message, "%s*%c+%s*", ":")
+      return string.format("%s [%s] %s", prefix, diag.source, msg)
     end,
     prefix = "",
-    source = "if_many",
   },
 })
