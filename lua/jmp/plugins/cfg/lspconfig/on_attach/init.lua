@@ -24,6 +24,26 @@ return function(client, bufnr)
     require(tools .. "auto_signature").setup(client)
   end
 
+  -- if client.supports_method("textDocument/documentHighlight") then
+  --   local grp = vim.api.nvim_create_augroup("LSPDocHighlight", {})
+
+  --   vim.api.nvim_create_autocmd("CursorHold", {
+  --     group = grp,
+  --     buffer = bufnr,
+  --     callback = function()
+  --       vim.lsp.buf.document_highlight()
+  --     end,
+  --   })
+
+  --   vim.api.nvim_create_autocmd("CursorMoved", {
+  --     group = grp,
+  --     buffer = bufnr,
+  --     callback = function()
+  --       vim.lsp.buf.clear_references()
+  --     end,
+  --   })
+  -- end
+
   map("n", "E", lsp.hover, opts("LSP Hover"))
   map("i", "<C-e>", lsp.signature_help, opts("LSP Signature Help"))
 

@@ -1,10 +1,10 @@
 -- api docs: https://neovim.io/doc/user/api.html
 
 local str = {
+  ast = "*",
   c_sl = "// ",
   dash = "-- ",
   latx = "% ",
-  md = "* ",
   semi = ";; ",
   text = "- ",
   octo = "# ",
@@ -21,8 +21,8 @@ local ft_match_table = {
   ["lisp"] = str.semi,
   ["lua"] = str.dash,
   ["make"] = str.octo,
-  ["markdown"] = str.md,
-  ["org"] = str.octo,
+  ["markdown"] = str.ast,
+  ["org"] = str.ast,
   ["python"] = str.octo,
   ["sh"] = str.octo,
   ["tex"] = str.latx,

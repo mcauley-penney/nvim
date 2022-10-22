@@ -4,6 +4,8 @@ require("nvim-treesitter.configs").setup({
     "c",
     "comment",
     "cpp",
+    "diff",
+    "javascript",
     "json",
     "latex",
     "lua",
@@ -18,7 +20,7 @@ require("nvim-treesitter.configs").setup({
   sync_install = false,
 
   -- List of parsers to ignore installing
-  ignore_install = { "javascript" },
+  ignore_install = {},
 
   highlight = {
     -- Setting this to true will run `:h syntax` and tree-sitter at the

@@ -52,6 +52,7 @@ local style = {
   ["icons"] = {
     ["branch"] = "",
     ["diagnostic"] = "■",
+    ["fold"] = "",
     ["mod"] = "•",
     ["ro"] = "",
   },

@@ -10,16 +10,17 @@ grp = augrp("entering", { clear = true })
 aucmd("BufEnter", {
   group = grp,
   callback = function()
-    vim.api.nvim_buf_set_option(0, "formatoptions", "2cjnpqr")
-    require("jmp.aucmd.functions").set_indent()
-    require("jmp.aucmd.functions").set_textwidth()
+    vim.api.nvim_buf_set_option(0, "formatoptions", "2cjnpqrt")
+    local ft = vim.api.nvim_buf_get_option(0, "filetype")
+    require("jmp.aucmd.functions").set_indent(ft)
+    require("jmp.aucmd.functions").set_textwidth(ft)
   end,
 })
 
 aucmd({ "BufEnter", "BufNewFile", "BufRead" }, {
   group = grp,
   pattern = "*.md,*.txt",
-  command = [[syn match parafirstword "\%(^$\n*\|\%^\)\@<=\%(^\s*\w\+\)"]],
+  command = [[syn match ParaFirstWord "\%(^$\n*\|\%^\)\@<=\%(^\s*\w\+\)"]],
   desc = "Embolden the first word of a paragraph. See original at https://www.reddit.com/r/vim/comments/wg1rbl/embolden_first_word_in_each_new_paragraph/"
 })
 
@@ -38,16 +39,27 @@ aucmd("BufWinEnter", {
 aucmd("FileType", {
   group = grp,
   pattern = "markdown,text",
-  command = "set spell"
+  callback = function()
+    vim.cmd("set spell")
+  end,
 })
 
--- allow us to close various buffers with just 'q'
+aucmd("FileType", {
+  group = grp,
+  pattern = "org",
+  callback = function()
+    vim.cmd("set conceallevel=2")
+  end,
+})
+
+
 aucmd("FileType", {
   group = grp,
   pattern = "help,lspinfo,qf,startuptime",
   callback = function()
     vim.api.nvim_set_keymap("n", "q", "<cmd>close<CR>", { silent = true })
   end,
+  desc = "Allow us to close various buffers with just 'q'."
 })
 
 ----------------------------------------

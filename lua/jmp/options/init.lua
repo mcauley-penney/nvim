@@ -34,11 +34,11 @@ end
 
 o.guicursor = {
   "n-sm-v:block-Cursor",
-  "c-ci-cr-i-ver:ver10-Cursor",
+  "c-ci-cr-i-ve:ver10-Cursor",
   "o-r:hor10-Cursor",
 }
 o.helpheight = 70
-o.hlsearch = false
+o.hlsearch = true
 o.laststatus = 3
 o.lazyredraw = true
 o.list = true
@@ -54,7 +54,6 @@ o.modelines = 0
 o.mouse = ""
 o.nrformats = "alpha"
 o.number = true
-o.numberwidth = 1
 o.redrawtime = 150
 o.relativenumber = true
 o.ruler = false
@@ -68,6 +67,7 @@ o.showmode = false
 o.showtabline = 1
 o.sidescrolloff = 5
 o.signcolumn = "yes:1"
+o.smartcase = true
 o.statusline = "%!v:lua.get_statusline()"
 o.swapfile = false
 o.synmaxcol = 1000

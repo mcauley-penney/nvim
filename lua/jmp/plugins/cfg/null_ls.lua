@@ -10,7 +10,6 @@ null_ls.setup({
 
     -- python
     builtins.diagnostics.flake8,
-    builtins.diagnostics.mypy,
     builtins.diagnostics.pydocstyle,
     builtins.diagnostics.pylint.with({
       method = null_ls.methods.DIAGNOSTICS_ON_SAVE,

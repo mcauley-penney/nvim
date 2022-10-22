@@ -51,15 +51,16 @@ end
 --------------------------------------------------
 -- fzf-lua
 map("n", "<leader>q", "<cmd>lua require('fzf-lua').quickfix()<cr>", {})
-map("n", "<leader>ff", "<cmd>lua require('fzf-lua').files()<cr>", {})
+map("n", "<C-t>", "<cmd>lua require('fzf-lua').files()<cr>", {})
 
 -- Gitsigns
-map("n", "<leader>gt", "<cmd>Gitsigns toggle_signs<cr>", silent)
-map("n", "<leader>gs", "<cmd>Gitsigns stage_hunk<cr>", silent)
-map("n", "<leader>gu", "<cmd>Gitsigns undo_stage_hunk<cr>", silent)
+-- map("n", "<leader>gt", "<cmd>Gitsigns toggle_signs<cr>", {})
+-- map("n", "<leader>gs", "<cmd>Gitsigns stage_hunk<cr>", {})
+-- map("n", "<leader>gp", "<cmd>Gitsigns preview_hunk<cr>", {})
+-- map("n", "<leader>gu", "<cmd>Gitsigns undo_stage_hunk<cr>", {})
 
 -- hop.nvim
-map("n", "/", "<cmd>HopChar1MW<cr>", silent)
+map("n", "'", "<cmd>HopChar1MW<cr>", silent)
 
 -- neogen
 map("n", "<leader>id", "<cmd>lua require('neogen').generate()<CR>", {})
@@ -130,8 +131,10 @@ map("i", "<home>", "<esc>^a", {})
 map("n", "<C-f>", ":LOOK ", {})
 
 -- open URLs
-map("n", "gx", "<cmd>!xdg-open <cWORD> > /dev/null & <CR><CR>", silent)
+-- https://www.reddit.com/r/neovim/comments/i72eo7/open_link_with_gx_asynchronously/
+map("n", "gx", "<cmd>call jobstart(['xdg-open', expand('<cfile>')], {'detach': v:true})<CR>", silent)
+
 
 -- buffers
-map("n", "<C-t>", ":e ", {})
+-- TODO: change so that we can use default C-w again
 map("n", "<C-w>", "<cmd>bd<CR>", silent)

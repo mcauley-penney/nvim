@@ -22,8 +22,7 @@ local plugins = {
 	--------------------------------------------------
 	-- color scheme
 	--------------------------------------------------
-	"/home/m/files/nonwork/still_light.nvim",
-	"/home/m/files/nonwork/daylight.nvim",
+	"/home/m/files/nonwork/still-light.nvim",
 
 	--------------------------------------------------
 	-- LSP
@@ -81,13 +80,18 @@ local plugins = {
 	},
 
 	{
-		"danymat/neogen",
-		config = cfg("neogen"),
+		"nvim-treesitter/nvim-treesitter-context",
 		requires = "nvim-treesitter/nvim-treesitter",
 	},
 
 	{
 		"nvim-treesitter/nvim-treesitter-textobjects",
+		requires = "nvim-treesitter/nvim-treesitter",
+	},
+
+	{
+		"danymat/neogen",
+		config = cfg("neogen"),
 		requires = "nvim-treesitter/nvim-treesitter",
 	},
 
@@ -120,8 +124,8 @@ local plugins = {
 		"hrsh7th/nvim-cmp",
 		config = cfg("cmp"),
 		requires = {
-			{ "hrsh7th/cmp-buffer" },
-			{ "hrsh7th/cmp-emoji" },
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-emoji",
 
 			{
 				"petertriho/cmp-git",
@@ -131,22 +135,12 @@ local plugins = {
 				requires = "nvim-lua/plenary.nvim",
 			},
 
-			{ "kdheepak/cmp-latex-symbols" },
-
-			{
-				"hrsh7th/cmp-nvim-lsp",
-			},
-
-			{
-				"hrsh7th/cmp-nvim-lua",
-			},
-
-			{
-				"hrsh7th/cmp-path",
-			},
-
-			{ "L3MON4D3/LuaSnip" },
-			{ "saadparwaiz1/cmp_luasnip" },
+			"kdheepak/cmp-latex-symbols",
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-nvim-lua",
+			"hrsh7th/cmp-path",
+			"L3MON4D3/LuaSnip",
+			"saadparwaiz1/cmp_luasnip",
 		},
 	},
 
@@ -158,9 +152,6 @@ local plugins = {
 	},
 
 	"machakann/vim-swap",
-
-	"jbyuki/venn.nvim",
-
 	--------------------------------------------------
 	-- formatting and linting
 	--------------------------------------------------
@@ -272,16 +263,14 @@ local plugins = {
 	{
 		"NvChad/nvim-colorizer.lua",
 		config = function()
-			require("colorizer").setup({ "css", "lua", "text", "vim" })
+			require("colorizer").setup({
+				filetypes = {
+					lua = { names = false },
+					text = { names = false },
+				}
+			})
 		end,
 	},
-
-	{
-		"petertriho/nvim-scrollbar",
-		config = cfg("scrollbar"),
-	},
-
-	"kyazdani42/nvim-web-devicons",
 
 	{
 		"akinsho/toggleterm.nvim",
@@ -352,63 +341,33 @@ local plugins = {
 				disable_sync_scroll = 0,
 				disable_filename = 1,
 			}
-			g.mkdp_theme = "light"
+			g.mkdp_theme = "dark"
 		end,
 		ft = "markdown",
+	},
+
+	{
+		"nvim-orgmode/orgmode",
+		config = cfg("org"),
+	},
+
+	{
+		"akinsho/org-bullets.nvim",
+		config = cfg("org-bullets"),
+		requires = "nvim-orgmode/orgmode"
 	},
 
 	--------------------------------------------------
 	-- testing
 	--------------------------------------------------
 	{
-		"haringsrob/nvim_context_vt",
-		config = function()
-			require('nvim_context_vt').setup({
-				prefix = '    →',
-				-- Disable display of virtual text below blocks for indentation based languages like Python
-				disable_virtual_lines = true,
-			})
-		end
+		'Kasama/nvim-custom-diagnostic-highlight',
+		config = cfg("custom-highlight")
 	},
 
-	{
-		"nvim-orgmode/orgmode",
-		config = function()
-			require('orgmode').setup_ts_grammar()
-			local files = "/home/m/files/kms/gtd/"
-			require('orgmode').setup({
-				org_agenda_files = files .. "actions/*",
-				org_default_notes_file = files .. "inbox.org",
-				org_todo_keywords = { "TODO", "BLOCKED", '|', "DONE" },
-			})
-		end
-	},
+	"rhysd/committia.vim",
 
-	-- {
-	-- 	"ms-jpq/coq_nvim",
-	-- 	config = function()
-	-- 		vim.g.coq_settings = {
-	-- 			auto_start = "shut-up",
-	-- 			-- clients = {},
-	-- 			display = {
-	-- 				preview = { border = "single" },
-	-- 				ghost_text = { enabled = false },
-	-- 			},
-	-- 			keymap = {
-	-- 				recommended = false,
-	-- 				pre_select = false,
-	-- 			},
-	-- 		}
-	-- 	end,
-	-- 	requires =
-	-- 	{
-	-- 		'ms-jpq/coq.thirdparty',
-	-- 		require("coq_3p") {
-	-- 			{ src = "nvimlua", short_name = "nLUA" },
-	-- 			{ src = "vimtex", short_name = "vTEX" },
-	-- 		}
-	-- 	}
-	-- },
+	"jbyuki/venn.nvim"
 }
 
 

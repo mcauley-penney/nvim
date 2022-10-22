@@ -15,9 +15,7 @@ local tw_tbl = {
 }
 
 local M = {
-  set_indent = function()
-    local ft = vim.api.nvim_buf_get_option(0, "filetype")
-
+  set_indent = function(ft)
     local indent = indent_tbl[ft]
 
     for _, opt in ipairs({ "shiftwidth", "softtabstop", "tabstop" }) do
@@ -25,10 +23,7 @@ local M = {
     end
   end,
 
-  set_textwidth = function()
-    -- get filetype
-    local ft = vim.api.nvim_buf_get_option(0, "filetype")
-
+  set_textwidth = function(ft)
     -- set textwidth
     vim.api.nvim_buf_set_option(0, "textwidth", tw_tbl[ft] or 0)
   end,

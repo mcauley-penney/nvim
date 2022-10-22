@@ -29,6 +29,8 @@ local servers = {
       "--suggest-missing-includes",
     },
   },
+  -- html = {},
+  jdtls = {},
   jsonls = {},
 
   pyright = {},
@@ -52,6 +54,10 @@ local servers = {
       },
     },
   },
+
+  tsserver = {},
+
+  vimls = {}
 }
 
 for name, cfg in pairs(servers) do
