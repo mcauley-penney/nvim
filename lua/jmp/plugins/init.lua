@@ -1,6 +1,5 @@
-local float_border = require("jmp.style").border
-
 local PACKER_PATH = vim.fn.stdpath("cache") .. "/packer/packer_compiled.lua"
+local float_border = require("jmp.style").border
 
 -- TODO: can use pcall here to protect call?
 local function cfg(name)
@@ -51,12 +50,8 @@ local plugins = {
 		"j-hui/fidget.nvim",
 		config = function()
 			require("fidget").setup({
-				align = {
-					bottom = false,
-				},
-				text = {
-					spinner = { "", "", "", "" },
-				},
+				align = { bottom = false, },
+				text = { spinner = { "", "", "", "" } },
 				timer = {
 					fidget_decay = 250, -- how long to keep around empty fidget, in ms
 					spinner_rate = 150,
@@ -67,7 +62,15 @@ local plugins = {
 					blend = 0,
 				},
 			})
+
+			vim.api.nvim_set_hl(0, "FidgetTask", { link = "NonText" })
+			vim.api.nvim_set_hl(0, "FidgetTitle", { link = "Statement" })
 		end,
+	},
+
+	{
+		"joechrisellis/lsp-format-modifications.nvim",
+		requires = "nvim-lua/plenary.nvim"
 	},
 
 	--------------------------------------------------
@@ -148,28 +151,27 @@ local plugins = {
 		"gbprod/substitute.nvim",
 		config = function()
 			require("substitute").setup()
+
+			vim.keymap.set("n", "r", require("substitute").operator, {})
+			vim.keymap.set("n", "rr", require("substitute").line, {})
+			vim.keymap.set("n", "R", require("substitute").eol, {})
+			vim.keymap.set("x", "r", require("substitute").visual, {})
 		end,
 	},
 
-	"machakann/vim-swap",
+	{
+		"machakann/vim-swap",
+		config = function()
+			vim.keymap.set("n", "<left>", "<Plug>(swap-prev)", {})
+			vim.keymap.set("n", "<right>", "<Plug>(swap-next)", {})
+		end
+	},
 	--------------------------------------------------
 	-- formatting and linting
 	--------------------------------------------------
 	{
 		"jose-elias-alvarez/null-ls.nvim",
 		config = cfg("null_ls"),
-	},
-
-	{
-		"nmac427/guess-indent.nvim",
-		commit = "3c17b9a1e132d0b28a90772e3c24d226c47dbb7f",
-		config = function()
-			require("guess-indent").setup({
-				filetype_exclude = {
-					"gitcommit",
-				},
-			})
-		end,
 	},
 
 	{
@@ -184,7 +186,12 @@ local plugins = {
 	--------------------------------------------------
 	"michaeljsmith/vim-indent-object",
 
-	"chaoren/vim-wordmotion",
+	{
+		"chaoren/vim-wordmotion",
+		setup = function()
+			vim.g.wordmotion_mappings = { e = "k", ge = "gk" }
+		end
+	},
 
 	"wellle/targets.vim",
 
@@ -205,6 +212,8 @@ local plugins = {
 				keys = "arstneioqwfpluy;",
 				teasing = false,
 			})
+
+			vim.keymap.set("n", "'", "<cmd>HopChar1MW<cr>", { silent = true })
 		end,
 	},
 
@@ -214,12 +223,14 @@ local plugins = {
 			require("symbols-outline").setup({
 				auto_close = true,
 				auto_preview = false,
-				autofold_depth = 1,
+				autofold_depth = 2,
 				auto_unfold_hover = false,
 				highlight_hovered_item = false,
 				show_guides = true,
 				show_symbol_details = false,
 			})
+
+			vim.keymap.set("n", "<F2>", "<cmd>SymbolsOutline<cr>", { silent = true })
 		end,
 	},
 
@@ -236,6 +247,8 @@ local plugins = {
 				q = "quit",
 				["<esc>"] = "quit",
 			}
+
+			vim.keymap.set("n", "<leader>u", "<cmd>MundoToggle<cr>", {})
 		end,
 		cmd = "MundoToggle",
 	},
@@ -265,6 +278,7 @@ local plugins = {
 		config = function()
 			require("colorizer").setup({
 				filetypes = {
+					"css",
 					lua = { names = false },
 					text = { names = false },
 				}
@@ -282,20 +296,34 @@ local plugins = {
 		end,
 	},
 
-	{ "itchyny/vim-highlighturl" },
+	{
+		"itchyny/vim-highlighturl",
+		config = function()
+			local hl_utils = require("jmp.style.utils")
+			vim.g.highlighturl_guifg = hl_utils.get_hl_grp_rgb("@text.uri", "fg")
+		end
+	},
 
 	{
 		"rrethy/vim-illuminate",
-		require('illuminate').configure({
-			delay = 150,
-			under_cursor = false,
-		})
+		config = function()
+			require('illuminate').configure({
+				delay = 150,
+				under_cursor = false,
+			})
+
+			for _, type in ipairs({ "Text", "Read", "Write" }) do
+				vim.api.nvim_set_hl(0, "IlluminatedWord" .. type, { link = "CursorLine" })
+			end
+		end
 	},
 
 	{
 		"lukas-reineke/virt-column.nvim",
 		config = function()
 			require("virt-column").setup({ char = "│" })
+
+			vim.api.nvim_set_hl(0, "VirtColumn", { link = "VertSplit" })
 		end,
 	},
 
@@ -320,6 +348,12 @@ local plugins = {
 					enabled = true,
 				},
 			})
+
+			vim.keymap.set("n", "p", "<Plug>(YankyPutAfter)", {})
+			vim.keymap.set("x", "p", "<Plug>(YankyPutAfter)", {})
+			vim.keymap.set("n", "P", "<Plug>(YankyPutBefore)", {})
+			vim.keymap.set("x", "P", "<Plug>(YankyPutBefore)", {})
+			vim.keymap.set({ "n", "x" }, "y", "<Plug>(YankyYank)", {})
 		end,
 	},
 
@@ -346,6 +380,10 @@ local plugins = {
 		ft = "markdown",
 	},
 
+
+	-- git commit
+	"rhysd/committia.vim",
+
 	{
 		"nvim-orgmode/orgmode",
 		config = cfg("org"),
@@ -357,19 +395,22 @@ local plugins = {
 		requires = "nvim-orgmode/orgmode"
 	},
 
+	{
+		'tamton-aquib/duck.nvim',
+		config = function()
+			require("duck").setup({
+				character = "🦆",
+				screensaver = true,
+				speed = 15,
+				wait_mins = 2
+			})
+		end
+	},
+
 	--------------------------------------------------
 	-- testing
 	--------------------------------------------------
-	{
-		'Kasama/nvim-custom-diagnostic-highlight',
-		config = cfg("custom-highlight")
-	},
-
-	"rhysd/committia.vim",
-
-	"jbyuki/venn.nvim"
 }
-
 
 require("packer").startup({
 	function(use)

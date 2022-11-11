@@ -29,4 +29,19 @@ require('orgmode').setup({
 	win_split_mode = "below 30split"
 })
 
+local grp = vim.api.nvim_create_augroup("org", { clear = true })
+
+vim.api.nvim_create_autocmd("FileType", {
+	group = grp,
+	pattern = "org",
+	command = "set conceallevel=2"
+})
+
+-- https://github.com/nvim-orgmode/orgmode/issues/433
+vim.api.nvim_create_autocmd("FileType", {
+	group = grp,
+	pattern = "orgagenda",
+	command = "set signcolumn=no"
+})
+
 require('orgmode').setup_ts_grammar()

@@ -1,80 +1,89 @@
 require("nvim-treesitter.configs").setup({
-  ensure_installed = {
-    "bash",
-    "c",
-    "comment",
-    "cpp",
-    "diff",
-    "javascript",
-    "json",
-    "latex",
-    "lua",
-    "make",
-    "markdown",
-    "markdown_inline",
-    "org",
-    "python",
-  },
+	ensure_installed = {
+		"bash",
+		"c",
+		"comment",
+		"cpp",
+		"diff",
+		"http",
+		"javascript",
+		"json",
+		"latex",
+		"lua",
+		"make",
+		"markdown",
+		"markdown_inline",
+		"org",
+		"python",
+	},
 
-  -- Install languages synchronously (only applied to `ensure_installed`)
-  sync_install = false,
+	-- Install languages synchronously (only applied to `ensure_installed`)
+	sync_install = false,
 
-  -- List of parsers to ignore installing
-  ignore_install = {},
+	-- List of parsers to ignore installing
+	ignore_install = {},
 
-  highlight = {
-    -- Setting this to true will run `:h syntax` and tree-sitter at the
-    -- same time. Set this to `true` if you depend on 'syntax' being
-    -- enabled (like for indentation). Using this option may slow down your
-    -- editor, and you may see some duplicate highlights. Instead of true
-    -- it can also be a list of languages
-    enable = true,
+	highlight = {
+		-- Setting this to true will run `:h syntax` and tree-sitter at the
+		-- same time. Set this to `true` if you depend on 'syntax' being
+		-- enabled (like for indentation). Using this option may slow down your
+		-- editor, and you may see some duplicate highlights. Instead of true
+		-- it can also be a list of languages
+		enable = true,
 
-    -- ORG: Required for spellcheck, some LaTex highlights and code
-    -- block highlights that do not have ts grammar
-    additional_vim_regex_highlighting = { 'org' },
-  },
+		-- ORG: Required for spellcheck, some LaTex highlights and code
+		-- block highlights that do not have ts grammar
+		additional_vim_regex_highlighting = { 'org' },
+	},
 
-  textobjects = {
-    lookahead = true,
-    select = {
-      enable = true,
-      keymaps = {
-        ["iC"] = "@call.inner",
-        ["aC"] = "@call.outer",
+	textobjects = {
+		lookahead = true,
+		select = {
+			enable = true,
+			keymaps = {
+				["iC"] = "@call.inner",
+				["aC"] = "@call.outer",
 
-        ["ic"] = "@conditional.inner",
-        ["ac"] = "@conditional.outer",
+				["ic"] = "@conditional.inner",
+				["ac"] = "@conditional.outer",
 
-        ["if"] = "@function.inner",
-        ["af"] = "@function.outer",
+				["if"] = "@function.inner",
+				["af"] = "@function.outer",
 
-        ["il"] = "@loop.inner",
-        ["al"] = "@loop.outer",
+				["il"] = "@loop.inner",
+				["al"] = "@loop.outer",
+			},
+		},
 
+		swap = {
+			enable = true,
+			swap_next = {
+				["<leader>a"] = "@function.outer",
+			},
+			swap_previous = {
+				["<leader>A"] = "@function.outer",
+			},
+		},
 
-      },
-    },
-
-    move = {
-      enable = true,
-      set_jumps = true,
-      goto_next_start = {
-        ["]m"] = "@function.outer",
-        ["]]"] = "@class.outer",
-      },
-      goto_next_end = {
-        ["]M"] = "@function.outer",
-        ["]["] = "@class.outer",
-      },
-      goto_previous_start = {
-        ["[m"] = "@function.outer",
-        ["[["] = "@class.outer",
-      },
-      goto_previous_end = {
-        ["[M"] = "@function.outer",
-        ["[]"] = "@class.outer",
-      },
-    }
-  },
+		move = {
+			enable = true,
+			set_jumps = true,
+			goto_next_start = {
+				["]m"] = "@function.outer",
+				["]]"] = "@class.outer",
+			},
+			goto_next_end = {
+				["]M"] = "@function.outer",
+				["]["] = "@class.outer",
+			},
+			goto_previous_start = {
+				["[m"] = "@function.outer",
+				["[["] = "@class.outer",
+			},
+			goto_previous_end = {
+				["[M"] = "@function.outer",
+				["[]"] = "@class.outer",
+			},
+		}
+	},
 })

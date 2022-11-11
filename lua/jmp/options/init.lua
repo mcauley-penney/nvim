@@ -2,11 +2,11 @@
 --- @param exe_str string
 --- @return boolean
 local function is_exe(exe_str)
-  return vim.fn.executable(exe_str) > 0
+	return vim.fn.executable(exe_str) > 0
 end
 
 for _, module in pairs({ "functions", "globals", "status" }) do
-  require("jmp.options." .. module)
+	require("jmp.options." .. module)
 end
 
 local o = vim.opt
@@ -17,7 +17,9 @@ o.colorcolumn = "+0"
 o.cindent = true
 o.clipboard = "unnamedplus"
 o.confirm = true
+o.diffopt:append { "linematch:60" }
 o.emoji = true
+o.expandtab = false
 o.fileignorecase = true
 o.fillchars = { eob = "⌁", fold = " " }
 o.foldenable = false
@@ -27,26 +29,27 @@ o.foldtext = "v:lua.get_fold_text()"
 o.gdefault = true
 
 if is_exe("rg") then
-  o.grepprg = [[rg --glob "!.git" --hidden --smart-case  --vimgrep]]
+	o.grepprg = [[rg --glob "!.git" --hidden --smart-case  --vimgrep]]
 else
-  o.grepprg = [[grep -nrH ]]
+	o.grepprg = [[grep -nrH ]]
 end
 
 o.guicursor = {
-  "n-sm-v:block-Cursor",
-  "c-ci-cr-i-ve:ver10-Cursor",
-  "o-r:hor10-Cursor",
+	"n-sm-v:block-Cursor",
+	"c-ci-cr-i-ve:ver10-Cursor",
+	"o-r:hor10-Cursor",
 }
 o.helpheight = 70
 o.hlsearch = true
 o.laststatus = 3
-o.lazyredraw = true
+o.lazyredraw = false
 o.list = true
 o.listchars = {
-  eol = "↴",
-  nbsp = "◊",
-  tab = "  ",
-  trail = "·",
+	eol = "↴",
+	lead = "·",
+	nbsp = "◊",
+	tab = "  ",
+	trail = "·",
 }
 o.linebreak = true
 o.modeline = false

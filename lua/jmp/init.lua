@@ -1,38 +1,38 @@
 local function bootstrap_packer()
-  local fn = vim.fn
+	local fn = vim.fn
 
-  local install_path = fn.stdpath("data")
-      .. "/site/pack/packer/start/packer.nvim"
+	local install_path = fn.stdpath("data")
+			.. "/site/pack/packer/start/packer.nvim"
 
-  if fn.empty(fn.glob(install_path)) > 0 then
-    print("Cloning packer ..")
-    fn.system({
-      "git",
-      "clone",
-      "--depth",
-      "1",
-      "https://github.com/wbthomason/packer.nvim",
-      install_path,
-    })
+	if fn.empty(fn.glob(install_path)) > 0 then
+		print("Cloning packer ..")
+		fn.system({
+			"git",
+			"clone",
+			"--depth",
+			"1",
+			"https://github.com/wbthomason/packer.nvim",
+			install_path,
+		})
 
-    vim.cmd("packadd! packer.nvim")
+		vim.cmd("packadd! packer.nvim")
 
-    require("packer").startup({
-      function(use)
-        for _, plugin in ipairs(require("jmp.plugins")) do
-          use(plugin)
-        end
-      end,
-    })
+		require("packer").startup({
+			function(use)
+				for _, plugin in ipairs(require("jmp.plugins")) do
+					use(plugin)
+				end
+			end,
+		})
 
-    require("packer").sync()
+		require("packer").sync()
 
-    return true
-  end
+		return true
+	end
 end
 
 if bootstrap_packer() then
-  return
+	return
 end
 
 vim.cmd.colorscheme("still_light")
@@ -40,12 +40,12 @@ vim.cmd.colorscheme("still_light")
 require("impatient")
 
 for _, module in ipairs({
-  "options",
-  "maps",
-  "aucmd",
-  "plugins",
-  "ui",
-  "cmd",
+	"options",
+	"maps",
+	"aucmd",
+	"plugins",
+	"ui",
+	"cmd",
 }) do
-  require("jmp." .. module)
+	require("jmp." .. module)
 end
