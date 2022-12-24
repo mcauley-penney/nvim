@@ -1,4 +1,5 @@
-local styles = require("jmp.style")
+local styles = require("jmp.ui")
+local icons = require("jmp.ui").no_hl_icons
 
 local termbg = { attribute = "bg", highlight = "Normal" }
 local termdarken = { attribute = "bg", highlight = "__termdarken" }
@@ -42,7 +43,7 @@ local opt_tbl = {
   options = {
     always_show_bufferline = false,
     enforce_regular_tabs = true,
-    modified_icon = styles.icons["mod"],
+    modified_icon = icons["mod"],
     separator_style = "thin",
     show_buffer_close_icons = false,
     show_buffer_icons = true,

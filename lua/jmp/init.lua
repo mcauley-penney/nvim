@@ -5,7 +5,16 @@ local function bootstrap_packer()
 			.. "/site/pack/packer/start/packer.nvim"
 
 	if fn.empty(fn.glob(install_path)) > 0 then
-		print("Cloning packer ..")
+		print([[
+ ______________
+/\             \
+\_| New Setup! |
+  | Cloning    |
+  |   Packer…  |
+  |   _________|_
+   \_/___________/
+		]])
+
 		fn.system({
 			"git",
 			"clone",

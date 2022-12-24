@@ -1,4 +1,5 @@
 -- vim.keymap.set: https://github.com/neovim/neovim/pull/16594
+-- Unused keys: https://vim.fandom.com/wiki/Unused_keys
 
 local func = require("jmp.maps.functions")
 local map = vim.keymap.set
@@ -6,7 +7,6 @@ local silent = { silent = true }
 local expr = { expr = true, silent = true }
 
 vim.g.mapleader = "m"
-
 
 --------------------------------------------------
 -- Colemak
@@ -27,15 +27,6 @@ for _, pairs in ipairs(colemak_maps) do
 
 	-- lowercase
 	map("", lhs, rhs, {})
-
-	-- ctrl lowercase
-	-- TODO: conflicts with ctrl-t for opening files
-	map(
-		"",
-		table.concat({ "<C-", lhs, ">" }),
-		table.concat({ "<C-w><C-", rhs, ">" }),
-		{}
-	)
 
 	-- uppercase
 	map("", upper_lhs, upper_rhs, {})
@@ -58,8 +49,8 @@ end
 --------------------------------------------------
 map("n", "<F1>", "za", {})
 map("i", "<F1>", "- ", {})
-map("i", "<F2>", func.send_comment, expr)
-map("i", "<F14>", "=", {})
+map("i", "<F6>", func.send_comment, expr)
+map("i", "<F7>", "=", {})
 map("i", "!!", "!=", {})
 
 -- CR to enter cmd mode
@@ -88,6 +79,3 @@ map("n", "<C-f>", ":LOOK ", {})
 -- open URLs
 -- https://www.reddit.com/r/neovim/comments/i72eo7/open_link_with_gx_asynchronously/
 map("n", "gx", "<cmd>call jobstart(['xdg-open', expand('<cfile>')], {'detach': v:true})<CR>", silent)
-
--- buffers
-map("n", "<C-w>", "<cmd>bd<CR>", silent)

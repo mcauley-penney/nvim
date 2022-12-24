@@ -5,6 +5,8 @@ require("nvim-treesitter.configs").setup({
 		"comment",
 		"cpp",
 		"diff",
+		"help",
+		"html",
 		"http",
 		"javascript",
 		"json",

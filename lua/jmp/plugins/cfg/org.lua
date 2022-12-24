@@ -1,5 +1,6 @@
 local files = "/home/m/files/kms/gtd/"
-local icons = require("jmp.style.init")["icons"]
+local ui = require("jmp.ui")
+local icons = ui["no_hl_icons"]
 
 
 require('orgmode').setup({

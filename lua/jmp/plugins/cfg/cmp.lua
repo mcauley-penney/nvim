@@ -1,25 +1,15 @@
 local cmp = require("cmp")
 local compare = cmp.config.compare
+local border = require("jmp.ui").border
 
 cmp.setup({
-	formatting = {
-		format = function(entry, vim_item)
-			vim_item.menu = ({
-				buffer = "[Buffer]",
-				cmp_git = "[Git]",
-				latex_symbols = "[TeX]",
-				emoji = "[Emoji]",
-				nvim_lsp = "[LSP]",
-				nvim_lua = "[Lua]",
-				path = "[Path]",
-				vsnip = "[VSnip]",
-			})[entry.source.name]
-
-			return vim_item
-		end,
+	mapping = {
+		["<Tab>"] = cmp.mapping.confirm({ select = true }),
+		['<Down>'] = cmp.mapping.select_next_item(),
+		['<Up>'] = cmp.mapping.select_prev_item(),
+		['<C-u>'] = cmp.mapping.scroll_docs(-4),
+		['<C-d>'] = cmp.mapping.scroll_docs(4),
 	},
-
-	mapping = { ["<Tab>"] = cmp.mapping.confirm({ select = true }), },
 
 	snippet = {
 		expand = function(args)
@@ -40,7 +30,6 @@ cmp.setup({
 		},
 	},
 
-
 	sources = {
 		{ name = "nvim_lsp" },
 		{ name = "buffer", max_item_count = 5 },
@@ -53,7 +42,31 @@ cmp.setup({
 		{ name = "vsnip" },
 	},
 
-	view = {
-		entries = "native",
+	window = {
+		documentation = {
+			border = border,
+			max_height = 150,
+			max_width = 150,
+		},
+	}
+})
+
+cmp.setup.cmdline({ '/', '?' }, {
+	mapping = cmp.mapping.preset.cmdline(),
+	sources = {
+		sources = cmp.config.sources(
+			{ name = 'nvim_lsp_document_symbol' },
+			{ name = 'buffer' }
+		),
 	},
 })
+
+cmp.setup.cmdline(':', {
+	sources = cmp.config.sources({
+		{ name = 'cmdline' },
+		{ name = 'path' },
+		{ name = 'cmdline_history', priority = 10, max_item_count = 5 },
+	}),
+})
+
+vim.api.nvim_set_hl(0, "CmpItemAbbrMatch", { link = "SpecialComment" })

@@ -1,4 +1,4 @@
-local custom_border = require("jmp.style").border
+local custom_border = require("jmp.ui").border
 
 
 -- TODO: see

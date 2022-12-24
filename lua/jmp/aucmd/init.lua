@@ -1,5 +1,6 @@
 local augrp = vim.api.nvim_create_augroup
 local aucmd = vim.api.nvim_create_autocmd
+local buf_get_opt = vim.api.nvim_buf_get_option
 local grp
 
 ----------------------------------------
@@ -7,21 +8,15 @@ local grp
 ----------------------------------------
 grp = augrp("entering", { clear = true })
 
-aucmd("BufEnter", {
+aucmd({"BufEnter", "BufWinEnter"}, {
 	group = grp,
 	callback = function()
 		vim.api.nvim_buf_set_option(0, "formatoptions", "2cjnpqrt")
-		local ft = vim.api.nvim_buf_get_option(0, "filetype")
+
+		local ft = buf_get_opt(0, "filetype")
 		require("jmp.aucmd.functions").set_indent(ft)
 		require("jmp.aucmd.functions").set_textwidth(ft)
 	end,
-})
-
-aucmd({ "BufEnter", "BufNewFile", "BufRead" }, {
-	group = grp,
-	pattern = "*.md,*.txt",
-	command = [[syn match ParaFirstWord "\%(^$\n*\|\%^\)\@<=\%(^\s*\w\+\)"]],
-	desc = "Embolden the first word of a paragraph. See original at https://www.reddit.com/r/vim/comments/wg1rbl/embolden_first_word_in_each_new_paragraph/"
 })
 
 aucmd("BufNewFile", {
@@ -44,15 +39,6 @@ aucmd("FileType", {
 	end,
 })
 
-aucmd("FileType", {
-	group = grp,
-	pattern = "help,lspinfo,qf,startuptime",
-	callback = function()
-		vim.api.nvim_set_keymap("n", "q", "<cmd>close<CR>", { silent = true })
-	end,
-	desc = "Allow us to close various buffers with just 'q'."
-})
-
 ----------------------------------------
 -- During editing
 ----------------------------------------
@@ -67,14 +53,9 @@ aucmd("CmdlineLeave", {
 	end,
 })
 
-aucmd("QuickFixCmdPost", {
-	group = grp,
-	callback = require("fzf-lua").quickfix,
-})
-
 aucmd("TextYankPost", {
 	group = grp,
-	command = [[silent! lua vim.highlight.on_yank{higroup="Yank", timeout=150}]],
+	command = [[silent! lua vim.highlight.on_yank{higroup="CursorLine", timeout=150}]],
 })
 
 ----------------------------------------

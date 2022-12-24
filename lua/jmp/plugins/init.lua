@@ -1,14 +1,13 @@
 local PACKER_PATH = vim.fn.stdpath("cache") .. "/packer/packer_compiled.lua"
-local float_border = require("jmp.style").border
+local float_border = require("jmp.ui").border
 
--- TODO: can use pcall here to protect call?
 local function cfg(name)
 	return string.format([[require 'jmp.plugins.cfg.%s']], name)
 end
 
 local plugins = {
 	--------------------------------------------------
-	-- core
+	-- Plugin management and support
 	--------------------------------------------------
 	"wbthomason/packer.nvim",
 
@@ -46,32 +45,27 @@ local plugins = {
 		end,
 	},
 
-	{
-		"j-hui/fidget.nvim",
-		config = function()
-			require("fidget").setup({
-				align = { bottom = false, },
-				text = { spinner = { "", "", "", "" } },
-				timer = {
-					fidget_decay = 250, -- how long to keep around empty fidget, in ms
-					spinner_rate = 150,
-					task_decay = 250,
-				},
-				window = {
-					relative = "editor",
-					blend = 0,
-				},
-			})
-
-			vim.api.nvim_set_hl(0, "FidgetTask", { link = "NonText" })
-			vim.api.nvim_set_hl(0, "FidgetTitle", { link = "Statement" })
-		end,
-	},
-
-	{
-		"joechrisellis/lsp-format-modifications.nvim",
-		requires = "nvim-lua/plenary.nvim"
-	},
+	-- {
+	-- 	"j-hui/fidget.nvim",
+	-- 	config = function()
+	-- 		require("fidget").setup({
+	-- 			align = { bottom = false, },
+	-- 			text = { spinner = { "", "", "", "" } },
+	-- 			timer = {
+	-- 				fidget_decay = 250, -- how long to keep around empty fidget, in ms
+	-- 				spinner_rate = 150,
+	-- 				task_decay = 250,
+	-- 			},
+	-- 			window = {
+	-- 				relative = "editor",
+	-- 				blend = 0,
+	-- 			},
+	-- 		})
+	--
+	-- 		vim.api.nvim_set_hl(0, "FidgetTask", { link = "NonText" })
+	-- 		vim.api.nvim_set_hl(0, "FidgetTitle", { link = "Statement" })
+	-- 	end,
+	-- },
 
 	--------------------------------------------------
 	-- treesitter
@@ -120,7 +114,13 @@ local plugins = {
 
 	{
 		"windwp/nvim-autopairs",
-		config = cfg("pairs"),
+		config = function()
+			require("nvim-autopairs").setup({
+				close_triple_quotes = true,
+				check_ts = false,
+				enable_check_bracket_line = true,
+			})
+		end
 	},
 
 	{
@@ -128,6 +128,7 @@ local plugins = {
 		config = cfg("cmp"),
 		requires = {
 			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-cmdline",
 			"hrsh7th/cmp-emoji",
 
 			{
@@ -199,13 +200,47 @@ local plugins = {
 	-- navigation and searching
 	--------------------------------------------------
 	{
-		"ibhagwan/fzf-lua",
-		config = cfg("fzf"),
+		'nvim-telescope/telescope.nvim',
+
+		tag = '0.1.0',
+		requires = {
+			'nvim-lua/plenary.nvim',
+			{ 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+		},
+		config = function()
+			local builtin = require('telescope.builtin')
+
+			require('telescope').setup({
+				defaults = {
+					border = false,
+					layout_strategy = "bottom_pane",
+					layout_config = {
+						prompt_position = "top",
+						height = 0.25,
+						width = 1,
+					},
+					sorting_strategy = "ascending"
+				},
+				extensions = {
+					fzf = {
+						fuzzy = true,
+						override_generic_sorter = true,
+						override_file_sorter = true,
+						case_mode = "smart_case",
+					}
+				}
+			})
+
+			require('telescope').load_extension('fzf')
+
+			vim.keymap.set("n", "<C-t>", builtin.find_files, { silent = true })
+			vim.keymap.set("n", "\\", builtin.buffers, { silent = true })
+		end,
 	},
 
 	{
 		"phaazon/hop.nvim",
-		branch = "v1", -- optional but strongly recommended
+		branch = "v2",
 		config = function()
 			require("hop").setup({
 				case_insensitive = false,
@@ -230,13 +265,13 @@ local plugins = {
 				show_symbol_details = false,
 			})
 
-			vim.keymap.set("n", "<F2>", "<cmd>SymbolsOutline<cr>", { silent = true })
+			vim.keymap.set("n", "<F6>", "<cmd>SymbolsOutline<cr>", { silent = true })
 		end,
 	},
 
 	{
 		"simnalamburt/vim-mundo",
-		config = function()
+		setup = function()
 			vim.g.mundo_header = 0
 			vim.g.mundo_preview_bottom = 1
 			vim.g.mundo_right = 1
@@ -270,7 +305,15 @@ local plugins = {
 
 	{
 		"lukas-reineke/indent-blankline.nvim",
-		config = cfg("indent_blankline"),
+		config = function()
+			require("indent_blankline").setup({
+				char = "├",
+				filetype_exclude = { "fzf", "mason", "packer" },
+				max_indent_increase = 1,
+				show_first_indent_level = false,
+				show_trailing_blankline_indent = false,
+			})
+		end
 	},
 
 	{
@@ -286,11 +329,14 @@ local plugins = {
 		end,
 	},
 
+	"nvim-tree/nvim-web-devicons",
+
 	{
 		"akinsho/toggleterm.nvim",
 		config = function()
 			require("toggleterm").setup({
-				direction = "float",
+				direction = "horizontal",
+				size = 50,
 				open_mapping = [[<C-space>]],
 			})
 		end,
@@ -299,7 +345,7 @@ local plugins = {
 	{
 		"itchyny/vim-highlighturl",
 		config = function()
-			local hl_utils = require("jmp.style.utils")
+			local hl_utils = require("jmp.ui.utils")
 			vim.g.highlighturl_guifg = hl_utils.get_hl_grp_rgb("@text.uri", "fg")
 		end
 	},
@@ -360,6 +406,9 @@ local plugins = {
 	--------------------------------------------------
 	-- filetype support
 	--------------------------------------------------
+	-- git commit
+	"rhysd/committia.vim",
+
 	{
 		"iamcco/markdown-preview.nvim",
 		run = function()
@@ -367,8 +416,8 @@ local plugins = {
 		end,
 		setup = function()
 			local g = vim.g
-			g.mkdp_auto_start = 1
-			g.mkdp_auto_close = 1
+			g.mkdp_auto_start = 0
+			g.mkdp_auto_close = 0
 			g.mkdp_browser = "firefox"
 			g.mkdp_page_title = "${name}.md"
 			g.mkdp_preview_options = {
@@ -381,9 +430,6 @@ local plugins = {
 	},
 
 
-	-- git commit
-	"rhysd/committia.vim",
-
 	{
 		"nvim-orgmode/orgmode",
 		config = cfg("org"),
@@ -395,14 +441,16 @@ local plugins = {
 		requires = "nvim-orgmode/orgmode"
 	},
 
+	--------------------------------------------------
+	-- whimsy
+	--------------------------------------------------
 	{
-		'tamton-aquib/duck.nvim',
+		"/home/m/files/nonwork/duck.nvim",
 		config = function()
 			require("duck").setup({
-				character = "🦆",
-				screensaver = true,
-				speed = 15,
-				wait_mins = 2
+				character = "👹",
+				speed = 10,
+				wait_mins = 3,
 			})
 		end
 	},
@@ -410,6 +458,28 @@ local plugins = {
 	--------------------------------------------------
 	-- testing
 	--------------------------------------------------
+	{
+		"rareitems/hl_match_area.nvim",
+		config = function()
+			require("hl_match_area").setup({
+				delay = 150,
+				highlight_in_insert_mode = false
+			})
+		end
+	},
+
+	{
+		"smjonas/inc-rename.nvim",
+		config = function()
+			require("inc_rename").setup({
+				review_empty_name = true
+			})
+
+			vim.keymap.set("n", "<leader>r", function()
+				return ":IncRename " .. vim.fn.expand("<cword>")
+			end, { expr = true })
+		end,
+	}
 }
 
 require("packer").startup({
