@@ -79,3 +79,6 @@ map("n", "<C-f>", ":LOOK ", {})
 -- open URLs
 -- https://www.reddit.com/r/neovim/comments/i72eo7/open_link_with_gx_asynchronously/
 map("n", "gx", "<cmd>call jobstart(['xdg-open', expand('<cfile>')], {'detach': v:true})<CR>", silent)
+
+-- buffers
+map("n", "<leader>q", ":bd ", {})

@@ -1,3 +1,10 @@
+for _, module in pairs({ "globals", "statusline" }) do
+	require("jmp.options." .. module)
+end
+
+
+local o = vim.opt
+
 --- Check if a cmd is executable
 --- @param exe_str string
 --- @return boolean
@@ -23,18 +30,12 @@ _G.get_fold_text = function()
 	)
 end
 
-for _, module in pairs({ "globals", "statusline"}) do
-	require("jmp.options." .. module)
-end
-
-local o = vim.opt
-
 o.breakindent = true
 o.breakindentopt = "shift:2"
 o.colorcolumn = "+0"
 o.cindent = true
 o.clipboard = "unnamedplus"
-o.cmdwinheight = 70
+o.cmdwinheight = 30
 o.confirm = true
 o.diffopt:append { "linematch:60" }
 o.emoji = true
@@ -59,7 +60,7 @@ o.guicursor = {
 	"o-r:hor10",
 	"a:Cursor/Cursor-blinkwait0-blinkoff10-blinkon10"
 }
-o.helpheight = 70
+o.helpheight = 30
 o.hlsearch = true
 o.inccommand = "split"
 o.ignorecase = true
@@ -116,6 +117,14 @@ o.writebackup = false
 -- key other than those associated with search movement
 vim.on_key(function(char)
 	if vim.fn.mode() == "n" then
-		vim.opt.hlsearch = vim.tbl_contains({ "<CR>", "n", "N", "*", "#", "?", "/" }, vim.fn.keytrans(char))
+		vim.opt.hlsearch = vim.tbl_contains({
+			"<CR>",
+			"n",
+			"N",
+			"*",
+			"#",
+			"?",
+			"/"
+		}, vim.fn.keytrans(char))
 	end
 end, vim.api.nvim_create_namespace "auto_hlsearch")

@@ -32,9 +32,13 @@ local plugins = {
 
 	{
 		"williamboman/mason.nvim",
+		requires = {
+			"neovim/nvim-lspconfig",
+		},
 		config = function()
 			require("mason").setup({
 				ui = {
+					border = float_border,
 					icons = {
 						package_installed = "✓",
 						package_pending = "→",
@@ -44,28 +48,6 @@ local plugins = {
 			})
 		end,
 	},
-
-	-- {
-	-- 	"j-hui/fidget.nvim",
-	-- 	config = function()
-	-- 		require("fidget").setup({
-	-- 			align = { bottom = false, },
-	-- 			text = { spinner = { "", "", "", "" } },
-	-- 			timer = {
-	-- 				fidget_decay = 250, -- how long to keep around empty fidget, in ms
-	-- 				spinner_rate = 150,
-	-- 				task_decay = 250,
-	-- 			},
-	-- 			window = {
-	-- 				relative = "editor",
-	-- 				blend = 0,
-	-- 			},
-	-- 		})
-	--
-	-- 		vim.api.nvim_set_hl(0, "FidgetTask", { link = "NonText" })
-	-- 		vim.api.nvim_set_hl(0, "FidgetTitle", { link = "Statement" })
-	-- 	end,
-	-- },
 
 	--------------------------------------------------
 	-- treesitter
@@ -137,6 +119,7 @@ local plugins = {
 					require("cmp_git").setup()
 				end,
 				requires = "nvim-lua/plenary.nvim",
+				ft = "gitcommit"
 			},
 
 			"kdheepak/cmp-latex-symbols",
@@ -216,7 +199,7 @@ local plugins = {
 					layout_strategy = "bottom_pane",
 					layout_config = {
 						prompt_position = "top",
-						height = 0.25,
+						height = 30,
 						width = 1,
 					},
 					sorting_strategy = "ascending"
@@ -336,7 +319,7 @@ local plugins = {
 		config = function()
 			require("toggleterm").setup({
 				direction = "horizontal",
-				size = 50,
+				size = 30,
 				open_mapping = [[<C-space>]],
 			})
 		end,
@@ -345,8 +328,8 @@ local plugins = {
 	{
 		"itchyny/vim-highlighturl",
 		config = function()
-			local hl_utils = require("jmp.ui.utils")
-			vim.g.highlighturl_guifg = hl_utils.get_hl_grp_rgb("@text.uri", "fg")
+			local get_hl = require("jmp.ui.utils").get_hl_grp_rgb
+			vim.g.highlighturl_guifg = get_hl("@text.uri", "fg")
 		end
 	},
 
@@ -445,12 +428,40 @@ local plugins = {
 	-- whimsy
 	--------------------------------------------------
 	{
-		"/home/m/files/nonwork/duck.nvim",
+		"tamton-aquib/duck.nvim",
 		config = function()
-			require("duck").setup({
+			local duck = require("duck")
+
+			duck.setup({
 				character = "👹",
 				speed = 10,
-				wait_mins = 3,
+			})
+
+			local active = false
+			local timer = vim.loop.new_timer()
+			local wait_mins = 3
+			local wait_ms = wait_mins * 60 * 1000
+
+			-- FIXME: error thrown when functions are called, e.g. hop.nvim
+			vim.api.nvim_create_autocmd({
+				"BufEnter",
+				"BufLeave",
+				"CursorMoved",
+				"CursorMovedI",
+				"ModeChanged",
+			}, {
+				group = "editing",
+				callback = function()
+					if active then
+						require("duck").cook()
+						active = false
+					else
+						timer:start(wait_ms, 0, vim.schedule_wrap(function()
+							require("duck").hatch()
+							active = true
+						end))
+					end
+				end,
 			})
 		end
 	},

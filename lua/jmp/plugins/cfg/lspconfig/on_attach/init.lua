@@ -1,6 +1,6 @@
 local tools = "jmp.plugins.cfg.lspconfig.on_attach."
 
-		local function opts(desc, opts_to_add)
+local function opts(desc, opts_to_add)
 	local defaults = { buffer = 0, desc = desc }
 
 	return vim.tbl_extend("keep", defaults, opts_to_add or {})

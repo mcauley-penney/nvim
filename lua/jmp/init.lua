@@ -1,19 +1,20 @@
 local function bootstrap_packer()
 	local fn = vim.fn
+	local init_str = [[
+ ______________
+/\             \
+\_| New Setup! |
+  |            |
+  | Cloning    |
+  |    Packer… |
+  |   _________|_
+   \_/___________/]]
 
 	local install_path = fn.stdpath("data")
 			.. "/site/pack/packer/start/packer.nvim"
 
 	if fn.empty(fn.glob(install_path)) > 0 then
-		print([[
- ______________
-/\             \
-\_| New Setup! |
-  | Cloning    |
-  |   Packer…  |
-  |   _________|_
-   \_/___________/
-		]])
+		print(init_str)
 
 		fn.system({
 			"git",

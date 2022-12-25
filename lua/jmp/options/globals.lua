@@ -14,7 +14,6 @@ vim.g.clipboard = {
 }
 
 -- filetype --
--- vim.g.python_recommended_style = 0
 vim.g.python3_host_prog = "/usr/bin/python3"
 
 -- turn off a bunch of default plugins
