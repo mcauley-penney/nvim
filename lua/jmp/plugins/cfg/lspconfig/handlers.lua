@@ -1,6 +1,5 @@
 local custom_border = require("jmp.ui").border
 
-
 -- TODO: see
 -- https://github.com/ray-x/lsp_signature.nvim/blob/aea1e060d465fcb565bc1178e4189fc79524ba61/lua/lsp_signature/init.lua#L161
 -- for how to stylize the markdown in signature

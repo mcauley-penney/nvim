@@ -1,12 +1,14 @@
 local utils = require("jmp.ui.utils")
 local get_hi = utils.get_hl_grp_rgb
+local hl_grp_prefix = "UI"
 
-local palette_grps = {
+local palette = {
 	Error = get_hi("DiagnosticError", "fg"),
 	Hint = get_hi("DiagnosticHint", "fg"),
 	Info = get_hi("DiagnosticInfo", "fg"),
-	Success = get_hi("@string.regex", "fg"),
+	Ok = get_hi("DiagnosticOk", "fg"),
 	Warn = get_hi("DiagnosticWarn", "fg"),
+	Muted = get_hi("Comment", "fg"),
 	bg = get_hi("StatusLine", "bg"),
 }
 
@@ -16,12 +18,12 @@ local icons = {
 }
 
 local icons_to_hl = {
-	["branch"] = { fg = "Success", sym = '' },
-	["no_branch"] = { fg = "Error", sym = 'ﱮ' },
-	["no_diag"] = { fg = "Success", sym = '' },
-	["modifiable"] = { fg = "Success", sym = '○' },
-	["modified"] = { fg = "Error", sym = '•' },
-	["readonly"] = { fg = "Warn", sym = '' },
+	["branch"] = { "Ok", '' },
+	["no_branch"] = { "Muted", '' },
+	-- ["no_diag"] = { "Ok", '' },
+	["modifiable"] = { "Ok", '○' },
+	["modified"] = { "Error", '•' },
+	["readonly"] = { "Warn", '' },
 }
 
 local signs = {
@@ -29,20 +31,28 @@ local signs = {
 	Warn = " ",
 	Info = " ",
 	Hint = "",
+	Ok = ""
 }
 
+local function make_ui_hl_grps(hi_palette)
+	local ui_bg = hi_palette["bg"]
+	local hi_grps_tbl = {}
 
-local function hl_icons(icon_tbl, palette)
+	for name, color in pairs(hi_palette) do
+		hi_grps_tbl[name] = utils.make_hl_grp(hl_grp_prefix .. name, {
+			fg = color,
+			bg = ui_bg
+		})
+	end
+
+	return hi_grps_tbl
+end
+
+local function hl_icons(icon_list, hl_grps)
 	local hled_icons = {}
 
-	for name, tbl in pairs(icon_tbl) do
-		local hl_grp = utils.make_hl_grp("UI".. tbl["fg"],{
-			fg = palette[tbl["fg"]],
-			bg = palette["bg"]
-		})
-
-		tbl = vim.list_extend(tbl, { "%*" })
-		hled_icons[name] = table.concat({hl_grp, tbl["sym"], "%*"})
+	for name, list in pairs(icon_list) do
+		hled_icons[name] = table.concat({ hl_grps[list[1]], list[2], "%*" })
 	end
 
 	return hled_icons
@@ -59,55 +69,26 @@ local make_invisible_border = function()
 	return border
 end
 
-local custom_border = make_invisible_border()
-
-local function hl_lsp_icons(lsp_icons, palette)
+local function hl_lsp_icons(lsp_icons, hl_grps)
 	local hl_syms = {}
-	local hl_str
-	local name
 	local sign_hl
 
 	for diag_type, sym in pairs(lsp_icons) do
-		-- define signs for sign col
 		sign_hl = table.concat({ "DiagnosticSign", diag_type })
 		vim.fn.sign_define(sign_hl, { text = sym, texthl = sign_hl })
 
-		-- define hl group for ui and concat with sign
-		name = "UI" .. diag_type
-
-		hl_str = utils.make_hl_grp(name, {
-			fg = palette[diag_type],
-			bg = palette["bg"]
-		})
-
-		hl_syms[diag_type] = table.concat({ hl_str, sym, "%*" })
+		hl_syms[diag_type] = table.concat({ hl_grps[diag_type], sym, "%*" })
 	end
 
 	return hl_syms
 end
 
-vim.diagnostic.config({
-	float = {
-		border = custom_border,
-		header = "",
-		severity_sort = true,
-	},
-	severity_sort = true,
-	underline = true,
-	update_in_insert = false,
-	virtual_text = {
-		format = function(diag)
-			local prefix = icons.diagnostic
-			local msg = string.gsub(diag.message, "%s*%c+%s*", ":")
-			return string.format("%s [%s] %s", prefix, diag.source, msg)
-		end,
-		prefix = "",
-	},
-})
+local hl_grp_tbl = make_ui_hl_grps(palette)
 
 return {
-	border = custom_border,
-	hl_icons = hl_icons(icons_to_hl, palette_grps),
-	hl_signs = hl_lsp_icons(signs, palette_grps),
+	border = make_invisible_border(),
+	hl_grps = hl_grp_tbl,
+	hl_icons = hl_icons(icons_to_hl, hl_grp_tbl),
+	hl_signs = hl_lsp_icons(signs, hl_grp_tbl),
 	no_hl_icons = icons,
 }

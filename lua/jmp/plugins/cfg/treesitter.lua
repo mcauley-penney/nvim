@@ -2,7 +2,8 @@ require("nvim-treesitter.configs").setup({
 	ensure_installed = {
 		"bash",
 		"c",
-		"comment",
+		-- https://github.com/nvim-treesitter/nvim-treesitter/issues/3967
+		-- "comment",
 		"cpp",
 		"diff",
 		"help",

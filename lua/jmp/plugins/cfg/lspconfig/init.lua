@@ -1,3 +1,4 @@
+local ui = require("jmp.ui")
 local lspcfg = "jmp.plugins.cfg.lspconfig."
 local on_attach = require(lspcfg .. "on_attach")
 
@@ -68,3 +69,22 @@ for name, cfg in pairs(servers) do
 	cfg.on_attach = on_attach
 	require("lspconfig")[name].setup(cfg)
 end
+
+vim.diagnostic.config({
+	float = {
+		border = ui.border,
+		header = "",
+		severity_sort = true,
+	},
+	severity_sort = true,
+	underline = true,
+	update_in_insert = false,
+	virtual_text = {
+		format = function(diag)
+			local prefix = ui.no_hl_icons.diagnostic
+			local msg = string.gsub(diag.message, "%s*%c+%s*", ":")
+			return string.format("%s [%s] %s", prefix, diag.source, msg)
+		end,
+		prefix = "",
+	},
+})

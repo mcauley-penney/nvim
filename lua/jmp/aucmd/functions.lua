@@ -1,32 +1,31 @@
-local std = 80
-
-local indent_tbl = {
-	["css"] = 2,
-	["lua"] = 2,
-	["org"] = 2,
+local short_indent = {
+	["css"] = true,
+	["javascript"] = true,
+	["lua"] = true,
+	["org"] = true,
 }
 
-local tw_tbl = {
-	["c"] = std,
-	["cpp"] = std,
+local nonstandard_tw = {
 	["gitcommit"] = 50,
-	["lua"] = std,
-	["python"] = std,
-	["sh"] = std,
 }
 
 local M = {
 	set_indent = function(ft)
-		local indent = indent_tbl[ft]
+		local indent = short_indent[ft] and 2 or 4
 
 		for _, opt in ipairs({ "shiftwidth", "softtabstop", "tabstop" }) do
-			vim.api.nvim_buf_set_option(0, opt, indent or 4)
+			vim.api.nvim_buf_set_option(0, opt, indent)
 		end
 	end,
 
 	set_textwidth = function(ft)
-		-- set textwidth
-		vim.api.nvim_buf_set_option(0, "textwidth", tw_tbl[ft] or 0)
+		local tw = nonstandard_tw[ft] or 80
+
+		if vim.g.nonprog_mode[ft] then
+			tw = 0
+		end
+
+		vim.api.nvim_buf_set_option(0, "textwidth", tw)
 	end,
 }
 

@@ -81,4 +81,4 @@ map("n", "<C-f>", ":LOOK ", {})
 map("n", "gx", "<cmd>call jobstart(['xdg-open', expand('<cfile>')], {'detach': v:true})<CR>", silent)
 
 -- buffers
-map("n", "<leader>q", ":bd ", {})
+map("n", "<leader>q", ":bd<CR>", {})

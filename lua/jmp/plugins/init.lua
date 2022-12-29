@@ -1,5 +1,6 @@
 local PACKER_PATH = vim.fn.stdpath("cache") .. "/packer/packer_compiled.lua"
-local float_border = require("jmp.ui").border
+local ui =  require("jmp.ui")
+local float_border = ui.border
 
 local function cfg(name)
 	return string.format([[require 'jmp.plugins.cfg.%s']], name)
@@ -34,6 +35,9 @@ local plugins = {
 		"williamboman/mason.nvim",
 		requires = {
 			"neovim/nvim-lspconfig",
+
+			-- TODO: will add this at some point
+			-- "williamboman/mason-lspconfig.nvim",
 		},
 		config = function()
 			require("mason").setup({
@@ -218,6 +222,12 @@ local plugins = {
 
 			vim.keymap.set("n", "<C-t>", builtin.find_files, { silent = true })
 			vim.keymap.set("n", "\\", builtin.buffers, { silent = true })
+
+			local hl_utils = require("jmp.ui.utils")
+			local norm_hl = hl_utils.get_hl_grp_rgb("Normal", "bg")
+			local dark_norm = hl_utils.shade_color(norm_hl, -30)
+
+			vim.api.nvim_set_hl(0, "TelescopeNormal", {bg = dark_norm})
 		end,
 	},
 
@@ -258,6 +268,8 @@ local plugins = {
 			vim.g.mundo_header = 0
 			vim.g.mundo_preview_bottom = 1
 			vim.g.mundo_right = 1
+			vim.g.mundo_verbose_graph = 0
+
 			vim.g.mundo_mappings = {
 				["<cr>"] = "preview",
 				e = "mode_newer",
@@ -412,16 +424,15 @@ local plugins = {
 		ft = "markdown",
 	},
 
-
-	{
-		"nvim-orgmode/orgmode",
-		config = cfg("org"),
-	},
-
 	{
 		"akinsho/org-bullets.nvim",
 		config = cfg("org-bullets"),
 		requires = "nvim-orgmode/orgmode"
+	},
+
+	{
+		"nvim-orgmode/orgmode",
+		config = cfg("org"),
 	},
 
 	--------------------------------------------------
@@ -490,7 +501,16 @@ local plugins = {
 				return ":IncRename " .. vim.fn.expand("<cword>")
 			end, { expr = true })
 		end,
-	}
+	},
+
+	{
+		"windwp/nvim-ts-autotag",
+		config = function()
+			require("nvim-ts-autotag").setup()
+		end
+	},
+
+	"dhruvasagar/vim-table-mode",
 }
 
 require("packer").startup({

@@ -48,3 +48,10 @@ end
 for _, provider in ipairs({ "node", "perl", "ruby" }) do
 	vim.g["loaded_" .. provider .. "_provider"] = 0
 end
+
+vim.g.nonprog_mode = {
+	["text"] = true,
+	["markdown"] = true,
+	["org"] = true,
+	["orgagenda"] = true
+}

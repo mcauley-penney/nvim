@@ -1,4 +1,4 @@
-for _, module in pairs({ "globals", "statusline" }) do
+for _, module in pairs({ "statusline" }) do
 	require("jmp.options." .. module)
 end
 
