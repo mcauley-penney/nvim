@@ -29,29 +29,23 @@ local stl_order = {
 }
 
 local function get_filepath(hl_grps)
-	local status = vim.b.gitsigns_status_dict or nil
+	local path = vim.api.nvim_buf_get_name(0)
+	if path == "" then return end
 
-	if not HAVE_GITSIGNS or status == nil or status["root"] == nil then
-		return vim.fn.expand("%:p")
-	end
+	local root = vim.g.get_path_root(path)
+	if root == nil then return path end
 
-	local root = table.concat({
+	return table.concat({
 		hl_grps["Muted"],
-		vim.fs.dirname(vim.fn.getcwd()),
+		vim.fs.dirname(root),
 		'/',
-		"%*"
-	})
-
-	local trunk = table.concat({
+		"%*",
 		hl_grps["Warn"],
-		vim.fs.basename(status["root"]),
+		vim.fs.basename(root),
 		'/',
 		"%*",
 		vim.fn.expand("%r"),
 	})
-
-	return root .. trunk
-
 end
 
 --- Create a string containing info for the current git branch
@@ -146,9 +140,7 @@ _G.get_statusline = function()
 	local buf = vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
 
 	stl_parts["git_branch"] = get_git_branch(hl_icons_tbl)
-
 	stl_parts["ro"] = buf_get_opt(buf, "readonly") and hl_icons_tbl["readonly"] or ""
-
 	stl_parts["path"] = get_filepath(hl_grps_tbl)
 
 	if not buf_get_opt(buf, "modifiable") then
