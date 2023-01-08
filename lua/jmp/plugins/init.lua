@@ -100,6 +100,13 @@ local plugins = {
 
 	{
 		"windwp/nvim-autopairs",
+		requires =
+		{
+			"windwp/nvim-ts-autotag",
+			config = function()
+				require("nvim-ts-autotag").setup()
+			end
+		},
 		config = function()
 			require("nvim-autopairs").setup({
 				close_triple_quotes = true,
@@ -192,43 +199,9 @@ local plugins = {
 		tag = '0.1.0',
 		requires = {
 			'nvim-lua/plenary.nvim',
-			{ 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+			{ 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
 		},
-		config = function()
-			local builtin = require('telescope.builtin')
-
-			require('telescope').setup({
-				defaults = {
-					border = false,
-					layout_strategy = "bottom_pane",
-					layout_config = {
-						prompt_position = "top",
-						height = 30,
-						width = 1,
-					},
-					sorting_strategy = "ascending"
-				},
-				extensions = {
-					fzf = {
-						fuzzy = true,
-						override_generic_sorter = true,
-						override_file_sorter = true,
-						case_mode = "smart_case",
-					}
-				}
-			})
-
-			require('telescope').load_extension('fzf')
-
-			vim.keymap.set("n", "<C-t>", builtin.find_files, { silent = true })
-			vim.keymap.set("n", "\\", builtin.buffers, { silent = true })
-
-			local hl_utils = require("jmp.ui.utils")
-			local norm_hl = hl_utils.get_hl_grp_rgb("Normal", "bg")
-			local dark_norm = hl_utils.shade_color(norm_hl, -30)
-
-			vim.api.nvim_set_hl(0, "TelescopeNormal", {bg = dark_norm})
-		end,
+		config = cfg("telescope")
 	},
 
 	{
@@ -241,7 +214,7 @@ local plugins = {
 				teasing = false,
 			})
 
-			vim.keymap.set("n", "'", "<cmd>HopChar1MW<cr>", { silent = true })
+			vim.keymap.set("n", "<F6>", "<cmd>HopChar1MW<cr>", { silent = true })
 		end,
 	},
 
@@ -258,7 +231,7 @@ local plugins = {
 				show_symbol_details = false,
 			})
 
-			vim.keymap.set("n", "<F6>", "<cmd>SymbolsOutline<cr>", { silent = true })
+			vim.keymap.set("n", "<F7>", "<cmd>SymbolsOutline<cr>", { silent = true })
 		end,
 	},
 
@@ -289,6 +262,16 @@ local plugins = {
 	{
 		"akinsho/bufferline.nvim",
 		config = cfg("bufferline"),
+	},
+
+	{
+		"rareitems/hl_match_area.nvim",
+		config = function()
+			require("hl_match_area").setup({
+				delay = 150,
+				highlight_in_insert_mode = false
+			})
+		end
 	},
 
 	{
