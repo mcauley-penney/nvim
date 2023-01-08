@@ -8,7 +8,7 @@ local grp
 ----------------------------------------
 grp = augrp("entering", { clear = true })
 
-aucmd({"BufEnter", "BufWinEnter"}, {
+aucmd({ "BufEnter", "BufWinEnter" }, {
 	group = grp,
 	callback = function()
 		vim.api.nvim_buf_set_option(0, "formatoptions", "2cjnpqrt")
@@ -16,6 +16,13 @@ aucmd({"BufEnter", "BufWinEnter"}, {
 		local ft = buf_get_opt(0, "filetype")
 		require("jmp.aucmd.functions").set_indent(ft)
 		require("jmp.aucmd.functions").set_textwidth(ft)
+
+		local path = vim.api.nvim_buf_get_name(0)
+		local root = vim.g.get_path_root(path)
+
+		if root ~= nil then
+			vim.cmd(":lcd " .. root)
+		end
 	end,
 })
 
