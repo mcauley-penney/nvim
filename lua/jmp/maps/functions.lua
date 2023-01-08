@@ -3,41 +3,56 @@
 local str = {
 	ast = "*",
 	c_sl = "// ",
-	dash = "-- ",
 	latx = "% ",
-	semi = ";; ",
 	text = "- ",
 	octo = "# ",
 }
 
-local ft_match_table = {
+local ft_cstr_overrides = {
 	["c"] = str.c_sl,
 	["cpp"] = str.c_sl,
-	["css"] = "/*  */",
 	["cuda"] = str.c_sl,
 	["gitcommit"] = str.text,
 	["gitconfig"] = str.octo,
-	["javascript"] = str.c_sl,
-	["lisp"] = str.semi,
-	["lua"] = str.dash,
-	["make"] = str.octo,
-	["markdown"] = str.ast,
-	["org"] = str.ast,
-	["python"] = str.octo,
-	["sh"] = str.octo,
-	["tex"] = str.latx,
 	["txt"] = str.text,
 	["text"] = str.text,
-	["vim"] = '" ',
-	["yaml"] = str.octo,
 }
 
+
+local unwrap_cstr = function(cstr)
+	local left, right = string.match(cstr, '(.*)%%s(.*)')
+
+	return vim.trim(left), vim.trim(right)
+end
+
+local find_cstr_cursor_pos = function(cstr)
+	-- if there is a space before the cursor position, do not
+	-- include it in the length we are calculating by adding
+	-- '%s*'
+	local start = string.find(cstr, "%s*%%s")
+
+	return start - 1
+end
+
 local M = {
-	-- Send comments to buffer at cursor position.
 	send_comment = function()
 		local ft = vim.api.nvim_buf_get_option(0, "filetype")
+		local cstr = ft_cstr_overrides[ft]
+		if (cstr ~= nil) then return cstr end
 
-		return ft_match_table[ft]
+		local row, col
+		local pos_tbl = vim.api.nvim_win_get_cursor(0)
+
+		row = pos_tbl[1] - 1
+		col = pos_tbl[2]
+
+		local lcs, rcs = unwrap_cstr(vim.bo.commentstring)
+		local inc_len = find_cstr_cursor_pos(vim.bo.commentstring)
+
+		vim.schedule(function()
+			vim.api.nvim_buf_set_text(0, row, col, row, col, { lcs .. ' ' .. rcs })
+			vim.api.nvim_win_set_cursor(0, { row + 1, col + inc_len + 1 })
+		end)
 	end,
 }
 

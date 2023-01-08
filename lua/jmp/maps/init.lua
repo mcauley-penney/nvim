@@ -48,9 +48,12 @@ end
 -- Base
 --------------------------------------------------
 map("n", "<F1>", "za", {})
-map("i", "<F1>", "- ", {})
+
 map("i", "<F6>", func.send_comment, expr)
 map("i", "<F7>", "=", {})
+map("i", "<F1>", "- ", {})
+map("i", "<F2>", "+", {})
+
 map("i", "!!", "!=", {})
 
 -- CR to enter cmd mode
@@ -70,9 +73,8 @@ map("v", "`", "~", {})
 map("n", "<tab>", ">>", {})
 map("n", "<bs>", "<<", {})
 
--- move to first non-blank char
-map("", "<home>", "^", {})
-map("i", "<home>", "<esc>^a", {})
+map("", "<home>", "^", {}) -- move to first non-blank char
+map("i", "<home>", "<C-o>^", {}) -- move in front of first non-blank char
 
 map("n", "<C-f>", ":LOOK ", {})
 
@@ -81,4 +83,4 @@ map("n", "<C-f>", ":LOOK ", {})
 map("n", "gx", "<cmd>call jobstart(['xdg-open', expand('<cfile>')], {'detach': v:true})<CR>", silent)
 
 -- buffers
-map("n", "<leader>q", ":bd<CR>", {})
+map("n", "<leader>q", ":bd<CR>", silent)
