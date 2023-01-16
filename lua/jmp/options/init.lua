@@ -2,8 +2,7 @@ for _, module in pairs({ "statusline" }) do
 	require("jmp.options." .. module)
 end
 
-
-local o = vim.opt
+local o, opt = vim.o, vim.opt
 
 --- Check if a cmd is executable
 --- @param exe_str string
@@ -37,11 +36,16 @@ o.cindent = true
 o.clipboard = "unnamedplus"
 o.cmdwinheight = 30
 o.confirm = true
-o.diffopt:append { "linematch:60" }
+opt.diffopt:append {
+	"indent-heuristic",
+	"linematch:60",
+	"vertical"
+}
 o.emoji = true
 o.expandtab = false
 o.fileignorecase = true
-o.fillchars = { eob = "⌁", fold = " " }
+opt.fillchars = { fold = " ", foldclose = '▸', foldopen = '▾', foldsep = " " }
+o.foldcolumn = '1'
 o.foldenable = false
 o.foldlevel = 99
 o.foldmethod = "indent"
@@ -54,22 +58,21 @@ else
 	o.grepprg = [[grep -nrH ]]
 end
 
-o.guicursor = {
+opt.guicursor = {
 	"n-sm-v:block",
 	"c-ci-cr-i-ve:ver1",
 	"o-r:hor10",
 	"a:Cursor/Cursor-blinkwait0-blinkoff10-blinkon10"
 }
-o.helpheight = 30
+o.helpheight = 50
 o.hlsearch = true
 o.inccommand = "split"
 o.ignorecase = true
 o.laststatus = 3
-o.lazyredraw = false
+o.lazyredraw = true
 o.list = true
-o.listchars = {
+opt.listchars = {
 	eol = "↴",
-	lead = "·",
 	nbsp = "◊",
 	tab = "  ",
 	trail = "·",
@@ -80,6 +83,7 @@ o.modelines = 0
 o.mouse = ""
 o.nrformats = "alpha"
 o.number = true
+o.pumblend = 10
 o.redrawtime = 150
 o.relativenumber = true
 o.ruler = false
@@ -104,7 +108,7 @@ o.timeout = false
 o.title = true
 o.undofile = true
 o.updatetime = 350 -- used for swap file and cursorhold
-o.viewoptions = { "cursor", "folds" }
+opt.viewoptions = { "cursor", "folds" }
 o.virtualedit = "all"
 o.wildignore = "*.o"
 o.wildmode = "longest:full"
