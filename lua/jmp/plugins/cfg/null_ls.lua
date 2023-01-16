@@ -3,7 +3,7 @@ local builtins = null_ls.builtins
 
 null_ls.setup({
 	debounce = 300,
-	on_attach = require("jmp.plugins.cfg.lspconfig.on_attach"),
+	on_attach = require("jmp.lsp.on_attach"),
 	sources = {
 		-- json
 		builtins.formatting.fixjson,

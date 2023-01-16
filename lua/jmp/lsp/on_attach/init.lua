@@ -1,4 +1,4 @@
-local tools = "jmp.plugins.cfg.lspconfig.on_attach."
+local tools = "jmp.lsp.on_attach."
 
 local function opts(desc, opts_to_add)
 	local defaults = { buffer = 0, desc = desc }
@@ -19,20 +19,16 @@ return function(client, bufnr)
 	end
 
 	if client.supports_method("textDocument/declaration") then
-		if vim.fn.maparg("<leader>DE", 'n') == "" then
-			map("n", "<leader>DE", lsp.declaration, opts("Go To Declaration"))
-		end
+		map("n", "<leader>DE", lsp.declaration, opts("Go To Declaration"))
 	end
 
 	for lhs, rhs in pairs({
-		["<leader>D"] = lsp.type_definition,
+		["<leader>d"] = lsp.definition,
 		["<leader>R"] = lsp.references,
 		["<leader>T"] = lsp.type_definition,
 		["<leader>I"] = lsp.implementation
 	}) do
-		if vim.fn.maparg(lhs, 'n') == "" then
-			vim.keymap.set('n', lhs, rhs, {})
-		end
+		vim.keymap.set('n', lhs, rhs, {})
 	end
 
 	-- E instead of K because Colemak

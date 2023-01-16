@@ -1,5 +1,5 @@
 local ui = require("jmp.ui")
-local lspcfg = "jmp.plugins.cfg.lspconfig."
+local lspcfg = "jmp.lsp."
 local on_attach = require(lspcfg .. "on_attach")
 
 for _, mod in ipairs({ "handlers" }) do
@@ -7,10 +7,7 @@ for _, mod in ipairs({ "handlers" }) do
 end
 
 local servers = {
-	bashls = {},
-
-	-- see $clangd -h, https://clangd.llvm.org/installation and
-	-- https://www.reddit.com/r/neovim/comments/vgxvow/comment/id63m9x/?utm_source=share&utm_medium=web2x&context=3
+	-- see $clangd -h, https://clangd.llvm.org/installation
 	clangd = {
 		cmd = {
 			"clangd",
@@ -29,11 +26,6 @@ local servers = {
 			"--suggest-missing-includes",
 		},
 	},
-
-	html = {},
-	jdtls = {},
-	jsonls = {},
-	pyright = {},
 
 	-- https://github.com/sumneko/lua-language-server/blob/f7e0e7a4245578af8cef9eb5e3ec9ce65113684e/locale/en-us/setting.lua
 	sumneko_lua = {
@@ -60,15 +52,29 @@ local servers = {
 			},
 		},
 	},
-
-	tsserver = {},
-	vimls = {}
 }
 
-for name, cfg in pairs(servers) do
+local server_setup = function(cfg, name)
 	cfg.on_attach = on_attach
 	require("lspconfig")[name].setup(cfg)
 end
+
+require("mason-lspconfig").setup_handlers {
+
+	function(server_name)
+		server_setup({}, server_name)
+	end,
+
+	["clangd"] = function()
+		local name = "clangd"
+		server_setup(servers[name], name)
+	end,
+
+  ["sumneko_lua"] = function()
+		local name = "sumneko_lua"
+		server_setup(servers[name], name)
+	end
+}
 
 vim.diagnostic.config({
 	float = {

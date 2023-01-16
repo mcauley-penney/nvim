@@ -1,5 +1,5 @@
 local PACKER_PATH = vim.fn.stdpath("cache") .. "/packer/packer_compiled.lua"
-local ui =  require("jmp.ui")
+local ui = require("jmp.ui")
 local float_border = ui.border
 
 local function cfg(name)
@@ -27,17 +27,10 @@ local plugins = {
 	-- LSP
 	--------------------------------------------------
 	{
-		"neovim/nvim-lspconfig",
-		config = cfg("lspconfig"),
-	},
-
-	{
 		"williamboman/mason.nvim",
 		requires = {
 			"neovim/nvim-lspconfig",
-
-			-- TODO: will add this at some point
-			-- "williamboman/mason-lspconfig.nvim",
+			"williamboman/mason-lspconfig.nvim",
 		},
 		config = function()
 			require("mason").setup({
@@ -50,6 +43,8 @@ local plugins = {
 					},
 				},
 			})
+
+			require("mason-lspconfig").setup()
 		end,
 	},
 
@@ -155,6 +150,17 @@ local plugins = {
 	},
 
 	{
+		"jbyuki/venn.nvim",
+		config = function()
+			vim.keymap.set("n", "<S-down>", "<C-v>j:VBox<CR>", { noremap = true })
+			vim.keymap.set("n", "<S-up>", "<C-v>k:VBox<CR>", { noremap = true })
+			vim.keymap.set("n", "<S-left>", "<C-v>h:VBox<CR>", { noremap = true })
+			vim.keymap.set("n", "<S-right>", "<C-v>l:VBox<CR>", { noremap = true })
+			vim.keymap.set("v", "<leader>b", ":VBox<CR>", { noremap = true })
+		end
+	},
+
+	{
 		"machakann/vim-swap",
 		config = function()
 			vim.keymap.set("n", "<left>", "<Plug>(swap-prev)", {})
@@ -195,11 +201,12 @@ local plugins = {
 	--------------------------------------------------
 	{
 		'nvim-telescope/telescope.nvim',
-
 		tag = '0.1.0',
 		requires = {
 			'nvim-lua/plenary.nvim',
-			{ 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
+			{ "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
+			{ "nvim-telescope/telescope-live-grep-args.nvim" },
+			{ "debugloop/telescope-undo.nvim" }
 		},
 		config = cfg("telescope")
 	},
@@ -271,6 +278,12 @@ local plugins = {
 				delay = 150,
 				highlight_in_insert_mode = false
 			})
+
+			local utils = require("jmp.ui.utils")
+			local match_fg = utils.get_hl_grp_rgb("MatchParen", "fg")
+			local dim_match_hl = utils.shade_color(match_fg, -75)
+
+			vim.api.nvim_set_hl(0, "MatchArea", { bg = dim_match_hl })
 		end
 	},
 
@@ -457,16 +470,6 @@ local plugins = {
 	-- testing
 	--------------------------------------------------
 	{
-		"rareitems/hl_match_area.nvim",
-		config = function()
-			require("hl_match_area").setup({
-				delay = 150,
-				highlight_in_insert_mode = false
-			})
-		end
-	},
-
-	{
 		"smjonas/inc-rename.nvim",
 		config = function()
 			require("inc_rename").setup({
@@ -478,15 +481,6 @@ local plugins = {
 			end, { expr = true })
 		end,
 	},
-
-	{
-		"windwp/nvim-ts-autotag",
-		config = function()
-			require("nvim-ts-autotag").setup()
-		end
-	},
-
-	"dhruvasagar/vim-table-mode",
 }
 
 require("packer").startup({

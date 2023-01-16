@@ -22,14 +22,14 @@
 local function bootstrap_packer()
 	local fn = vim.fn
 	local init_str = [[
- ______________
-/\             \
-\_| New Setup! |
-  |            |
-  | Cloning    |
-  |    Packer… |
-  |   _________|_
-   \_/___________/]]
+ __________________
+/\                 \
+\_| New Setup!     |
+  |                |
+  | Initializing … |
+  |   _____________|_
+   \_/_______________/
+]]
 
 	local install_path = fn.stdpath("data")
 			.. "/site/pack/packer/start/packer.nvim"
@@ -78,6 +78,7 @@ for _, module in ipairs({
 	"plugins",
 	"ui",
 	"cmd",
+	"lsp",
 }) do
 	require("jmp." .. module)
 end
