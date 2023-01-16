@@ -1,6 +1,7 @@
 local short_indent = {
 	["css"] = true,
 	["javascript"] = true,
+	["json"] = true,
 	["lua"] = true,
 	["org"] = true,
 }

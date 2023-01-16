@@ -25,6 +25,18 @@ aucmd("BufEnter", {
 	end,
 	desc = "Set root dir and initialize version control information."
 })
+
+aucmd({ "BufEnter", "BufWinEnter" }, {
+	group = grp,
+	callback = function()
+		vim.api.nvim_win_set_option(0, "foldminlines", 1)
+		vim.api.nvim_win_set_option(0, "foldnestmax", 1)
+		vim.api.nvim_buf_set_option(0, "formatoptions", "2cjnpqrt")
+
+		local ft = buf_get_opt(0, "filetype")
+		require("jmp.aucmd.functions").set_indent(ft)
+		require("jmp.aucmd.functions").set_textwidth(ft)
+	end,
 })
 
 aucmd("BufNewFile", {
