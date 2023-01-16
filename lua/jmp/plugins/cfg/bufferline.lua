@@ -1,5 +1,5 @@
 local styles = require("jmp.ui")
-local icons = require("jmp.ui").no_hl_icons
+local icons = styles.no_hl_icons
 
 local termbg = { attribute = "bg", highlight = "Normal" }
 local termdarken = { attribute = "bg", highlight = "__termdarken" }

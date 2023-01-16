@@ -6,6 +6,7 @@ require("nvim-treesitter.configs").setup({
 		-- "comment",
 		"cpp",
 		"diff",
+		"gitcommit",
 		"help",
 		"html",
 		"http",

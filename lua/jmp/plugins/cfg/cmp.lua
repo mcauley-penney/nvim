@@ -31,8 +31,8 @@ cmp.setup({
 	},
 
 	sources = {
-		{ name = "nvim_lsp" },
-		{ name = "buffer", max_item_count = 5 },
+		{ name = "buffer", max_item_count = 10 },
+		{ name = "nvim_lsp", max_item_count = 20 },
 		{ name = "nvim_lua", max_item_count = 5 },
 		{ name = "path" },
 		{ name = "git" },
@@ -45,27 +45,17 @@ cmp.setup({
 	window = {
 		documentation = {
 			border = border,
-			max_height = 150,
-			max_width = 150,
+			max_height = 75,
+			max_width = 75,
 		},
 	}
 })
 
-cmp.setup.cmdline({ '/', '?' }, {
-	mapping = cmp.mapping.preset.cmdline(),
-	sources = {
-		sources = cmp.config.sources(
-			{ name = 'nvim_lsp_document_symbol' },
-			{ name = 'buffer' }
-		),
-	},
-})
-
 cmp.setup.cmdline(':', {
+	mapping = cmp.mapping.preset.cmdline(),
 	sources = cmp.config.sources({
-		{ name = 'cmdline' },
-		{ name = 'path' },
-		{ name = 'cmdline_history', priority = 10, max_item_count = 5 },
+		{ name = 'cmdline', max_item_count = 20 },
+		{ name = 'path', max_item_count = 1 },
 	}),
 })
 

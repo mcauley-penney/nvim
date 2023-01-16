@@ -1,4 +1,5 @@
-local grn = "Success"
+local gra = "NonText"
+local grn = "DiagnosticOk"
 local red = "DiagnosticError"
 local ylw = "DiagnosticWarn"
 
@@ -23,9 +24,21 @@ local signs_tbl = {
 		hl = red,
 		text = "‾",
 	},
+  untracked = {
+		hl = gra,
+		text = '┆'
+	},
 }
 
 require("gitsigns").setup({
+	preview_config = {
+		border = require("jmp.ui.init").border,
+		style = 'minimal',
+		relative = 'cursor',
+		row = 0,
+		col = 1
+	},
+
 	signs = signs_tbl,
 	signcolumn = false,
 
@@ -38,14 +51,12 @@ require("gitsigns").setup({
 			vim.keymap.set(mode, l, r, opts)
 		end
 
+		map('n', '<leader>gd', gs.diffthis)
+		map('n', '<leader>gD', function() gs.diffthis('~') end)
 		map("n", "<leader>gt", gs.toggle_signs)
-		map({ "n", "v" }, "<leader>gs", gs.stage_hunk)
 		map("n", "<leader>gp", gs.preview_hunk)
 		map("n", "<leader>gu", gs.undo_stage_hunk)
+
+		map({ "n", "v" }, "<leader>gs", ':Gitsigns stage_hunk<CR>')
 	end
 })
-
--- vim.keymap.set("n", "<leader>gt", "<cmd>Gitsigns toggle_signs<cr>", {})
--- vim.keymap.set("n", "<leader>gs", "<cmd>Gitsigns stage_hunk<cr>", {})
--- vim.keymap.set("n", "<leader>gp", "<cmd>Gitsigns preview_hunk<cr>", {})
--- vim.keymap.set("n", "<leader>gu", "<cmd>Gitsigns undo_stage_hunk<cr>", {})
