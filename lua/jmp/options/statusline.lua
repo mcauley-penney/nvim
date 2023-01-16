@@ -1,4 +1,3 @@
-local HAVE_GITSIGNS = pcall(require, "gitsigns")
 local WS = "  "
 
 -- see https://vimhelp.org/options.txt.html#%27statusline%27 for part fmt strs
@@ -28,12 +27,8 @@ local stl_order = {
 	"pad",
 }
 
-local function get_filepath(hl_grps)
-	local path = vim.api.nvim_buf_get_name(0)
-	if path == "" then return end
-
-	local root = vim.g.get_path_root(path)
-	if root == nil then return path end
+local function get_filepath(root, hl_grps)
+	if root == nil then return nil end
 
 	return table.concat({
 		hl_grps["Muted"],
@@ -52,18 +47,12 @@ end
 -- @treturn string: branch info
 -- alternative, for if we ever stopped using gitsigns:
 -- https://www.reddit.com/r/neovim/comments/uz3ofs/heres_a_function_to_grab_the_name_of_the_current/
-local function get_git_branch(icon_tbl)
-	if not HAVE_GITSIGNS then
-		return ""
-	end
-
-	local branch = vim.b.gitsigns_head
+local function get_git_branch(root, icon_tbl)
+	local branch = vim.g.get_git_branch(root)
 
 	local icon = branch and icon_tbl["branch"] or icon_tbl["no_branch"]
 
-	branch = { icon, " ", branch or "", " ", ">" }
-
-	return table.concat(branch)
+	return table.concat({ icon, " ", branch or "", " ", ">" })
 end
 
 --- Create a string of diagnostic information
@@ -137,14 +126,16 @@ _G.get_statusline = function()
 		return "%#StatusLineNC#"
 	end
 
+	local path = vim.api.nvim_buf_get_name(0)
+	local root = vim.g.get_path_root(path)
 	local buf = vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
 
-	stl_parts["git_branch"] = get_git_branch(hl_icons_tbl)
+	stl_parts["path"] = get_filepath(root, hl_grps_tbl) or path
+	stl_parts["git_branch"] = get_git_branch(root, hl_icons_tbl)
 	stl_parts["ro"] = buf_get_opt(buf, "readonly") and hl_icons_tbl["readonly"] or ""
-	stl_parts["path"] = get_filepath(hl_grps_tbl)
 
 	if not buf_get_opt(buf, "modifiable") then
-		stl_parts["mod"] = hl_icons_tbl["modifiable"]
+		stl_parts["mod"] = hl_icons_tbl["nomodifiable"]
 	elseif buf_get_opt(buf, "modified") then
 		stl_parts["mod"] = hl_icons_tbl["modified"]
 	else

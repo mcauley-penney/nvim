@@ -67,8 +67,7 @@ vim.g.nonprog_mode = {
 
 -- provides a place to cache the root
 -- directory for current editing session
-vim.g.root_cache = {}
--- vim.g.branch_cache = {}
+local branch_cache = {}
 
 --------------------------------------------------
 -- functions
@@ -80,7 +79,9 @@ vim.g.root_cache = {}
 -- @tparam  path: file to get root of
 -- @treturn path to the root of the filepath parameter
 vim.g.get_path_root = function(path)
-	local root = vim.g.root_cache[path]
+	if path == "" then return end
+
+	local root = vim.b.path_root
 	if root ~= nil then return root end
 
 	local root_items = {
@@ -92,24 +93,26 @@ vim.g.get_path_root = function(path)
 		upward = true,
 		type = "directory"
 	})[1]
-
 	if root == nil then return nil end
 
 	root = vim.fs.dirname(root)
-	vim.g.root_cache[path] = root
+	vim.b.path_root = root
 
 	return root
 end
 
--- vim.g.get_git_branch = function(root)
--- 	local branch = vim.g.branch_cache[root]
--- 	if branch ~= nil then return branch end
---
--- 	branch = vim.fn.system("git branch --show-current") or nil
--- 	if branch == nil then return nil end
---
--- 	branch = branch:gsub("\n", "")
--- 	vim.g.branch_cache[root] = branch
---
--- 	return branch
--- end
+vim.g.get_git_branch = function(root)
+	if root == nil then return end
+
+	local branch = branch_cache[root]
+	if branch ~= nil then return branch end
+
+	local cmd = table.concat({"git", "-C", root, "branch --show-current"}, " ")
+	branch = vim.fn.system(cmd)
+	if branch == nil then return nil end
+
+	branch = branch:gsub("\n", "")
+	branch_cache[root] = branch
+
+	return branch
+end

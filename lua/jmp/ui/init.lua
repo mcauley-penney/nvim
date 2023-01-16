@@ -20,8 +20,7 @@ local icons = {
 local icons_to_hl = {
 	["branch"] = { "Ok", '' },
 	["no_branch"] = { "Muted", '' },
-	-- ["no_diag"] = { "Ok", '' },
-	["modifiable"] = { "Ok", '○' },
+	["nomodifiable"] = { "Ok", '○' },
 	["modified"] = { "Error", '•' },
 	["readonly"] = { "Warn", '' },
 }
@@ -31,7 +30,7 @@ local signs = {
 	Warn = " ",
 	Info = " ",
 	Hint = "",
-	Ok = ""
+	Ok = " "
 }
 
 local function make_ui_hl_grps(hi_palette)
