@@ -1,13 +1,17 @@
+# Make manual: hhttps://www.gnu.org/software/make/manual/make.html
 # GCC Options: https://gcc.gnu.org/onlinedocs/gcc/Option-Summary.html
-# Standard Targets: https://www.gnu.org/software/make/manual/make.html#Standard-Targets
 # Makefile Tutorial: https://www.youtube.com/watch?v=FfG-QqRK4cY
 
 # -------------------------------------------------------------------
 # files and directories
 # -------------------------------------------------------------------
-bin_name = <TEMPLATE>
+bin_name =
+man_name = $(bin_name).1.gz
 
-install_dir = /usr/bin
+prefix = /usr/local
+bindir = $(prefix)/bin
+mandir = $(prefix)/man/man1
+
 src_dir = src
 inc_dir = inc
 test_dir = test
@@ -65,12 +69,14 @@ debug_clean:
 	rm -rf $(build_dir)
 	rm debug_$(bin_name)
 
-# install target for "sudo make install"
+
 install:
 	$(NORMAL_INSTALL)
-	install -m 007 $(bin_name) $(install_dir)/
+	install -m 007 $(bin_name) $(bindir)
+	cp ./man/$(man_name) $(mandir)/$(man_name)
 
 
 uninstall:
 	$(NORMAL_UNINSTALL)
-	rm $(install_dir)/$(bin_name)
+	rm $(bindir)/$(bin_name)
+	rm $(mandir)/$(man_name)
