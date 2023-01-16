@@ -1,21 +1,9 @@
 -- api docs: https://neovim.io/doc/user/api.html
 
-local str = {
-	ast = "*",
-	c_sl = "// ",
-	latx = "% ",
-	text = "- ",
-	octo = "# ",
-}
-
 local ft_cstr_overrides = {
-	["c"] = str.c_sl,
-	["cpp"] = str.c_sl,
-	["cuda"] = str.c_sl,
-	["gitcommit"] = str.text,
-	["gitconfig"] = str.octo,
-	["txt"] = str.text,
-	["text"] = str.text,
+	["gitcommit"] = "- ",
+	["txt"] = "- ",
+	["text"] ="- "
 }
 
 

@@ -76,8 +76,6 @@ map("n", "<bs>", "<<", {})
 map("", "<home>", "^", {}) -- move to first non-blank char
 map("i", "<home>", "<C-o>^", {}) -- move in front of first non-blank char
 
-map("n", "<C-f>", ":LOOK ", {})
-
 -- open URLs
 -- https://www.reddit.com/r/neovim/comments/i72eo7/open_link_with_gx_asynchronously/
 map("n", "gx", "<cmd>call jobstart(['xdg-open', expand('<cfile>')], {'detach': v:true})<CR>", silent)
