@@ -99,6 +99,7 @@ o.sidescrolloff = 5
 o.signcolumn = "yes:1"
 o.smartcase = true
 o.splitkeep = "screen"
+o.statuscolumn = "%!v:lua.get_statuscol()"
 o.statusline = "%!v:lua.get_statusline()"
 o.swapfile = false
 o.synmaxcol = 1000
