@@ -48,6 +48,19 @@ local plugins = {
 		end,
 	},
 
+	{
+		"smjonas/inc-rename.nvim",
+		config = function()
+			require("inc_rename").setup({
+				review_empty_name = true
+			})
+
+			vim.keymap.set("n", "<leader>r", function()
+				return ":IncRename " .. vim.fn.expand("<cword>")
+			end, { expr = true })
+		end,
+	},
+
 	--------------------------------------------------
 	-- treesitter
 	--------------------------------------------------
@@ -279,10 +292,8 @@ local plugins = {
 			})
 
 			local utils = require("jmp.ui.utils")
-			local match_fg = utils.get_hl_grp_rgb("MatchParen", "fg")
-			local dim_match_hl = utils.shade_color(match_fg, -75)
-
-			vim.api.nvim_set_hl(0, "MatchArea", { bg = dim_match_hl })
+			local match_bg = utils.get_hl_grp_rgb("MatchParen", "bg")
+			vim.api.nvim_set_hl(0, "MatchArea", { bg = match_bg })
 		end
 	},
 
@@ -412,57 +423,16 @@ local plugins = {
 		ft = "markdown",
 	},
 
+	-- Org
 	{
 		"akinsho/org-bullets.nvim",
-		config = cfg("org-bullets"),
+		config = cfg("bullets"),
 		requires = "nvim-orgmode/orgmode"
 	},
 
 	{
 		"nvim-orgmode/orgmode",
 		config = cfg("org"),
-	},
-
-	--------------------------------------------------
-	-- whimsy
-	--------------------------------------------------
-	{
-		"tamton-aquib/duck.nvim",
-		config = function()
-			local duck = require("duck")
-
-			duck.setup({
-				character = "👹",
-				speed = 10,
-			})
-
-			local active = false
-			local timer = vim.loop.new_timer()
-			local wait_mins = 3
-			local wait_ms = wait_mins * 60 * 1000
-
-			-- FIXME: error thrown when functions are called, e.g. hop.nvim
-			vim.api.nvim_create_autocmd({
-				"BufEnter",
-				"BufLeave",
-				"CursorMoved",
-				"CursorMovedI",
-				"ModeChanged",
-			}, {
-				group = "editing",
-				callback = function()
-					if active then
-						require("duck").cook()
-						active = false
-					else
-						timer:start(wait_ms, 0, vim.schedule_wrap(function()
-							require("duck").hatch()
-							active = true
-						end))
-					end
-				end,
-			})
-		end
 	},
 
 	--------------------------------------------------

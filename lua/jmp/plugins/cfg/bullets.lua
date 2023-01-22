@@ -3,8 +3,8 @@ require("org-bullets").setup {
 	symbols = {
 		headlines = { "→" },
 		checkboxes = {
-			half = { "", "OrgTSCheckboxHalfChecked" },
-			done = { "✓", "OrgDone" },
+			half = { "-", "OrgTSCheckboxHalfChecked" },
+			done = { "✔", "OrgDone" },
 			todo = { "✘", "OrgTODO" },
 		},
 	}

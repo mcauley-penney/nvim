@@ -17,6 +17,10 @@ require('orgmode').setup({
 	win_split_mode = "below 30split"
 })
 
+vim.api.nvim_set_hl(0, "OrgDONE", {link = "DiagnosticOk"})
+vim.api.nvim_set_hl(0, "OrgDONE_builtin", {link = "DiagnosticOk"})
+vim.api.nvim_set_hl(0, "OrgTSCheckbox", {link = "Normal"})
+
 local grp = vim.api.nvim_create_augroup("org", { clear = true })
 
 vim.api.nvim_create_autocmd("FileType", {
