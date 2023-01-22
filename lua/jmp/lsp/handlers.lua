@@ -34,6 +34,7 @@ local lsp_signature_help = function(_, result, ctx, config)
 		relative = "cursor",
 		row = row_num,
 		col = 1,
+		width = 80,
 	})
 
 	return bufnr, winnr
