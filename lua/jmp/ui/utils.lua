@@ -36,12 +36,21 @@ function M.shade_color(color, percent)
 end
 
 --- get rgb str from highlight group name
---- @tparam hi: highlight group name, e.g. Special
---- @tparam type: background or foreground
-function M.get_hl_grp_rgb(grp, type)
-	local hlID = vim.api.nvim_get_hl_id_by_name(grp)
+--- @tparam  hi: highlight group name, e.g. Special
+--- @tparam  type: background or foreground
+M.get_hl_grp_rgb = function(grp, type)
+    local _get_hl_rgb_str = function(hl_num)
+        return string.format("#%06x", hl_num)
+    end
 
-	return vim.fn.synIDattr(hlID, type, "gui")
+    -- retrieve table of hi info
+    local hl_tbl = vim.api.nvim_get_hl_by_name(grp, true)
+
+    if type == "fg" then
+        return _get_hl_rgb_str(hl_tbl.foreground)
+    elseif type == "bg" then
+        return _get_hl_rgb_str(hl_tbl.background)
+    end
 end
 
 function M.make_hl_grp(grp_name, hi)
