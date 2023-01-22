@@ -12,11 +12,13 @@ local stl_parts = {
 	path = nil,
 	ro = nil,
 	sep = "%=",
+	trunc = "%<"
 }
 
 local stl_order = {
 	"pad",
 	"git_branch",
+	"trunc",
 	"path",
 	"ro",
 	"mod",

@@ -1,4 +1,4 @@
-for _, module in pairs({ "statusline" }) do
+for _, module in pairs({ "statusline", "statuscol" }) do
 	require("jmp.options." .. module)
 end
 
@@ -36,7 +36,8 @@ o.cindent = true
 o.clipboard = "unnamedplus"
 o.cmdwinheight = 30
 o.confirm = true
-opt.diffopt:append {
+opt.diffopt = {
+	"filler",
 	"indent-heuristic",
 	"linematch:60",
 	"vertical"
@@ -115,6 +116,7 @@ o.wildignore = "*.o"
 o.wildmode = "longest:full"
 o.wildoptions = "pum"
 o.winbar = " "
+o.winblend = 10
 o.writebackup = false
 
 
