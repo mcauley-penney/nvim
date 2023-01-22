@@ -117,7 +117,6 @@ local plugins = {
 		requires = {
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-cmdline",
-			"hrsh7th/cmp-emoji",
 
 			{
 				"petertriho/cmp-git",

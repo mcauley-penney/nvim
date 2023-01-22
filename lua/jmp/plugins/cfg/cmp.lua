@@ -1,5 +1,4 @@
 local cmp = require("cmp")
-local compare = cmp.config.compare
 local border = require("jmp.ui").border
 
 cmp.setup({
@@ -17,27 +16,12 @@ cmp.setup({
 		end,
 	},
 
-	sorting = {
-		priority_weight = 1.0,
-		comparators = {
-			compare.offset,
-			compare.exact,
-			compare.score,
-			compare.kind,
-			compare.sort_text,
-			compare.length,
-			compare.order,
-		},
-	},
-
 	sources = {
-		{ name = "buffer", max_item_count = 10 },
 		{ name = "nvim_lsp", max_item_count = 20 },
 		{ name = "nvim_lua", max_item_count = 5 },
+		{ name = "buffer", max_item_count = 10 },
 		{ name = "path" },
 		{ name = "git" },
-		{ name = "emoji", max_item_count = 10 },
-		{ name = "digraphs" },
 		{ name = "latex_symbols" },
 		{ name = "vsnip" },
 	},
@@ -47,6 +31,10 @@ cmp.setup({
 			border = border,
 			max_height = 75,
 			max_width = 75,
+			winhighlight = table.concat({
+				'Normal:NormalFloat',
+				'FloatBorder:FloatBorder',
+			}, ','),
 		},
 	}
 })
