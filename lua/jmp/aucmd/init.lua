@@ -87,9 +87,3 @@ aucmd("BufWinLeave", {
 	group = grp,
 	command = "silent! mkview",
 })
-
-aucmd("ExitPre", {
-	group = grp,
-	command = "set guicursor=a:ver90",
-	desc = "Set cursor back to beam when leaving Neovim."
-})

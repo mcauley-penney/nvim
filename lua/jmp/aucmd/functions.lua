@@ -1,6 +1,7 @@
 local short_indent = {
 	["css"] = true,
 	["javascript"] = true,
+	["javascriptreact"] = true,
 	["json"] = true,
 	["lua"] = true,
 	["org"] = true,
@@ -8,6 +9,9 @@ local short_indent = {
 
 local nonstandard_tw = {
 	["gitcommit"] = 50,
+	["javascript"] = 120,
+	["javascriptreact"] = 120,
+	["json"] = 0,
 }
 
 local M = {
