@@ -13,24 +13,23 @@ local palette = {
 }
 
 local icons = {
-	["diagnostic"] = "■",
-	["fold"] = "⋯",
+	["diagnostic"] = '■',
+	["fold"] = "┉",
 }
 
 local icons_to_hl = {
 	["branch"] = { "Ok", '' },
-	["no_branch"] = { "Muted", '' },
-	["nomodifiable"] = { "Ok", '○' },
+	["nomodifiable"] = { "Warn", '○' },
 	["modified"] = { "Error", '•' },
-	["readonly"] = { "Warn", '' },
+	["readonly"] = { "Warn", '' },
 }
 
 local signs = {
-	Error = " ",
-	Warn = " ",
-	Info = " ",
-	Hint = "",
-	Ok = " "
+	Error = '≡',
+	Warn = '≡',
+	Info = '≡',
+	Hint = '≡',
+	Ok = '≡'
 }
 
 local function make_ui_hl_grps(hi_palette)
