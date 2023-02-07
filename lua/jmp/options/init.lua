@@ -45,7 +45,7 @@ opt.diffopt = {
 o.emoji = true
 o.expandtab = false
 o.fileignorecase = true
-opt.fillchars = { fold = " ", foldclose = '▸', foldopen = '▾', foldsep = " " }
+opt.fillchars = { fold = " ", foldclose = '►', foldopen = '▼', foldsep = " " }
 o.foldcolumn = '1'
 o.foldenable = false
 o.foldlevel = 99
@@ -61,19 +61,18 @@ end
 
 opt.guicursor = {
 	"n-sm-v:block",
-	"c-ci-cr-i-ve:ver1",
+	"c-ci-cr-i-ve:ver10",
 	"o-r:hor10",
-	"a:Cursor/Cursor-blinkwait0-blinkoff10-blinkon10"
+	"a:Cursor/Cursor"
 }
-o.helpheight = 50
+o.helpheight = 70
 o.hlsearch = true
 o.inccommand = "split"
 o.ignorecase = true
 o.laststatus = 3
-o.lazyredraw = true
 o.list = true
 opt.listchars = {
-	eol = "↴",
+	eol = "¬",
 	nbsp = "◊",
 	tab = "  ",
 	trail = "·",
@@ -92,7 +91,7 @@ o.scrolloff = 60
 o.sessionoptions = "buffers,folds,skiprtp"
 o.shada = "'0,:30,/30"
 o.shiftround = true
-o.shortmess = "acstFOW"
+o.shortmess = "acstFOSW"
 o.showcmd = false
 o.showmode = false
 o.showtabline = 1
@@ -104,7 +103,7 @@ o.statuscolumn = "%!v:lua.get_statuscol()"
 o.statusline = "%!v:lua.get_statusline()"
 o.swapfile = false
 o.synmaxcol = 1000
-o.tabline = "%=" .. vim.fn.tabpagenr()
+-- o.tabline = "%=" .. vim.fn.tabpagenr()
 o.termguicolors = true
 o.timeout = false
 o.title = true
@@ -118,20 +117,3 @@ o.wildoptions = "pum"
 o.winbar = " "
 o.winblend = 10
 o.writebackup = false
-
-
--- turn off search highlighting when the user presses a
--- key other than those associated with search movement
-vim.on_key(function(char)
-	if vim.fn.mode() == "n" then
-		vim.opt.hlsearch = vim.tbl_contains({
-			"<CR>",
-			"n",
-			"N",
-			"*",
-			"#",
-			"?",
-			"/"
-		}, vim.fn.keytrans(char))
-	end
-end, vim.api.nvim_create_namespace "auto_hlsearch")

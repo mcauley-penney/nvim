@@ -52,9 +52,7 @@ end
 local function get_git_branch(root, icon_tbl)
 	local branch = vim.g.get_git_branch(root)
 
-	local icon = branch and icon_tbl["branch"] or icon_tbl["no_branch"]
-
-	return table.concat({ icon, " ", branch or "", " ", ">" })
+	return branch and table.concat({ icon_tbl["branch"], " ", branch, " ", ">" })
 end
 
 --- Create a string of diagnostic information

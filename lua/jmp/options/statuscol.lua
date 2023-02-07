@@ -1,6 +1,6 @@
 local parts = {
 	["fold"] = "%C",
-	["num"] = "%{v:wrap? '-': (v:relnum?v:relnum:v:lnum)}",
+	["num"] = "%{v:virtnum? '-': (v:relnum?v:relnum:v:lnum)}",
 	["sep"] = "%=",
 	["signcol"] = "%s",
 	["space"] = " "
@@ -34,7 +34,6 @@ local function prepare_sign(sign)
 	end
 
 	return "  "
-
 end
 
 _G.get_statuscol = function()
