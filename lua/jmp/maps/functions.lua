@@ -2,8 +2,9 @@
 
 local ft_cstr_overrides = {
 	["gitcommit"] = "- ",
+	["org"] = "- ",
 	["txt"] = "- ",
-	["text"] ="- "
+	["text"] = "- "
 }
 
 
@@ -11,15 +12,6 @@ local unwrap_cstr = function(cstr)
 	local left, right = string.match(cstr, '(.*)%%s(.*)')
 
 	return vim.trim(left), vim.trim(right)
-end
-
-local find_cstr_cursor_pos = function(cstr)
-	-- if there is a space before the cursor position, do not
-	-- include it in the length we are calculating by adding
-	-- '%s*'
-	local start = string.find(cstr, "%s*%%s")
-
-	return start - 1
 end
 
 local M = {
@@ -34,8 +26,10 @@ local M = {
 		row = pos_tbl[1] - 1
 		col = pos_tbl[2]
 
-		local lcs, rcs = unwrap_cstr(vim.bo.commentstring)
-		local inc_len = find_cstr_cursor_pos(vim.bo.commentstring)
+		cstr = vim.bo.commentstring
+
+		local lcs, rcs = unwrap_cstr(cstr)
+		local inc_len = string.find(cstr, "%s*%%s") - 1
 
 		vim.schedule(function()
 			vim.api.nvim_buf_set_text(0, row, col, row, col, { lcs .. ' ' .. rcs })

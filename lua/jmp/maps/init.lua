@@ -8,6 +8,11 @@ local expr = { expr = true, silent = true }
 
 vim.g.mapleader = "m"
 
+local function swap_map(lhs, rhs, mode)
+	map(mode or "", lhs, rhs, {})
+	map(mode or "", rhs, lhs, {})
+end
+
 --------------------------------------------------
 -- Colemak
 --------------------------------------------------
@@ -17,25 +22,24 @@ local colemak_maps = {
 	{ "s", "h" }, -- left
 	{ "t", "l" }, -- right
 }
+local mvmnt_prefix = "<C-w><C-"
 
 for _, pairs in ipairs(colemak_maps) do
 	local lhs = pairs[1]
 	local rhs = pairs[2]
 
-	local upper_lhs = string.upper(lhs)
-	local upper_rhs = string.upper(rhs)
+	local mvmnt_lhs = table.concat({ mvmnt_prefix, lhs, ">" })
+	local mvmnt_rhs = table.concat({ mvmnt_prefix, rhs, ">" })
 
 	-- lowercase
-	map("", lhs, rhs, {})
+	swap_map(lhs, rhs)
 
 	-- uppercase
-	map("", upper_lhs, upper_rhs, {})
+	swap_map(string.upper(lhs), string.upper(rhs))
 
-	-- reverse lowercase
-	map("", rhs, lhs, {})
+	-- window movement
+	swap_map(mvmnt_lhs, mvmnt_rhs)
 
-	-- reverse uppercase
-	map("", upper_rhs, upper_lhs, {})
 end
 
 for _, mode in pairs({ "n", "v" }) do
@@ -66,8 +70,7 @@ map("n", "<Space>", "a", {})
 map("v", "<Space>", "I", {})
 
 -- make single char case change more accessible
-map("n", "`", "~", {})
-map("v", "`", "~", {})
+swap_map("`", "~", { 'n', 'v' })
 
 -- tab and bs for indentation
 map("n", "<tab>", ">>", {})
@@ -80,5 +83,8 @@ map("i", "<home>", "<C-o>^", {}) -- move in front of first non-blank char
 -- https://www.reddit.com/r/neovim/comments/i72eo7/open_link_with_gx_asynchronously/
 map("n", "gx", "<cmd>call jobstart(['xdg-open', expand('<cfile>')], {'detach': v:true})<CR>", silent)
 
--- buffers
-map("n", "<leader>q", ":bd<CR>", silent)
+-- tabs and buffers
+map("n", "<leader>bq", ":bd<CR>", silent)
+map("n", "<leader>tq", ":tabclose<CR>", silent)
+map("n", "<C-Pageup>", ":bp<CR>", silent)
+map("n", "<C-Pagedown>", ":bn<CR>", silent)
