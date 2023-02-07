@@ -36,11 +36,11 @@ return function(client, bufnr)
 	map("i", "<C-k>", lsp.signature_help, opts("LSP Signature Help"))
 	-- map("n", "<leader>r", lsp.rename, opts("LSP Rename"))
 
-	map("n", "<up>", function()
+	map("n", "[d", function()
 		vim.diagnostic.goto_prev({ buffer = bufnr, float = false })
 	end, {})
 
-	map("n", "<down>", function()
+	map("n", "]d", function()
 		vim.diagnostic.goto_next({ buffer = bufnr, float = false })
 	end, {})
 

@@ -52,29 +52,37 @@ local servers = {
 			},
 		},
 	},
+
+	tsserver = {
+		init_options = {
+			preferences = { includeCompletionsForModuleExports = false }
+		}
+	}
 }
 
-local server_setup = function(cfg, name)
-	cfg.on_attach = on_attach
-	require("lspconfig")[name].setup(cfg)
+local populate_setup = function(servers_tbl, attach_fn)
+	local server_setup = function(server_name, server_cfg, attach)
+		server_cfg.on_attach = attach
+		require("lspconfig")[server_name].setup(server_cfg)
+	end
+
+
+	local setup_tbl = {
+		function(server_name)
+			server_setup(server_name, {}, attach_fn)
+		end
+	}
+
+	for name, cfg in pairs(servers_tbl) do
+		setup_tbl[name] = function()
+			server_setup(name, cfg, attach_fn)
+		end
+	end
+
+	return setup_tbl
 end
 
-require("mason-lspconfig").setup_handlers {
-
-	function(server_name)
-		server_setup({}, server_name)
-	end,
-
-	["clangd"] = function()
-		local name = "clangd"
-		server_setup(servers[name], name)
-	end,
-
-  ["sumneko_lua"] = function()
-		local name = "sumneko_lua"
-		server_setup(servers[name], name)
-	end
-}
+require("mason-lspconfig").setup_handlers(populate_setup(servers, on_attach))
 
 vim.diagnostic.config({
 	float = {
