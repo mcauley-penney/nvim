@@ -22,6 +22,7 @@ for grp, hl in pairs({
 
 	sign_tbl[string.lower(grp)] = { text = sym }
 end
+-- arsetn
 
 require("gitsigns").setup({
 	_threaded_diff = true,
@@ -48,12 +49,22 @@ require("gitsigns").setup({
 			vim.keymap.set(mode, l, r, opts)
 		end
 
-		map('n', '<leader>gd', gs.diffthis)
-		map('n', '<leader>gD', function() gs.diffthis('~') end)
 		map("n", "<leader>gt", gs.toggle_signs)
 		map("n", "<leader>gp", gs.preview_hunk)
 		map("n", "<leader>gu", gs.undo_stage_hunk)
 
 		map({ "n", "v" }, "<leader>gs", ':Gitsigns stage_hunk<CR>')
+
+		for map_str, fn in pairs({
+			["]h"] = gs.next_hunk,
+			["[h"] = gs.prev_hunk
+		}) do
+			map('n', map_str, function()
+				if vim.wo.diff then return map_str end
+				vim.schedule(function() fn() end)
+				return '<Ignore>'
+			end, { expr = true })
+		end
+
 	end
 })

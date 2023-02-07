@@ -8,6 +8,18 @@ require('telescope').setup({
 	defaults = {
 		border = true,
 		borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
+		file_ignore_patterns = {
+			'%.jpg',
+			'%.jpeg',
+			'%.png',
+			'%.otf',
+			'%.ttf',
+			'%.DS_Store',
+			'^.git*',
+			'^node_modules/',
+			'^site-packages/',
+			'^.yarn/',
+		},
 		layout_strategy = "bottom_pane",
 		layout_config = {
 			prompt_position = "top",
@@ -35,6 +47,12 @@ require('telescope').setup({
 		},
 	},
 	pickers = {
+		buffers = {
+			ignore_current_buffer = true,
+			show_all_buffers = true,
+			sort_lastused = true,
+			sort_mru = true,
+		},
 		find_files = {
 			hidden = true
 		},
