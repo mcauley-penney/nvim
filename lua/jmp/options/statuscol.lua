@@ -1,6 +1,6 @@
 local parts = {
 	["fold"] = "%C",
-	["num"] = "%{v:virtnum? '-': (v:relnum?v:relnum:v:lnum)}",
+	["num"] = nil,
 	["sep"] = "%=",
 	["signcol"] = "%s",
 	["space"] = " "
@@ -14,6 +14,48 @@ local order = {
 	"gitsigns",
 	"fold"
 }
+
+local function get_num()
+	local function set_numwidth(in_str, indent)
+		local width = 4
+		local indent_str = indent and "%= " or ""
+
+		local num_spaces = width - #in_str
+		if num_spaces <= 0 then num_spaces = 1 end
+
+		return table.concat({ string.rep(" ", num_spaces), in_str, indent_str })
+	end
+
+	local cur_num
+	local do_indent = false
+	local sep = ','
+
+	-- if is current line
+	if vim.v.relnum == 0 then
+		do_indent = true
+		cur_num = vim.v.lnum
+	else
+		cur_num = vim.v.relnum
+	end
+
+	-- if line is wrapped
+	if vim.v.virtnum ~= 0 then
+		cur_num = '-'
+	end
+
+	-- insert thousands separators in line numbers
+	-- https://stackoverflow.com/a/42911668
+	if type(cur_num) == "number" then
+		cur_num = vim.fn.substitute(
+			tostring(cur_num),
+			'\\d\\zs\\ze\\%(\\d\\d\\d\\)\\+$',
+			sep,
+			'g'
+		)
+	end
+
+	return set_numwidth(cur_num, do_indent)
+end
 
 local function mk_hl(group, sym)
 	return table.concat({ "%#", group, "#", sym, "%*" })
@@ -38,6 +80,8 @@ end
 
 _G.get_statuscol = function()
 	local str_tbl = {}
+
+	parts["num"] = get_num()
 
 	local diag_sign, git_sign
 	for _, sign_tbl in ipairs(get_signs()) do
