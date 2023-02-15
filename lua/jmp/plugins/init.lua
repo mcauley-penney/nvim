@@ -107,24 +107,6 @@ local plugins = {
 	},
 
 	{
-		"windwp/nvim-autopairs",
-		requires =
-		{
-			"windwp/nvim-ts-autotag",
-			config = function()
-				require("nvim-ts-autotag").setup()
-			end
-		},
-		config = function()
-			require("nvim-autopairs").setup({
-				close_triple_quotes = true,
-				check_ts = false,
-				enable_check_bracket_line = true,
-			})
-		end
-	},
-
-	{
 		"hrsh7th/nvim-cmp",
 		config = cfg("cmp"),
 		requires = {
@@ -217,7 +199,6 @@ local plugins = {
 		requires = {
 			'nvim-lua/plenary.nvim',
 			{ "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
-			{ "nvim-telescope/telescope-live-grep-args.nvim" },
 			{ "debugloop/telescope-undo.nvim" }
 		},
 		config = cfg("telescope")
@@ -279,11 +260,6 @@ local plugins = {
 	-- UI
 	--------------------------------------------------
 	{
-		"akinsho/bufferline.nvim",
-		config = cfg("bufferline"),
-	},
-
-	{
 		"rareitems/hl_match_area.nvim",
 		config = function()
 			require("hl_match_area").setup({
@@ -295,6 +271,11 @@ local plugins = {
 			local match_bg = utils.get_hl_grp_rgb("MatchParen", "bg")
 			vim.api.nvim_set_hl(0, "MatchArea", { bg = match_bg })
 		end
+	},
+
+	{
+		'kevinhwang91/nvim-hlslens',
+		config = cfg("hlslens"),
 	},
 
 	{
@@ -323,15 +304,14 @@ local plugins = {
 		end,
 	},
 
-	"nvim-tree/nvim-web-devicons",
-
 	{
 		"akinsho/toggleterm.nvim",
 		config = function()
 			require("toggleterm").setup({
 				direction = "horizontal",
-				size = 30,
+				insert_mappings = false,
 				open_mapping = [[<C-space>]],
+				size = 50,
 			})
 		end,
 	},
@@ -403,6 +383,7 @@ local plugins = {
 	-- git commit
 	"rhysd/committia.vim",
 
+	-- Markdown
 	{
 		"iamcco/markdown-preview.nvim",
 		run = function()
@@ -458,7 +439,6 @@ require("packer").startup({
 			use(plugin)
 		end
 	end,
-
 	config = {
 		compile_path = PACKER_PATH,
 		display = {
