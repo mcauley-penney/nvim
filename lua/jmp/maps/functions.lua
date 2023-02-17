@@ -1,10 +1,12 @@
 -- api docs: https://neovim.io/doc/user/api.html
 
+local dash = "- "
+
 local ft_cstr_overrides = {
-	["gitcommit"] = "- ",
-	["org"] = "- ",
-	["txt"] = "- ",
-	["text"] = "- "
+	["gitcommit"] = dash,
+	["org"] = dash,
+	["txt"] = dash,
+	["text"] = dash
 }
 
 
@@ -16,10 +18,12 @@ end
 
 local M = {
 	send_comment = function()
+		-- check our commentstring override map
 		local ft = vim.api.nvim_buf_get_option(0, "filetype")
 		local cstr = ft_cstr_overrides[ft]
 		if (cstr ~= nil) then return cstr end
 
+		-- if we haven't overridden the current commentstring, return it
 		local row, col
 		local pos_tbl = vim.api.nvim_win_get_cursor(0)
 
@@ -28,11 +32,11 @@ local M = {
 
 		cstr = vim.bo.commentstring
 
-		local lcs, rcs = unwrap_cstr(cstr)
+		local left_cstr, right_cstr = unwrap_cstr(cstr)
 		local inc_len = string.find(cstr, "%s*%%s") - 1
 
 		vim.schedule(function()
-			vim.api.nvim_buf_set_text(0, row, col, row, col, { lcs .. ' ' .. rcs })
+			vim.api.nvim_buf_set_text(0, row, col, row, col, { left_cstr .. "  " .. right_cstr })
 			vim.api.nvim_win_set_cursor(0, { row + 1, col + inc_len + 1 })
 		end)
 	end,

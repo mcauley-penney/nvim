@@ -79,15 +79,21 @@ end
 --- Get wordcount for current buffer or visual selection
 -- @treturn string containing word count
 local function get_wordcount_str()
+	local cc
 	local wc
 
-	if vim.fn.wordcount().visual_words ~= nil then
-		wc = vim.fn.wordcount().visual_words
-	else
-		wc = vim.fn.wordcount().words
+	local wc_table = vim.fn.wordcount()
+
+	if wc_table.visual_words and wc_table.visual_chars then
+		wc = wc_table.visual_words
+		cc = wc_table.visual_chars
+
+		return string.format("%d words, %d chars%s", wc, cc, WS)
 	end
 
-	return string.format("\\w: %d%s", wc, WS)
+	wc = wc_table.words
+
+	return string.format("%d words%s", wc, WS)
 end
 
 -- Get fmt strs from dict and concatenate them into one string.

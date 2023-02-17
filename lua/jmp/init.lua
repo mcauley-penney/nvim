@@ -75,9 +75,10 @@ for _, module in ipairs({
 	"options",
 	"maps",
 	"aucmd",
-	"plugins",
 	"ui",
+	"plugins",
 	"cmd",
+	"filetype",
 	"lsp",
 }) do
 	require("jmp." .. module)

@@ -31,11 +31,13 @@ end
 
 o.breakindent = true
 o.breakindentopt = "shift:2"
-o.colorcolumn = "+0"
 o.cindent = true
 o.clipboard = "unnamedplus"
 o.cmdwinheight = 30
+o.colorcolumn = "+0"
 o.confirm = true
+o.cursorline = true
+opt.cursorlineopt = { "number" }
 opt.diffopt = {
 	"filler",
 	"indent-heuristic",

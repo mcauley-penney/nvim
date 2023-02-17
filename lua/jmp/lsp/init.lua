@@ -28,7 +28,7 @@ local servers = {
 	},
 
 	-- https://github.com/sumneko/lua-language-server/blob/f7e0e7a4245578af8cef9eb5e3ec9ce65113684e/locale/en-us/setting.lua
-	sumneko_lua = {
+	lua_ls = {
 		settings = {
 			Lua = {
 				diagnostics = { globals = { "vim" } },
