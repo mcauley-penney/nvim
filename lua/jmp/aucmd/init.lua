@@ -29,7 +29,7 @@ aucmd("BufEnter", {
 aucmd({ "BufEnter", "BufWinEnter" }, {
 	group = grp,
 	callback = function()
-		vim.api.nvim_win_set_option(0, "foldminlines", 1)
+		vim.api.nvim_win_set_option(0, "foldminlines", 3)
 		vim.api.nvim_win_set_option(0, "foldnestmax", 1)
 		vim.api.nvim_buf_set_option(0, "formatoptions", "2cjnpqrt")
 

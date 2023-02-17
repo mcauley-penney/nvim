@@ -47,7 +47,6 @@ o.expandtab = false
 o.fileignorecase = true
 opt.fillchars = { fold = " ", foldclose = '►', foldopen = '▼', foldsep = " " }
 o.foldcolumn = '1'
-o.foldenable = false
 o.foldlevel = 99
 o.foldmethod = "indent"
 o.foldtext = "v:lua.get_fold_text()"
