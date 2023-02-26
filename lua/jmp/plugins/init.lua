@@ -37,9 +37,9 @@ local plugins = {
 				ui = {
 					border = float_border,
 					icons = {
-						package_installed = "✓",
-						package_pending = "→",
-						package_uninstalled = "✗",
+						package_installed = '✓',
+						package_pending = '┉',
+						package_uninstalled = '✗',
 					},
 				},
 			})
@@ -179,8 +179,6 @@ local plugins = {
 	--------------------------------------------------
 	-- motions and textobjects
 	--------------------------------------------------
-	"michaeljsmith/vim-indent-object",
-
 	{
 		"chaoren/vim-wordmotion",
 		setup = function()
@@ -189,6 +187,26 @@ local plugins = {
 	},
 
 	"wellle/targets.vim",
+
+	{
+		"chrisgrieser/nvim-various-textobjs",
+		config = function()
+			local map = vim.keymap.set
+			local modes = { "o", "x" }
+
+			-- diagnostics
+			map(modes, "?", function() require("various-textobjs").diagnostic() end)
+
+			-- indentation
+			map(modes, "ii", function() require("various-textobjs").indentation(true, true) end)
+			map(modes, "ai", function() require("various-textobjs").indentation(false, true) end)
+
+			-- values, e.g. variable assignment
+			map(modes, "iv", function() require("various-textobjs").value(true) end)
+			map(modes, "av", function() require("various-textobjs").value(false) end)
+		end
+
+	},
 
 	--------------------------------------------------
 	-- navigation and searching

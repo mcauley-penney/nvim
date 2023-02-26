@@ -40,7 +40,13 @@ local lsp_signature_help = function(_, result, ctx, config)
 	return bufnr, winnr
 end
 
+
 -- override handlers
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+	vim.lsp.handlers["hover"],
+	{ border = custom_border }
+)
+
 vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
 	lsp_signature_help,
 	{
@@ -48,9 +54,4 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
 		focus = false,
 		silent = true,
 	}
-)
-
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-	vim.lsp.handlers["hover"],
-	{ border = custom_border }
 )

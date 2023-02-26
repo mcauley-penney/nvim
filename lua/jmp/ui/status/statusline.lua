@@ -1,11 +1,11 @@
-local WS = "  "
+local utils = require("jmp.ui.status.utils")
 
 -- see https://vimhelp.org/options.txt.html#%27statusline%27 for part fmt strs
 local stl_parts = {
 	buf_info = nil,
 	diag = nil,
 	git_branch = nil,
-	loc = "%l/%-4L ",
+	loc = "%4L lines",
 	modifiable = nil,
 	modified = nil,
 	pad = " ",
@@ -18,7 +18,6 @@ local stl_parts = {
 local stl_order = {
 	"pad",
 	"git_branch",
-	"trunc",
 	"path",
 	"ro",
 	"mod",
@@ -41,6 +40,7 @@ local function get_filepath(root, hl_grps)
 		vim.fs.basename(root),
 		'/',
 		"%*",
+		stl_parts["trunc"],
 		vim.fn.expand("%r"),
 	})
 end
@@ -52,25 +52,20 @@ end
 local function get_git_branch(root, icon_tbl)
 	local branch = vim.g.get_git_branch(root)
 
-	return branch and table.concat({ icon_tbl["branch"], " ", branch, " ", ">" })
+	return branch and table.concat({ icon_tbl["branch"], ' ', branch })
 end
 
 --- Create a string of diagnostic information
 -- @tparam lsp_signs: dict of signs used for diagnostics
--- @tparam hl_dict: dict of highlights for statusline
--- @treturn success str: string indicating no diagnostics available
 -- @treturn diagnostic str: string indicating diagnostics available
 local function get_diag_str(lsp_signs)
-	if #vim.diagnostic.get(0) < 1 then
-		return table.concat({ lsp_signs["Ok"], WS })
-	end
-
 	local count = nil
 	local diag_tbl = {}
 
 	for _, type in pairs({ "Error", "Warn", "Info", "Hint" }) do
 		count = #vim.diagnostic.get(0, { severity = string.upper(type) })
-		vim.list_extend(diag_tbl, { lsp_signs[type], ":", count, WS })
+		local count_str = utils.pad_str(tostring(count), 3, false, "left")
+		vim.list_extend(diag_tbl, { lsp_signs[type], ":", count_str })
 	end
 
 	return table.concat(diag_tbl)
@@ -88,12 +83,12 @@ local function get_wordcount_str()
 		wc = wc_table.visual_words
 		cc = wc_table.visual_chars
 
-		return string.format("%d words, %d chars%s", wc, cc, WS)
+		return string.format("%d chars, %d words", cc, wc)
 	end
 
 	wc = wc_table.words
 
-	return string.format("%d words%s", wc, WS)
+	return string.format("%d words", wc)
 end
 
 -- Get fmt strs from dict and concatenate them into one string.

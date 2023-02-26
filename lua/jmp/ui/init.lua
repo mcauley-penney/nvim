@@ -1,3 +1,7 @@
+for _, file in pairs({"input", "status.statuscol", "status.statusline"}) do
+	require("jmp.ui." .. file)
+end
+
 local utils = require("jmp.ui.utils")
 local get_hi = utils.get_hl_grp_rgb
 local hl_grp_prefix = "UI"
@@ -14,12 +18,12 @@ local palette = {
 
 local icons = {
 	["diagnostic"] = '■',
-	["fold"] = "┉",
+	["fold"] = '┉',
 }
 
 local icons_to_hl = {
 	["branch"] = { "Ok", '' },
-	["nomodifiable"] = { "Warn", '○' },
+	["nomodifiable"] = { "Warn", '•' },
 	["modified"] = { "Error", '•' },
 	["readonly"] = { "Warn", '' },
 }
@@ -31,6 +35,9 @@ local signs = {
 	Hint = '≡',
 	Ok = '≡'
 }
+
+local line_border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' }
+local invis_border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }
 
 local function make_ui_hl_grps(hi_palette)
 	local ui_bg = hi_palette["bg"]
@@ -56,16 +63,7 @@ local function hl_icons(icon_list, hl_grps)
 	return hled_icons
 end
 
-local make_invisible_border = function()
-	local border = {}
-	local required_border_len = 8
 
-	while #border < required_border_len do
-		table.insert(border, { " ", "FloatBorder" })
-	end
-
-	return border
-end
 
 local function hl_lsp_icons(lsp_icons, hl_grps)
 	local hl_syms = {}
@@ -84,7 +82,7 @@ end
 local hl_grp_tbl = make_ui_hl_grps(palette)
 
 return {
-	border = make_invisible_border(),
+	border = line_border,
 	hl_grps = hl_grp_tbl,
 	hl_icons = hl_icons(icons_to_hl, hl_grp_tbl),
 	hl_signs = hl_lsp_icons(signs, hl_grp_tbl),

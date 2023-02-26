@@ -12,6 +12,7 @@ local nonstandard_tw = {
 	["javascript"] = 120,
 	["javascriptreact"] = 120,
 	["json"] = 0,
+	["python"] = 120,
 }
 
 local M = {

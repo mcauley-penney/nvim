@@ -1,3 +1,5 @@
+local utils = require("jmp.ui.status.utils")
+
 local parts = {
 	["fold"] = "%C",
 	["num"] = nil,
@@ -16,16 +18,6 @@ local order = {
 }
 
 local function get_num()
-	local function set_numwidth(in_str, indent)
-		local width = 4
-		local indent_str = indent and "%= " or ""
-
-		local num_spaces = width - #in_str
-		if num_spaces <= 0 then num_spaces = 1 end
-
-		return table.concat({ string.rep(" ", num_spaces), in_str, indent_str })
-	end
-
 	local cur_num
 	local do_indent = false
 	local sep = ','
@@ -54,7 +46,7 @@ local function get_num()
 		)
 	end
 
-	return set_numwidth(cur_num, do_indent)
+	return utils.pad_str(cur_num, 4, do_indent, "right" )
 end
 
 local function mk_hl(group, sym)

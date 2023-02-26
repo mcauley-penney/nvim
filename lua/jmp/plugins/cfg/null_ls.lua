@@ -9,13 +9,9 @@ null_ls.setup({
 		builtins.formatting.fixjson,
 
 		-- python
-		builtins.diagnostics.flake8,
 		builtins.diagnostics.pydocstyle,
-		builtins.diagnostics.pylint.with({
-			method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
-		}),
 		builtins.formatting.black.with({
-			extra_args = { "--line-length", "79" },
+			extra_args = { "--line-length", "119" },
 		}),
 
 		-- sh

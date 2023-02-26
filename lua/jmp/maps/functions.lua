@@ -3,8 +3,7 @@
 local dash = "- "
 
 local ft_cstr_overrides = {
-	["gitcommit"] = dash,
-	["org"] = dash,
+	["c"] = "// ",
 	["txt"] = dash,
 	["text"] = dash
 }

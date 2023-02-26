@@ -39,7 +39,6 @@ for _, pairs in ipairs(colemak_maps) do
 
 	-- window movement
 	swap_map(mvmnt_lhs, mvmnt_rhs)
-
 end
 
 for _, mode in pairs({ "n", "v" }) do

@@ -1,7 +1,3 @@
-for _, module in pairs({ "statusline", "statuscol" }) do
-	require("jmp.options." .. module)
-end
-
 local o, opt = vim.o, vim.opt
 
 --- Check if a cmd is executable
@@ -74,7 +70,7 @@ o.laststatus = 3
 o.list = true
 opt.listchars = {
 	eol = "¬",
-	nbsp = "◊",
+	nbsp = "◆",
 	tab = "  ",
 	trail = "·",
 }
@@ -84,7 +80,6 @@ o.modelines = 0
 o.mouse = ""
 o.nrformats = "alpha"
 o.number = true
-o.pumblend = 10
 o.redrawtime = 150
 o.relativenumber = true
 o.ruler = false
@@ -104,7 +99,6 @@ o.statuscolumn = "%!v:lua.get_statuscol()"
 o.statusline = "%!v:lua.get_statusline()"
 o.swapfile = false
 o.synmaxcol = 1000
--- o.tabline = "%=" .. vim.fn.tabpagenr()
 o.termguicolors = true
 o.timeout = false
 o.title = true
@@ -116,5 +110,4 @@ o.wildignore = "*.o"
 o.wildmode = "longest:full"
 o.wildoptions = "pum"
 o.winbar = " "
-o.winblend = 10
 o.writebackup = false

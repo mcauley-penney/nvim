@@ -75,7 +75,6 @@ for _, module in ipairs({
 	"options",
 	"maps",
 	"aucmd",
-	"ui",
 	"plugins",
 	"cmd",
 	"filetype",
