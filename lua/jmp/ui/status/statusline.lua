@@ -32,8 +32,10 @@ local function get_filepath(root, hl_grps)
 	if root == nil then return nil end
 
 	return table.concat({
+		"%.15(",
 		hl_grps["Muted"],
 		vim.fs.dirname(root),
+		"%)",
 		'/',
 		"%*",
 		hl_grps["Warn"],
