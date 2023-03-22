@@ -39,9 +39,9 @@ require('telescope').setup({
 			diff_context_lines = 10,
 			mappings = {
 				i = {
-					["<cr>"] = require("telescope-undo.actions").restore,
-					["<C-cr>"] = require("telescope-undo.actions").yank_additions,
-					["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
+							["<cr>"] = require("telescope-undo.actions").restore,
+							["<C-cr>"] = require("telescope-undo.actions").yank_additions,
+							["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
 				},
 			},
 		},
@@ -52,6 +52,14 @@ require('telescope').setup({
 			show_all_buffers = true,
 			sort_lastused = true,
 			sort_mru = true,
+			mappings = {
+				i = {
+							["<c-d>"] = "delete_buffer",
+				},
+				n = {
+							["<c-d>"] = "delete_buffer",
+				}
+			}
 		},
 		find_files = {
 			hidden = true
@@ -59,7 +67,7 @@ require('telescope').setup({
 	}
 })
 
-for _, ext in ipairs({ "fzf", "live_grep_args", "undo" }) do
+for _, ext in ipairs({ "fzf", "undo" }) do
 	require('telescope').load_extension(ext)
 end
 
@@ -79,9 +87,5 @@ vim.api.nvim_set_hl(0, "TelescopeNormal", { bg = dark_norm })
 vim.keymap.set("n", "<C-t>", builtin.find_files, { silent = true })
 vim.keymap.set("n", "<C-q>", builtin.quickfix, { silent = true })
 vim.keymap.set("n", "\\", builtin.buffers, { silent = true })
-
-vim.keymap.set("n", "<C-f>",
-	require('telescope').extensions.live_grep_args.live_grep_args,
-	{ silent = true })
-
+vim.keymap.set("n", "<C-f>", builtin.live_grep, { silent = true })
 vim.keymap.set("n", "<leader>u", "<cmd>Telescope undo<cr>", { silent = true })

@@ -19,12 +19,10 @@ local order = {
 
 local function get_num()
 	local cur_num
-	local do_indent = false
 	local sep = ','
 
 	-- if is current line
 	if vim.v.relnum == 0 then
-		do_indent = true
 		cur_num = vim.v.lnum
 	else
 		cur_num = vim.v.relnum
@@ -46,7 +44,7 @@ local function get_num()
 		)
 	end
 
-	return utils.pad_str(cur_num, 4, do_indent, "right" )
+	return utils.pad_str(cur_num, 4, false, "right")
 end
 
 local function mk_hl(group, sym)

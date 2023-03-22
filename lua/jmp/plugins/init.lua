@@ -21,7 +21,7 @@ local plugins = {
 	--------------------------------------------------
 	-- color scheme
 	--------------------------------------------------
-	"/home/m/files/nonwork/still-light.nvim",
+	"/home/m/files/nonwork/hl-den.nvim",
 
 	--------------------------------------------------
 	-- LSP
@@ -44,20 +44,7 @@ local plugins = {
 				},
 			})
 
-			require("mason-lspconfig").setup()
-		end,
-	},
-
-	{
-		"smjonas/inc-rename.nvim",
-		config = function()
-			require("inc_rename").setup({
-				review_empty_name = true
-			})
-
-			vim.keymap.set("n", "<leader>r", function()
-				return ":IncRename " .. vim.fn.expand("<cword>")
-			end, { expr = true })
+			require("mason-lspconfig").setup({})
 		end,
 	},
 
@@ -71,11 +58,6 @@ local plugins = {
 	},
 
 	{
-		"nvim-treesitter/nvim-treesitter-context",
-		requires = "nvim-treesitter/nvim-treesitter",
-	},
-
-	{
 		"nvim-treesitter/nvim-treesitter-textobjects",
 		requires = "nvim-treesitter/nvim-treesitter",
 	},
@@ -84,6 +66,40 @@ local plugins = {
 		"danymat/neogen",
 		config = cfg("neogen"),
 		requires = "nvim-treesitter/nvim-treesitter",
+	},
+
+	{
+		"echasnovski/mini.splitjoin",
+		config = function()
+			local MiniSplitjoin = require('mini.splitjoin')
+
+			local pairs = {
+				'%b()',
+				'%b<>',
+				'%b[]',
+				'%b{}',
+			}
+
+			MiniSplitjoin.setup({
+				detect = {
+					brackets = pairs,
+					separator = '[,;]',
+					exclude_regions = {},
+				},
+				mappings = {
+					toggle = 'gS',
+				},
+			})
+
+			local gen_hook = MiniSplitjoin.gen_hook
+			local hook_pairs = { brackets = pairs }
+			local add_pair_commas = gen_hook.add_trailing_separator(hook_pairs)
+			local del_pair_commas = gen_hook.del_trailing_separator(hook_pairs)
+			vim.b.minisplitjoin_config = {
+				split = { hooks_post = { add_pair_commas } },
+				join  = { hooks_post = { del_pair_commas } },
+			}
+		end,
 	},
 
 	--------------------------------------------------
@@ -134,12 +150,31 @@ local plugins = {
 	{
 		"gbprod/substitute.nvim",
 		config = function()
-			require("substitute").setup()
+			require("substitute").setup({
+				highlight_substituted_text = {
+					timer = 200,
+				},
+				range = {
+					group_substituted_text = false,
+					prefix = "s",
+					prompt_current_text = false,
+					suffix = "",
+				},
+			})
 
-			vim.keymap.set("n", "r", require("substitute").operator, {})
-			vim.keymap.set("n", "rr", require("substitute").line, {})
-			vim.keymap.set("n", "R", require("substitute").eol, {})
-			vim.keymap.set("x", "r", require("substitute").visual, {})
+			local map = vim.keymap.set
+			local sub = require("substitute")
+
+			map("n", "r", sub.operator, {})
+			map("n", "rr", sub.line, {})
+			map("n", "R", sub.eol, {})
+			map("x", "r", sub.visual, {})
+
+			map("n", "<leader>s", require("substitute.range").operator, { noremap = true })
+			map("x", "<leader>s", require("substitute.range").visual, { noremap = true })
+
+			vim.api.nvim_set_hl(0, "SubstituteSubstituted", { link = "Substitute" })
+			vim.api.nvim_set_hl(0, "SubstituteRange", { link = "Substitute" })
 		end,
 	},
 
@@ -179,13 +214,6 @@ local plugins = {
 	--------------------------------------------------
 	-- motions and textobjects
 	--------------------------------------------------
-	{
-		"chaoren/vim-wordmotion",
-		setup = function()
-			vim.g.wordmotion_mappings = { e = "k", ge = "gk" }
-		end
-	},
-
 	"wellle/targets.vim",
 
 	{
@@ -193,10 +221,6 @@ local plugins = {
 		config = function()
 			local map = vim.keymap.set
 			local modes = { "o", "x" }
-
-			-- diagnostics
-			map(modes, "?", function() require("various-textobjs").diagnostic() end)
-
 			-- indentation
 			map(modes, "ii", function() require("various-textobjs").indentation(true, true) end)
 			map(modes, "ai", function() require("various-textobjs").indentation(false, true) end)
@@ -205,21 +229,25 @@ local plugins = {
 			map(modes, "iv", function() require("various-textobjs").value(true) end)
 			map(modes, "av", function() require("various-textobjs").value(false) end)
 		end
-
 	},
 
 	--------------------------------------------------
 	-- navigation and searching
 	--------------------------------------------------
 	{
-		'nvim-telescope/telescope.nvim',
-		tag = '0.1.0',
-		requires = {
-			'nvim-lua/plenary.nvim',
-			{ "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
-			{ "debugloop/telescope-undo.nvim" }
-		},
-		config = cfg("telescope")
+		"stevearc/aerial.nvim",
+		config = function()
+			require("aerial").setup({
+				layout = {
+					close_on_select = false,
+					max_width = 45,
+					min_width = 45,
+					close_automatic_events = { "switch_buffer", "unfocus", "unsupported" },
+				}
+			})
+
+			vim.keymap.set("n", "<F7>", "<cmd>AerialToggle<cr>", { silent = true })
+		end
 	},
 
 	{
@@ -237,57 +265,27 @@ local plugins = {
 	},
 
 	{
-		"simrat39/symbols-outline.nvim",
-		config = function()
-			require("symbols-outline").setup({
-				auto_close = true,
-				auto_preview = false,
-				autofold_depth = 2,
-				auto_unfold_hover = false,
-				highlight_hovered_item = false,
-				show_guides = true,
-				show_symbol_details = false,
-			})
-
-			vim.keymap.set("n", "<F7>", "<cmd>SymbolsOutline<cr>", { silent = true })
-		end,
-	},
-
-	{
-		"simnalamburt/vim-mundo",
-		setup = function()
-			vim.g.mundo_header = 0
-			vim.g.mundo_preview_bottom = 1
-			vim.g.mundo_right = 1
-			vim.g.mundo_verbose_graph = 0
-
-			vim.g.mundo_mappings = {
-				["<cr>"] = "preview",
-				e = "mode_newer",
-				n = "mode_older",
-				q = "quit",
-				["<esc>"] = "quit",
-			}
-
-			vim.keymap.set("n", "<leader>u", "<cmd>MundoToggle<cr>", {})
-		end,
-		cmd = "MundoToggle",
+		'nvim-telescope/telescope.nvim',
+		tag = '0.1.0',
+		requires = {
+			'nvim-lua/plenary.nvim',
+			{ "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
+			{ "debugloop/telescope-undo.nvim" }
+		},
+		config = cfg("telescope")
 	},
 
 	--------------------------------------------------
 	-- UI
 	--------------------------------------------------
 	{
-		"rareitems/hl_match_area.nvim",
+		"/home/m/files/nonwork/racket-match.nvim",
 		config = function()
-			require("hl_match_area").setup({
-				delay = 150,
-				highlight_in_insert_mode = false
-			})
+			require("racket-match").setup({})
 
 			local utils = require("jmp.ui.utils")
 			local match_bg = utils.get_hl_grp_rgb("MatchParen", "bg")
-			vim.api.nvim_set_hl(0, "MatchArea", { bg = match_bg })
+			vim.api.nvim_set_hl(0, "RacketMatch", { bg = match_bg })
 		end
 	},
 
@@ -300,12 +298,14 @@ local plugins = {
 		"lukas-reineke/indent-blankline.nvim",
 		config = function()
 			require("indent_blankline").setup({
-				char = "├",
+				char = "│",
 				filetype_exclude = { "fzf", "mason", "packer" },
 				max_indent_increase = 1,
 				show_first_indent_level = false,
 				show_trailing_blankline_indent = false,
 			})
+
+			vim.api.nvim_set_hl(0, "IndentBlanklineChar", { link = "NonText" })
 		end
 	},
 
@@ -347,6 +347,9 @@ local plugins = {
 		config = function()
 			require('illuminate').configure({
 				delay = 150,
+				providers = {
+					'regex',
+				},
 				under_cursor = false,
 			})
 
@@ -392,6 +395,9 @@ local plugins = {
 			vim.keymap.set("n", "P", "<Plug>(YankyPutBefore)", {})
 			vim.keymap.set("x", "P", "<Plug>(YankyPutBefore)", {})
 			vim.keymap.set({ "n", "x" }, "y", "<Plug>(YankyYank)", {})
+
+			local bg = require("jmp.ui").palette.bg
+			vim.api.nvim_set_hl(0, "YankyPut", { fg = "#4b8b51", bg = bg })
 		end,
 	},
 
@@ -438,17 +444,45 @@ local plugins = {
 	-- testing
 	--------------------------------------------------
 	{
-		"smjonas/inc-rename.nvim",
-		config = function()
-			require("inc_rename").setup({
-				review_empty_name = true
-			})
-
-			vim.keymap.set("n", "<leader>r", function()
-				return ":IncRename " .. vim.fn.expand("<cword>")
-			end, { expr = true })
-		end,
+		"nvim-neo-tree/neo-tree.nvim",
+		branch = "v2.x",
+		requires = {
+			"nvim-lua/plenary.nvim",
+			"MunifTanjim/nui.nvim",
+		}
 	},
+
+	-- for vim.ui.select
+	{
+		'stevearc/dressing.nvim',
+		config = function()
+			require('dressing').setup({
+				input = { enabled = false },
+				select = {
+					enabled = true,
+					backend = {
+						--  "fzf",
+						"telescope",
+						"builtin",
+					},
+					telescope = require('telescope.themes').get_ivy({})
+				}
+			})
+		end
+	},
+
+	{
+		"projekt0n/circles.nvim",
+		requires = { "nvim-tree/nvim-web-devicons" },
+		config = function()
+			require("circles").setup({
+				icons = { empty = "○", filled = "●", lsp_prefix = "" },
+			})
+		end
+	},
+
+	-- https://www.reddit.com/r/vim/comments/k10psl/how_to_convert_smart_quotes_and_other_fancy/
+	"idbrii/vim-textconv",
 }
 
 require("packer").startup({

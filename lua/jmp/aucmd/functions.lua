@@ -12,6 +12,7 @@ local nonstandard_tw = {
 	["javascript"] = 120,
 	["javascriptreact"] = 120,
 	["json"] = 0,
+	["lua"] = 120,
 	["python"] = 120,
 }
 

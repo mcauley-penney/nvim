@@ -16,6 +16,7 @@ return function(client, bufnr)
 
 	if client.supports_method("textDocument/rename") then
 		map("n", "<leader>r", require(tools .. "rename").rename, {})
+		--  map('n', "<leader>r", lsp.rename, opts("LSP Rename"))
 	end
 
 	if client.supports_method("textDocument/signatureHelp") then

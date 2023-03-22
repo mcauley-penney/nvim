@@ -75,7 +75,7 @@ aucmd("CmdlineLeave", {
 
 aucmd("TextYankPost", {
 	group = grp,
-	command = [[silent! lua vim.highlight.on_yank{higroup="CursorLine", timeout=150}]],
+	command = [[silent! lua vim.highlight.on_yank{higroup="CursorLine", timeout=200}]],
 })
 
 ----------------------------------------

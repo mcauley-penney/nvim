@@ -36,7 +36,7 @@ vim.ui.input = function(opts, on_confirm)
 		prompt = prompt .. opts.prompt
 	end
 
-	local default_text = opts.default or ""
+	local default_text = opts.default or "Input: "
 
 	-- set keymaps
 	vim.keymap.set({ "i", "n" }, "<CR>", "<CR><Esc>:close!<CR>:stopinsert<CR>", {

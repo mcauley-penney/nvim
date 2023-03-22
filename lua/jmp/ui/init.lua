@@ -17,7 +17,7 @@ local palette = {
 }
 
 local icons = {
-	["diagnostic"] = '■',
+	["diagnostic"] = '',
 	["fold"] = '┉',
 }
 
@@ -36,7 +36,6 @@ local signs = {
 	Ok = '≡'
 }
 
-local line_border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' }
 local invis_border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }
 
 local function make_ui_hl_grps(hi_palette)
@@ -82,9 +81,10 @@ end
 local hl_grp_tbl = make_ui_hl_grps(palette)
 
 return {
-	border = line_border,
+	border = invis_border,
 	hl_grps = hl_grp_tbl,
 	hl_icons = hl_icons(icons_to_hl, hl_grp_tbl),
 	hl_signs = hl_lsp_icons(signs, hl_grp_tbl),
 	no_hl_icons = icons,
+	palette = palette
 }

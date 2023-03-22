@@ -36,8 +36,8 @@ function M.shade_color(color, percent)
 end
 
 --- get rgb str from highlight group name
---- @tparam  hi: highlight group name, e.g. Special
---- @tparam  type: background or foreground
+--- @param  hi: highlight group name, e.g. Special
+--- @param  type: background or foreground
 M.get_hl_grp_rgb = function(grp, type)
     local _get_hl_rgb_str = function(hl_num)
         return string.format("#%06x", hl_num)

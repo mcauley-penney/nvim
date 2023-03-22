@@ -15,14 +15,12 @@ for grp, hl in pairs({
 	Topdelete = red,
 	Untracked = gra,
 }) do
-
 	fg = ui.get_hl_grp_rgb(hl, "fg")
 	dim_hl = ui.shade_color(fg, -25)
 	vim.api.nvim_set_hl(0, "GitSigns" .. grp, { fg = dim_hl })
 
 	sign_tbl[string.lower(grp)] = { text = sym }
 end
--- arsetn
 
 require("gitsigns").setup({
 	_threaded_diff = true,
@@ -36,10 +34,8 @@ require("gitsigns").setup({
 		row = 0,
 		col = 1
 	},
-
 	signs = sign_tbl,
 	signcolumn = true,
-
 	on_attach = function(bufnr)
 		local gs = package.loaded.gitsigns
 
@@ -49,11 +45,14 @@ require("gitsigns").setup({
 			vim.keymap.set(mode, l, r, opts)
 		end
 
+		map('n', '<leader>gd', gs.diffthis)
+		map('n', '<leader>gD', function() gs.diffthis('~') end)
 		map("n", "<leader>gt", gs.toggle_signs)
-		map("n", "<leader>gp", gs.preview_hunk)
-		map("n", "<leader>gu", gs.undo_stage_hunk)
+		map("n", "<leader>hp", gs.preview_hunk)
+		map("n", "<leader>hu", gs.undo_stage_hunk)
 
-		map({ "n", "v" }, "<leader>gs", ':Gitsigns stage_hunk<CR>')
+		map({ "n", "v" }, "<leader>hs", ':Gitsigns stage_hunk<CR>')
+		map({ 'n', 'v' }, '<leader>hr', ':Gitsigns reset_hunk<CR>')
 
 		for map_str, fn in pairs({
 			["]h"] = gs.next_hunk,
@@ -65,6 +64,5 @@ require("gitsigns").setup({
 				return '<Ignore>'
 			end, { expr = true })
 		end
-
 	end
 })

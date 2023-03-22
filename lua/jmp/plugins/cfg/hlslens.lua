@@ -5,7 +5,7 @@ local function lens(render, pos_list, nearest, wkg_i, relIdx)
 	local abs_rel_idx = math.abs(relIdx)
 
 	if abs_rel_idx > 1 then
-		indicator = (' %d%s'):format(abs_rel_idx, sfw ~= (relIdx > 1) and '↑' or '↓')
+		indicator = (' %d%s'):format(abs_rel_idx, sfw ~= (relIdx > 1) and 'N' or 'n')
 	else
 		indicator = ''
 	end

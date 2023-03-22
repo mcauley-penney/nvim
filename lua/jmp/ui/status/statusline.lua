@@ -31,18 +31,29 @@ local stl_order = {
 local function get_filepath(root, hl_grps)
 	if root == nil then return nil end
 
-	return table.concat({
-		"%.15(",
+	local cols = math.floor(vim.api.nvim_get_option("columns") / 3)
+
+	local root_grp = table.concat({
+		"%.",
+		cols,
+		'(',
 		hl_grps["Muted"],
 		vim.fs.dirname(root),
 		"%)",
 		'/',
-		"%*",
+		"%*"
+	})
+
+	local trunk_grp = table.concat({
 		hl_grps["Warn"],
 		vim.fs.basename(root),
 		'/',
 		"%*",
-		stl_parts["trunc"],
+	})
+
+	return table.concat({
+		root_grp,
+		trunk_grp,
 		vim.fn.expand("%r"),
 	})
 end
@@ -64,7 +75,7 @@ local function get_diag_str(lsp_signs)
 	local count = nil
 	local diag_tbl = {}
 
-	for _, type in pairs({ "Error", "Warn", "Info", "Hint" }) do
+	for _, type in pairs({ "Error", "Warn" }) do
 		count = #vim.diagnostic.get(0, { severity = string.upper(type) })
 		local count_str = utils.pad_str(tostring(count), 3, false, "left")
 		vim.list_extend(diag_tbl, { lsp_signs[type], ":", count_str })
@@ -123,7 +134,7 @@ _G.get_statusline = function()
 	local ui = require("jmp.ui")
 	local hl_grps_tbl = ui.hl_grps
 	local hl_icons_tbl = ui.hl_icons
-	local buf_get_opt = vim.api.nvim_buf_get_option
+	local get_bufopt = vim.api.nvim_buf_get_option
 
 	if vim.bo.buftype == "terminal" then
 		return "%#StatusLineNC#"
@@ -135,11 +146,11 @@ _G.get_statusline = function()
 
 	stl_parts["path"] = get_filepath(root, hl_grps_tbl) or path
 	stl_parts["git_branch"] = get_git_branch(root, hl_icons_tbl)
-	stl_parts["ro"] = buf_get_opt(buf, "readonly") and hl_icons_tbl["readonly"] or ""
+	stl_parts["ro"] = get_bufopt(buf, "readonly") and hl_icons_tbl["readonly"] or ""
 
-	if not buf_get_opt(buf, "modifiable") then
+	if not get_bufopt(buf, "modifiable") then
 		stl_parts["mod"] = hl_icons_tbl["nomodifiable"]
-	elseif buf_get_opt(buf, "modified") then
+	elseif get_bufopt(buf, "modified") then
 		stl_parts["mod"] = hl_icons_tbl["modified"]
 	else
 		stl_parts["mod"] = ""
