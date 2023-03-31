@@ -66,9 +66,9 @@ if bootstrap_packer() then
 	return
 end
 
-vim.cmd.colorscheme("still_light")
+vim.loader.enable()
 
-require("impatient")
+vim.cmd.colorscheme("hi-dungeon")
 
 for _, module in ipairs({
 	"globals",

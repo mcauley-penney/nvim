@@ -12,8 +12,6 @@ local plugins = {
 	--------------------------------------------------
 	"wbthomason/packer.nvim",
 
-	"lewis6991/impatient.nvim",
-
 	"nvim-lua/plenary.nvim",
 
 	{ "dstein64/vim-startuptime", cmd = "StartupTime" },
@@ -21,7 +19,7 @@ local plugins = {
 	--------------------------------------------------
 	-- color scheme
 	--------------------------------------------------
-	"/home/m/files/nonwork/hl-den.nvim",
+	"/home/m/files/nonwork/hi-dungeon.nvim",
 
 	--------------------------------------------------
 	-- LSP
