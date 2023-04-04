@@ -14,6 +14,13 @@ local plugins = {
 
 	"nvim-lua/plenary.nvim",
 
+	{
+		"folke/neodev.nvim",
+		config = function()
+			require("neodev").setup({})
+		end
+	},
+
 	{ "dstein64/vim-startuptime", cmd = "StartupTime" },
 
 	--------------------------------------------------

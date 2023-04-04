@@ -26,12 +26,10 @@ local servers = {
 			"--suggest-missing-includes",
 		},
 	},
-
 	-- https://github.com/sumneko/lua-language-server/blob/f7e0e7a4245578af8cef9eb5e3ec9ce65113684e/locale/en-us/setting.lua
 	lua_ls = {
 		settings = {
 			Lua = {
-				diagnostics = { globals = { "vim" } },
 				format = {
 					enable = true,
 					defaultConfig = {
@@ -39,20 +37,11 @@ local servers = {
 						indent_size = "2",
 					}
 				},
-				runtime = {
-					version = "LuaJIT",
-					path = vim.split(package.path, ";"),
-				},
+				workspace = { checkThirdParty = false },
 				telemetry = { enable = false },
-				workspace = {
-					library = {
-						library = vim.api.nvim_get_runtime_file("", true),
-					},
-				},
 			},
 		},
 	},
-
 	tsserver = {
 		init_options = {
 			preferences = { includeCompletionsForModuleExports = false }
