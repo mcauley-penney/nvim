@@ -6,7 +6,6 @@ require("nvim-treesitter.configs").setup({
 		"cpp",
 		"diff",
 		"gitcommit",
-		"help",
 		"html",
 		"http",
 		"javascript",
@@ -18,6 +17,7 @@ require("nvim-treesitter.configs").setup({
 		"markdown_inline",
 		"org",
 		"python",
+		"vimdoc",
 	},
 
 	-- Install languages synchronously (only applied to `ensure_installed`)
