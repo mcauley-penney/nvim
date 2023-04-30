@@ -1,4 +1,8 @@
-for _, file in pairs({"input", "status.statuscol", "status.statusline"}) do
+for _, file in pairs({
+	"input",
+	"status.statuscol",
+	"status.statusline",
+}) do
 	require("jmp.ui." .. file)
 end
 
