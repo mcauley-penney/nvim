@@ -1,10 +1,5 @@
 local ui = require("jmp.ui")
-local lspcfg = "jmp.lsp."
-local on_attach = require(lspcfg .. "on_attach")
-
-for _, mod in ipairs({ "handlers" }) do
-	require(lspcfg .. mod)
-end
+local on_attach = require("jmp.lsp.on_attach")
 
 local servers = {
 	-- see $clangd -h, https://clangd.llvm.org/installation
@@ -52,6 +47,10 @@ local servers = {
 local populate_setup = function(servers_tbl, attach_fn)
 	local server_setup = function(server_name, server_cfg, attach)
 		server_cfg.on_attach = attach
+
+		-- TODO: remove when fixed; https://github.com/neovim/neovim/issues/23291
+		server_cfg.capabilities = vim.lsp.protocol.make_client_capabilities()
+		server_cfg.capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
 		require("lspconfig")[server_name].setup(server_cfg)
 	end
 
