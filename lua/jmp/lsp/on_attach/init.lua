@@ -16,11 +16,6 @@ return function(client, bufnr)
 
 	if client.supports_method("textDocument/rename") then
 		map("n", "<leader>r", require(tools .. "rename").rename, {})
-		--  map('n', "<leader>r", lsp.rename, opts("LSP Rename"))
-	end
-
-	if client.supports_method("textDocument/signatureHelp") then
-		require(tools .. "auto_signature").setup(client)
 	end
 
 	if client.supports_method("textDocument/declaration") then
@@ -28,7 +23,7 @@ return function(client, bufnr)
 	end
 
 	for lhs, rhs in pairs({
-		["<leader>d"] = lsp.definition,
+		["<leader>D"] = lsp.definition,
 		["<leader>R"] = lsp.references,
 		["<leader>T"] = lsp.type_definition,
 		["<leader>I"] = lsp.implementation

@@ -74,7 +74,6 @@ require("mason-lspconfig").setup_handlers(populate_setup(servers, on_attach))
 
 vim.diagnostic.config({
 	float = {
-		border = ui.border,
 		header = "",
 		severity_sort = true,
 	},

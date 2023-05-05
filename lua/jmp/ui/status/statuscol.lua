@@ -12,7 +12,6 @@ local order = {
 	"diag",
 	"sep",
 	"num",
-	"space",
 	"gitsigns",
 	"fold"
 }
@@ -36,12 +35,7 @@ local function get_num()
 	-- insert thousands separators in line numbers
 	-- https://stackoverflow.com/a/42911668
 	if type(cur_num) == "number" then
-		cur_num = vim.fn.substitute(
-			tostring(cur_num),
-			'\\d\\zs\\ze\\%(\\d\\d\\d\\)\\+$',
-			sep,
-			'g'
-		)
+		cur_num = tostring(cur_num):reverse():gsub('(%d%d%d)', '%1,'):reverse():gsub('^,', '')
 	end
 
 	return utils.pad_str(cur_num, 4, false, "right")

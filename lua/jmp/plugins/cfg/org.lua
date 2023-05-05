@@ -17,6 +17,7 @@ require('orgmode').setup({
 	win_split_mode = "below 30split"
 })
 
+-- TODO: turn off underlining for TSHeadlines
 vim.api.nvim_set_hl(0, "OrgDONE", {link = "DiagnosticOk"})
 vim.api.nvim_set_hl(0, "OrgDONE_builtin", {link = "DiagnosticOk"})
 vim.api.nvim_set_hl(0, "OrgTSCheckbox", {link = "Normal"})
@@ -32,7 +33,6 @@ vim.api.nvim_create_autocmd("FileType", {
 	end
 })
 
--- TODO: orgagenda doesn't respect our tw function
 vim.api.nvim_create_autocmd("FileType", {
 	group = grp,
 	pattern = "orgagenda",

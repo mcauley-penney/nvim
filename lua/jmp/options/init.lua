@@ -43,7 +43,7 @@ opt.diffopt = {
 o.emoji = true
 o.expandtab = false
 o.fileignorecase = true
-opt.fillchars = { fold = " ", foldclose = '►', foldopen = '▼', foldsep = " " }
+opt.fillchars = { fold = " ", foldclose = '>', foldopen = '∨', foldsep = " " }
 o.foldcolumn = '1'
 o.foldlevel = 99
 o.foldmethod = "indent"
@@ -101,7 +101,6 @@ o.swapfile = false
 o.synmaxcol = 1000
 o.termguicolors = true
 o.timeout = false
-o.title = true
 o.undofile = true
 o.updatetime = 350 -- used for swap file and cursorhold
 opt.viewoptions = { "cursor", "folds" }

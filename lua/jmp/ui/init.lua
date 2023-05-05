@@ -21,7 +21,7 @@ local palette = {
 }
 
 local icons = {
-	["diagnostic"] = '',
+	["diagnostic"] = '■',
 	["fold"] = '┉',
 }
 
@@ -39,8 +39,6 @@ local signs = {
 	Hint = '≡',
 	Ok = '≡'
 }
-
-local invis_border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }
 
 local function make_ui_hl_grps(hi_palette)
 	local ui_bg = hi_palette["bg"]
@@ -66,8 +64,6 @@ local function hl_icons(icon_list, hl_grps)
 	return hled_icons
 end
 
-
-
 local function hl_lsp_icons(lsp_icons, hl_grps)
 	local hl_syms = {}
 	local sign_hl
@@ -84,8 +80,8 @@ end
 
 local hl_grp_tbl = make_ui_hl_grps(palette)
 
+
 return {
-	border = invis_border,
 	hl_grps = hl_grp_tbl,
 	hl_icons = hl_icons(icons_to_hl, hl_grp_tbl),
 	hl_signs = hl_lsp_icons(signs, hl_grp_tbl),

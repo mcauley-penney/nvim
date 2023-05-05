@@ -1,6 +1,6 @@
-local hl_utils = require("jmp.ui.utils")
-local norm_hl = hl_utils.get_hl_grp_rgb("Normal", "bg")
-local dark_norm = hl_utils.shade_color(norm_hl, -30)
+--  local hl_utils = require("jmp.ui.utils")
+--  local norm_hl = hl_utils.get_hl_grp_rgb("Normal", "bg")
+--  local dark_norm = hl_utils.shade_color(norm_hl, -30)
 
 local builtin = require('telescope.builtin')
 
@@ -39,9 +39,9 @@ require('telescope').setup({
 			diff_context_lines = 10,
 			mappings = {
 				i = {
-							["<cr>"] = require("telescope-undo.actions").restore,
-							["<C-cr>"] = require("telescope-undo.actions").yank_additions,
-							["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
+					["<cr>"] = require("telescope-undo.actions").restore,
+					["<C-cr>"] = require("telescope-undo.actions").yank_additions,
+					["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
 				},
 			},
 		},
@@ -54,10 +54,10 @@ require('telescope').setup({
 			sort_mru = true,
 			mappings = {
 				i = {
-							["<c-d>"] = "delete_buffer",
+					["<c-d>"] = "delete_buffer",
 				},
 				n = {
-							["<c-d>"] = "delete_buffer",
+					["<c-d>"] = "delete_buffer",
 				}
 			}
 		},
@@ -82,10 +82,21 @@ vim.api.nvim_create_user_command("Highlights", function()
 	builtin.highlights()
 end, {})
 
-vim.api.nvim_set_hl(0, "TelescopeNormal", { bg = dark_norm })
+vim.api.nvim_create_user_command("Keymaps", function()
+	builtin.keymaps()
+end, {})
+
+--  vim.api.nvim_set_hl(0, "TelescopeNormal", { bg = dark_norm })
 
 vim.keymap.set("n", "<C-t>", builtin.find_files, { silent = true })
 vim.keymap.set("n", "<C-q>", builtin.quickfix, { silent = true })
 vim.keymap.set("n", "\\", builtin.buffers, { silent = true })
 vim.keymap.set("n", "<C-f>", builtin.live_grep, { silent = true })
+vim.keymap.set('n', '<leader>/', function()
+	builtin.current_buffer_fuzzy_find({
+		winblend = 10,
+		previewer = false,
+	})
+end, { desc = '[/] Fuzzily search in current buffer' })
+
 vim.keymap.set("n", "<leader>u", "<cmd>Telescope undo<cr>", { silent = true })

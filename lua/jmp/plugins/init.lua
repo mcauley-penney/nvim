@@ -1,6 +1,4 @@
 local PACKER_PATH = vim.fn.stdpath("cache") .. "/packer/packer_compiled.lua"
-local ui = require("jmp.ui")
-local float_border = ui.border
 
 local function cfg(name)
 	return string.format([[require 'jmp.plugins.cfg.%s']], name)
@@ -26,7 +24,7 @@ local plugins = {
 	--------------------------------------------------
 	-- color scheme
 	--------------------------------------------------
-	"/home/m/files/nonwork/hi-dungeon.nvim",
+	"/home/m/files/nonwork/hl-dungeon.nvim",
 
 	--------------------------------------------------
 	-- LSP
@@ -40,7 +38,6 @@ local plugins = {
 		config = function()
 			require("mason").setup({
 				ui = {
-					border = float_border,
 					icons = {
 						package_installed = '✓',
 						package_pending = '┉',
@@ -51,6 +48,41 @@ local plugins = {
 
 			require("mason-lspconfig").setup({})
 		end,
+	},
+
+	{
+		"onsails/lspkind.nvim",
+		config = function()
+			require('lspkind').init({
+				symbol_map = {
+					Class = ' ',
+					Color = ' ',
+					Constant = ' ',
+					Constructor = ' ',
+					Enum = ' ',
+					EnumMember = ' ',
+					Event = ' ',
+					Field = ' ',
+					File = ' ',
+					Folder = ' ',
+					Function = ' ',
+					Interface = ' ',
+					Keyword = ' ',
+					Method = ' ',
+					Module = ' ',
+					Operator = ' ',
+					Property = ' ',
+					Reference = ' ',
+					Snippet = ' ',
+					Struct = ' ',
+					Text = ' ',
+					TypeParameter = ' ',
+					Unit = ' ',
+					Value = ' ',
+					Variable = ' ',
+				}
+			})
+		end
 	},
 
 	--------------------------------------------------
@@ -128,6 +160,39 @@ local plugins = {
 	},
 
 	{
+		"folke/noice.nvim",
+		config = function()
+			require("noice").setup({
+				cmdline = { enabled = false },
+				documentation = {
+					opts = {
+						position = { row = 2 },
+					},
+				},
+				lsp = {
+					-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+					override = {
+						["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+						["vim.lsp.util.stylize_markdown"] = true,
+						["cmp.entry.get_documentation"] = true,
+					},
+					progress = { enabled = false },
+				},
+				messages = { enabled = false },
+				notify = { enabled = false },
+				popupmenu = { enabled = false },
+				presets = {
+					lsp_doc_border = true,
+				},
+				smart_move = {
+					excluded_filetypes = {},
+				},
+			})
+		end,
+		requires = { "MunifTanjim/nui.nvim" }
+	},
+
+	{
 		"hrsh7th/nvim-cmp",
 		config = cfg("cmp"),
 		requires = {
@@ -143,7 +208,6 @@ local plugins = {
 				ft = "gitcommit"
 			},
 
-			"kdheepak/cmp-latex-symbols",
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-nvim-lua",
 			"hrsh7th/cmp-path",
@@ -201,6 +265,9 @@ local plugins = {
 			vim.keymap.set("n", "<right>", "<Plug>(swap-next)", {})
 		end
 	},
+
+	-- https://www.reddit.com/r/vim/comments/k10psl/how_to_convert_smart_quotes_and_other_fancy/
+	"idbrii/vim-textconv",
 	--------------------------------------------------
 	-- formatting and linting
 	--------------------------------------------------
@@ -219,8 +286,6 @@ local plugins = {
 	--------------------------------------------------
 	-- motions and textobjects
 	--------------------------------------------------
-	"wellle/targets.vim",
-
 	{
 		"chrisgrieser/nvim-various-textobjs",
 		config = function()
@@ -233,6 +298,15 @@ local plugins = {
 			-- values, e.g. variable assignment
 			map(modes, "iv", function() require("various-textobjs").value(true) end)
 			map(modes, "av", function() require("various-textobjs").value(false) end)
+		end
+	},
+
+	"wellle/targets.vim",
+
+	{
+		"chaoren/vim-wordmotion",
+		setup = function()
+			vim.g.wordmotion_mappings = { e = "k", ge = "gk" }
 		end
 	},
 
@@ -288,9 +362,7 @@ local plugins = {
 		config = function()
 			require("racket-match").setup({})
 
-			local utils = require("jmp.ui.utils")
-			local match_bg = utils.get_hl_grp_rgb("MatchParen", "bg")
-			vim.api.nvim_set_hl(0, "RacketMatch", { bg = match_bg })
+			vim.api.nvim_set_hl(0, "RacketMatch", { link = "Visual" })
 		end
 	},
 
@@ -342,8 +414,7 @@ local plugins = {
 	{
 		"itchyny/vim-highlighturl",
 		config = function()
-			local get_hl = require("jmp.ui.utils").get_hl_grp_rgb
-			vim.g.highlighturl_guifg = get_hl("@text.uri", "fg")
+			vim.api.nvim_set_hl(0, "HighlightUrl", { link = "@text.uri" })
 		end
 	},
 
@@ -359,7 +430,7 @@ local plugins = {
 			})
 
 			for _, type in ipairs({ "Text", "Read", "Write" }) do
-				vim.api.nvim_set_hl(0, "IlluminatedWord" .. type, { link = "CursorLine" })
+				vim.api.nvim_set_hl(0, "IlluminatedWord" .. type, { link = "Cursorline" })
 			end
 		end
 	},
@@ -368,8 +439,6 @@ local plugins = {
 		"lukas-reineke/virt-column.nvim",
 		config = function()
 			require("virt-column").setup({ char = "│" })
-
-			vim.api.nvim_set_hl(0, "VirtColumn", { link = "VertSplit" })
 		end,
 	},
 
@@ -395,14 +464,13 @@ local plugins = {
 				},
 			})
 
-			vim.keymap.set("n", "p", "<Plug>(YankyPutAfter)", {})
-			vim.keymap.set("x", "p", "<Plug>(YankyPutAfter)", {})
-			vim.keymap.set("n", "P", "<Plug>(YankyPutBefore)", {})
-			vim.keymap.set("x", "P", "<Plug>(YankyPutBefore)", {})
+			vim.keymap.set("n", "p", "<Plug>(YankyPutIndentAfter)", {})
+			vim.keymap.set("x", "p", "<Plug>(YankyPutIndentAfter)", {})
+			vim.keymap.set("n", "P", "<Plug>(YankyPutIndentBefore)", {})
+			vim.keymap.set("x", "P", "<Plug>(YankyPutIndentBefore)", {})
 			vim.keymap.set({ "n", "x" }, "y", "<Plug>(YankyYank)", {})
 
-			local bg = require("jmp.ui").palette.bg
-			vim.api.nvim_set_hl(0, "YankyPut", { fg = "#4b8b51", bg = bg })
+			vim.api.nvim_set_hl(0, "YankyPut", { link = "Substitute" })
 		end,
 	},
 
@@ -466,7 +534,6 @@ local plugins = {
 				select = {
 					enabled = true,
 					backend = {
-						--  "fzf",
 						"telescope",
 						"builtin",
 					},
@@ -477,17 +544,47 @@ local plugins = {
 	},
 
 	{
-		"projekt0n/circles.nvim",
-		requires = { "nvim-tree/nvim-web-devicons" },
+		"VidocqH/lsp-lens.nvim",
 		config = function()
-			require("circles").setup({
-				icons = { empty = "○", filled = "●", lsp_prefix = "" },
-			})
-		end
+			require("lsp-lens").setup({})
+		end,
 	},
 
-	-- https://www.reddit.com/r/vim/comments/k10psl/how_to_convert_smart_quotes_and_other_fancy/
-	"idbrii/vim-textconv",
+	{
+		"utilyre/barbecue.nvim",
+		requires = { "SmiteshP/nvim-navic" },
+		config = function()
+			require("barbecue").setup({
+				show_basename = false,
+				show_dirname = false,
+				symbols = {
+					separator = ">",
+				}
+			})
+		end,
+	},
+
+	{
+		"dnlhc/glance.nvim",
+		config = function()
+			require('glance').setup({
+				height = 30, -- Height of the window
+				zindex = 45,
+				border = {
+					enable = true,
+					top_char = ' ',
+					bottom_char = ' ',
+				}
+			})
+
+			local map = vim.keymap.set
+
+			map('n', '<leader>D', '<cmd>Glance definitions<cr>')
+			map('n', '<leader>R', '<cmd>Glance references<cr>')
+			map('n', '<leader>T', '<cmd>Glance type_definitions<cr>')
+			map('n', '<leader>I', '<cmd>Glance implementations<cr>')
+		end,
+	}
 }
 
 require("packer").startup({
@@ -501,9 +598,8 @@ require("packer").startup({
 		display = {
 			header_sym = "",
 			open_fn = function()
-				return require("packer.util").float({ border = float_border })
+				return require("packer.util").float({})
 			end,
-			prompt_border = float_border,
 		},
 	},
 })

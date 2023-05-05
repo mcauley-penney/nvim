@@ -5,7 +5,6 @@ local stl_parts = {
 	buf_info = nil,
 	diag = nil,
 	git_branch = nil,
-	loc = "%4L lines",
 	modifiable = nil,
 	modified = nil,
 	pad = " ",
@@ -24,14 +23,21 @@ local stl_order = {
 	"sep",
 	"diag",
 	"wordcount",
-	"loc",
 	"pad",
 }
+
+--- Create a string containing info for the current git branch
+-- @treturn string: branch info
+local function get_git_branch(root, icon_tbl)
+	local branch = vim.g.get_git_branch(root)
+
+	return branch and table.concat({ icon_tbl["branch"], ' ', branch, ' ' })
+end
 
 local function get_filepath(root, hl_grps)
 	if root == nil then return nil end
 
-	local cols = math.floor(vim.api.nvim_get_option("columns") / 3)
+	local cols = math.floor(vim.api.nvim_get_option("columns") / 4)
 
 	local root_grp = table.concat({
 		"%.",
@@ -54,18 +60,9 @@ local function get_filepath(root, hl_grps)
 	return table.concat({
 		root_grp,
 		trunk_grp,
+		stl_parts["trunc"],
 		vim.fn.expand("%r"),
 	})
-end
-
---- Create a string containing info for the current git branch
--- @treturn string: branch info
--- alternative, for if we ever stopped using gitsigns:
--- https://www.reddit.com/r/neovim/comments/uz3ofs/heres_a_function_to_grab_the_name_of_the_current/
-local function get_git_branch(root, icon_tbl)
-	local branch = vim.g.get_git_branch(root)
-
-	return branch and table.concat({ icon_tbl["branch"], ' ', branch })
 end
 
 --- Create a string of diagnostic information
@@ -87,21 +84,27 @@ end
 --- Get wordcount for current buffer or visual selection
 -- @treturn string containing word count
 local function get_wordcount_str()
-	local cc
-	local wc
+	local lc = "%L lines"
+	local ft = vim.api.nvim_buf_get_option(0, "filetype")
 
+	if not vim.g.nonprog_mode[ft] then
+		return lc
+	end
+
+	local wc
 	local wc_table = vim.fn.wordcount()
 
 	if wc_table.visual_words and wc_table.visual_chars then
+		local cc
 		wc = wc_table.visual_words
 		cc = wc_table.visual_chars
 
-		return string.format("%d chars, %d words", cc, wc)
+		return string.format("%d chars, %d words, %s", cc, wc, lc)
 	end
 
 	wc = wc_table.words
 
-	return string.format("%d words", wc)
+	return string.format("%d words, %s", wc, lc)
 end
 
 -- Get fmt strs from dict and concatenate them into one string.
@@ -121,15 +124,6 @@ end
 
 -- Top level function called in options.init to get statusline.
 -- @return str: statusline text to be displayed
---
--- NOTES:
---  • tracking window status:
---      1. Should avoid autocommands to track current statusline, see
---      https://github.com/vim/vim/issues/4406#issuecomment-495496763 .
---
---      2. Can track via global vars, see
---      https://www.reddit.com/r/vim/comments/dxcgtm/comment/f7p12hr/?utm_source=share&utm_medium=web2x&context=3
---
 _G.get_statusline = function()
 	local ui = require("jmp.ui")
 	local hl_grps_tbl = ui.hl_grps
@@ -144,8 +138,8 @@ _G.get_statusline = function()
 	local root = vim.g.get_path_root(path)
 	local buf = vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
 
-	stl_parts["path"] = get_filepath(root, hl_grps_tbl) or path
 	stl_parts["git_branch"] = get_git_branch(root, hl_icons_tbl)
+	stl_parts["path"] = get_filepath(root, hl_grps_tbl) or path
 	stl_parts["ro"] = get_bufopt(buf, "readonly") and hl_icons_tbl["readonly"] or ""
 
 	if not get_bufopt(buf, "modifiable") then
@@ -156,13 +150,11 @@ _G.get_statusline = function()
 		stl_parts["mod"] = ""
 	end
 
-	if #vim.lsp.buf_get_clients() > 0 then
+	if #vim.lsp.get_active_clients({ bufnr = 0 }) > 0 then
 		stl_parts["diag"] = get_diag_str(ui.hl_signs)
 	end
 
-	if vim.g.nonprog_mode[vim.api.nvim_buf_get_option(0, "filetype")] then
-		stl_parts["wordcount"] = get_wordcount_str()
-	end
+	stl_parts["wordcount"] = get_wordcount_str()
 
 	-- turn all of these pieces into one string
 	return concat_status(stl_order, stl_parts)

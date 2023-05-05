@@ -1,4 +1,6 @@
 local ui = require("jmp.ui.utils")
+local set_hl = vim.api.nvim_set_hl
+
 local gra = "Nontext"
 local grn = "DiagnosticOk"
 local red = "DiagnosticError"
@@ -17,18 +19,33 @@ for grp, hl in pairs({
 }) do
 	fg = ui.get_hl_grp_rgb(hl, "fg")
 	dim_hl = ui.shade_color(fg, -25)
-	vim.api.nvim_set_hl(0, "GitSigns" .. grp, { fg = dim_hl })
+	set_hl(0, "GitSigns" .. grp, { fg = dim_hl })
 
 	sign_tbl[string.lower(grp)] = { text = sym }
 end
 
+
+local diffadd_bg = ui.get_hl_grp_rgb("DiffAdd", "bg")
+local diffrm_bg = ui.get_hl_grp_rgb("DiffDelete", "bg")
+
+local diffadd_lighter = ui.shade_color(diffadd_bg, 75)
+local diffrm_lighter = ui.shade_color(diffrm_bg, 75)
+
+set_hl(0, "GitSignsAddInline", {link = "DiffAdd"})
+set_hl(0, "GitSignsAddLnInline", {fg = "fg", bg = diffadd_lighter})
+set_hl(0, "GitSignsChangeInline", {link = "DiffText"})
+set_hl(0, "GitSignsChangeLnInline", {link = "DiffChange"})
+set_hl(0, "GitSignsDeleteInline", {link = "DiffDelete"})
+set_hl(0, "GitSignsDeleteLnInline", {fg = "fg", bg = diffrm_lighter})
+
 require("gitsigns").setup({
-	_threaded_diff = true,
+	-- see https://github.com/akinsho/dotfiles/blob/83040e0d929bcdc56de82cfd49a0b9110603ceee/.config/nvim/plugin/statuscolumn.lua#L58-L72
 	_extmark_signs = false,
+	_inline2 = true,
 	_signs_staged_enable = false,
-	update_debounce = 500,
+	_threaded_diff = true,
 	preview_config = {
-		border = require("jmp.ui.init").border,
+		border = "single",
 		style = 'minimal',
 		relative = 'cursor',
 		row = 0,
@@ -36,6 +53,7 @@ require("gitsigns").setup({
 	},
 	signs = sign_tbl,
 	signcolumn = true,
+	update_debounce = 500,
 	on_attach = function(bufnr)
 		local gs = package.loaded.gitsigns
 
@@ -45,10 +63,11 @@ require("gitsigns").setup({
 			vim.keymap.set(mode, l, r, opts)
 		end
 
+		map('n', '<leader>gb', function() gs.blame_line({ full = true }) end)
 		map('n', '<leader>gd', gs.diffthis)
 		map('n', '<leader>gD', function() gs.diffthis('~') end)
 		map("n", "<leader>gt", gs.toggle_signs)
-		map("n", "<leader>hp", gs.preview_hunk)
+		map("n", "<leader>hp", gs.preview_hunk_inline)
 		map("n", "<leader>hu", gs.undo_stage_hunk)
 
 		map({ "n", "v" }, "<leader>hs", ':Gitsigns stage_hunk<CR>')
