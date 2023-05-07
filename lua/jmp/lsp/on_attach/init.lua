@@ -28,7 +28,9 @@ return function(client, bufnr)
 		["<leader>T"] = lsp.type_definition,
 		["<leader>I"] = lsp.implementation
 	}) do
-		vim.keymap.set('n', lhs, rhs, {})
+		if not vim.fn.maparg(lhs, 'n') then
+			vim.keymap.set('n', lhs, rhs, {})
+		end
 	end
 
 	-- E instead of K because Colemak

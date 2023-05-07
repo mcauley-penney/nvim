@@ -1,7 +1,3 @@
--- TODO: need a undotree
--- https://github.com/debugloop/telescope-undo.nvim
--- https://github.com/mcauley-penney/nvim/blob/8621b4cf40a0828cb495a862dcb192a9854d620f/lua/jmp/plugins/init.lua#L235
-
 return {
 	--------------------------------------------------
 	-- Plugin management and support
@@ -109,7 +105,7 @@ return {
 		"j-hui/fidget.nvim",
 		config = {
 			align = { bottom = false },
-			text = { spinner = { "", "", "", "" } },
+			text = { spinner = { " ", " ", " ", " " } },
 			timer = {
 				fidget_decay = 250, -- how long to keep around empty fidget, in ms
 				spinner_rate = 150,
@@ -760,77 +756,85 @@ return {
 
 	{
 		"nvim-telescope/telescope.nvim",
-
-		tag = "0.1.0",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" }
+			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+			"nvim-telescope/telescope-ui-select.nvim",
+			"debugloop/telescope-undo.nvim",
 		},
-		config = {
-			defaults = {
-				border = true,
-				borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
-				file_ignore_patterns = {
-					"%.jpg",
-					"%.jpeg",
-					"%.png",
-					"%.otf",
-					"%.ttf",
-					"%.DS_Store",
-					"^.git*",
-					"^node_modules/",
-					"^site-packages/",
-					"^.yarn/",
-				},
-				layout_strategy = "bottom_pane",
-				layout_config = {
-					prompt_position = "top",
-					height = 30,
-					width = 1,
-				},
-				sorting_strategy = "ascending",
-			},
-			extensions = {
-				fzf = {
-					fuzzy = true,
-					override_generic_sorter = true,
-					override_file_sorter = true,
-					case_mode = "smart_case",
-				},
-				--  undo = {
-				--  	diff_context_lines = 10,
-				--  	mappings = {
-				--  		i = {
-				--  			["<cr>"] = require("telescope-undo.actions").restore,
-				--  			["<C-cr>"] = require("telescope-undo.actions").yank_additions,
-				--  			["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
-				--  		},
-				--  	},
-				--  },
-			},
-			pickers = {
-				buffers = {
-					ignore_current_buffer = true,
-					show_all_buffers = true,
-					sort_lastused = true,
-					sort_mru = true,
-					mappings = {
-						i = {
-							["<c-d>"] = "delete_buffer",
+		config = function()
+			require("telescope").setup({
+				defaults = {
+					border = true,
+					borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
+					file_ignore_patterns = {
+						"%.jpg",
+						"%.jpeg",
+						"%.png",
+						"%.otf",
+						"%.ttf",
+						"%.DS_Store",
+						"^.git*",
+						"^node_modules/",
+						"^site-packages/",
+						"^.yarn/",
+					},
+					layout_strategy = "bottom_pane",
+					layout_config = {
+						prompt_position = "top",
+						height = 35,
+						width = 1,
+						vertical = {
+							width = 0.9,
+							height = 0.95,
+							preview_height = 0.75,
 						},
-						n = {
-							["<c-d>"] = "delete_buffer",
+					},
+					sorting_strategy = "ascending",
+				},
+				extensions = {
+					fzf = {
+						fuzzy = true,
+						override_generic_sorter = true,
+						override_file_sorter = true,
+						case_mode = "smart_case",
+					},
+					undo = {
+						diff_context_lines = 20,
+						layout_strategy = "vertical",
+						mappings = {
+							i = {
+								["<cr>"] = require("telescope-undo.actions").restore,
+								["<C-cr>"] = require("telescope-undo.actions").yank_additions,
+								["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
+							},
+						},
+					},
+				},
+				pickers = {
+					buffers = {
+						ignore_current_buffer = true,
+						show_all_buffers = true,
+						sort_lastused = true,
+						sort_mru = true,
+						mappings = {
+							i = {
+								["<c-d>"] = "delete_buffer",
+							},
+							n = {
+								["<c-d>"] = "delete_buffer",
+							}
 						}
-					}
+					},
+					find_files = {
+						hidden = true
+					},
 				},
-				find_files = {
-					hidden = true
-				},
-			}
-		},
+			})
 
-		init = function()
 			require("telescope").load_extension("fzf")
+			require("telescope").load_extension("ui-select")
+			require("telescope").load_extension("undo")
 
 			local builtin = require("telescope.builtin")
 
@@ -856,10 +860,18 @@ return {
 			vim.keymap.set("n", "\\", builtin.buffers, { silent = true })
 			vim.keymap.set("n", "<C-f>", builtin.live_grep, { silent = true })
 
-			vim.keymap.set("n", "<leader>u", "<cmd>Telescope undo<cr>", { silent = true })
+			-- LSP
+			vim.keymap.set("n", "<leader>R", builtin.lsp_references, { silent = true })
 
-			vim.keymap.set("n", "<C-t>", builtin.find_files, { silent = true })
-			vim.keymap.set("n", "\\", builtin.buffers, { silent = true })
+			-- git
+			vim.keymap.set("n", "<leader>GC", function()
+				builtin.git_commits({
+					layout_strategy = "vertical"
+				})
+			end, { silent = true })
+			vim.keymap.set("n", "<leader>GB", builtin.git_branches, { silent = true })
+
+			vim.keymap.set("n", "<leader>u", "<cmd>Telescope undo<cr>", { silent = true })
 		end
 	},
 
@@ -1122,22 +1134,6 @@ return {
 	--------------------------------------------------
 	-- testing
 	--------------------------------------------------
-
-	{
-		'stevearc/dressing.nvim',
-		config = {
-			input = { enabled = false },
-			select = {
-				enabled = true,
-				backend = {
-					"telescope",
-					"builtin",
-				},
-				--  telescope = require("telescope.themes").get_ivy({})
-			}
-		},
-		dependencies = "nvim-telescope/telescope.nvim"
-	},
 
 	{
 		"VidocqH/lsp-lens.nvim",
