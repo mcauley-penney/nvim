@@ -32,40 +32,25 @@ local init_str = [[
    \_/_______________/
 ]]
 
-local install_path = fn.stdpath("data")
-		.. "/site/pack/packer/start/packer.nvim"
+local data_path = fn.stdpath("data")
+local install_path = data_path .. "/lazy/lazy.nvim"
 
-if fn.empty(fn.glob(install_path)) > 0 then
+if not vim.loop.fs_stat(install_path) then
 	print(init_str)
 
 	fn.system({
-		"git",
-		"clone",
-		"--depth",
-		"1",
-		"https://github.com/wbthomason/packer.nvim",
+		'git',
+		'clone',
+		'--filter=blob:none',
+		'--single-branch',
+		'https://github.com/folke/lazy.nvim.git',
 		install_path,
 	})
-
-	vim.cmd("packadd! packer.nvim")
-
-	require("packer").startup({
-		function(use)
-			for _, plugin in ipairs(require("jmp.plugins")) do
-				use(plugin)
-			end
-		end,
-	})
-
-	require("packer").sync()
-
-	return true
 end
 
+vim.opt.runtimepath:prepend(install_path)
 
 vim.loader.enable()
-
-vim.cmd.colorscheme("hl-dungeon")
 
 for _, module in ipairs({
 	"globals",
@@ -74,8 +59,26 @@ for _, module in ipairs({
 	"aucmd",
 	"cmd",
 	"filetype",
-	"lsp",
-	"plugins",
 }) do
 	require("jmp." .. module)
 end
+
+
+require('lazy').setup("jmp.plugins", {
+	ui = { border = "single" },
+	defaults = { lazy = false },
+	change_detection = { notify = false },
+	checker = {
+		enabled = true,
+		concurrency = 30,
+		notify = false,
+		frequency = 3600, -- check for updates every hour
+	},
+	performance = {
+		rtp = {
+			paths = { data_path .. '/site' },
+		},
+	},
+})
+
+require("jmp.lsp")

@@ -48,9 +48,15 @@ local populate_setup = function(servers_tbl, attach_fn)
 	local server_setup = function(server_name, server_cfg, attach)
 		server_cfg.on_attach = attach
 
+		local caps = vim.lsp.protocol.make_client_capabilities()
+
 		-- TODO: remove when fixed; https://github.com/neovim/neovim/issues/23291
-		server_cfg.capabilities = vim.lsp.protocol.make_client_capabilities()
-		server_cfg.capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
+		caps.workspace.didChangeWatchedFiles.dynamicRegistration = false
+
+		--  caps = require('cmp_nvim_lsp').default_capabilities(caps)
+
+		server_cfg.capabilities = caps
+
 		require("lspconfig")[server_name].setup(server_cfg)
 	end
 
