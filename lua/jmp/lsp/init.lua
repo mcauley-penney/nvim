@@ -88,7 +88,14 @@ vim.diagnostic.config({
 		format = function(diag)
 			local prefix = ui.no_hl_icons.diagnostic
 			local msg = string.gsub(diag.message, "%s*%c+%s*", ":")
-			return string.format("%s [%s] %s ", prefix, diag.source, msg)
+
+			if diag.source == nil then
+				return string.format("%s %s ", prefix, msg)
+			end
+
+			diag.source = diag.source:gsub('%.', '')
+
+			return string.format("%s %s: %s ", prefix, diag.source, msg)
 		end,
 		prefix = "",
 	},
