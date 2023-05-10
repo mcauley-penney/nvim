@@ -4,11 +4,6 @@ return {
 	--------------------------------------------------
 	"nvim-lua/plenary.nvim",
 
-	{
-		"dstein64/vim-startuptime",
-		cmd = "StartupTime"
-	},
-
 	--------------------------------------------------
 	-- color scheme
 	--------------------------------------------------
@@ -56,9 +51,16 @@ return {
 		dependencies = {
 			"mason.nvim",
 		},
-		config = function()
-			require("mason-lspconfig").setup({})
-		end
+		config = {
+			ensure_installed = {
+				"clangd",
+				"html",
+				"jsonls",
+				"lua_ls",
+				"pyright",
+				"tsserver"
+			},
+		}
 	},
 
 	{
@@ -99,21 +101,27 @@ return {
 		}
 	},
 
-	-- requires setting up cmps capabilities
-	-- https://github.com/j-hui/fidget.nvim/issues/107
+	{
+		"VidocqH/lsp-lens.nvim",
+		config = true,
+		dependencies = {
+			"neovim/nvim-lspconfig",
+		},
+	},
+
 	{
 		"j-hui/fidget.nvim",
 		config = {
 			align = { bottom = false },
-			text = { spinner = { " ", " ", " ", " " } },
+			text = { spinner = { " ", " ", " ", " ", " " } },
 			timer = {
-				fidget_decay = 250, -- how long to keep around empty fidget, in ms
-				spinner_rate = 150,
-				task_decay = 250,
+				fidget_decay = 400, -- how long to keep around empty fidget, in ms
+				spinner_rate = 135,
+				task_decay = 400,
 			},
 			window = {
 				relative = "editor",
-				blend = 0,
+				blend = 50,
 			},
 		},
 		dependencies = {
@@ -479,8 +487,6 @@ return {
 			--- Depending on the LSP this information is stored in different parts of the
 			--- lsp.CompletionItem payload. The process to find them is very manual: log the payloads
 			--- And see where useful information is stored.
-			---@param completion lsp.CompletionItem
-			---@param source cmp.Source
 			---@see https://www.reddit.com/r/neovim/comments/128ndxk/comment/jen9444/?utm_source=share&utm_medium=web2x&context=3
 			local function get_lsp_completion_context(completion, source)
 				local ok, source_name = pcall(function() return source.source.client.config.name end)
@@ -506,8 +512,6 @@ return {
 			cmp.setup({
 				formatting = {
 					fields = { "abbr", "kind", "menu" },
-					--- @param entry cmp.Entry
-					--- @param vim_item vim.CompletedItem
 					format = function(entry, vim_item)
 						local choice = require("lspkind").cmp_format({
 							mode = "symbol_text",
@@ -548,7 +552,7 @@ return {
 				},
 				sources = {
 					{ name = "nvim_lsp",     max_item_count = 20 },
-					{ name = "nvim_lua",     max_item_count = 5 },
+					{ name = "nvim_lua",     max_item_count = 20 },
 					{ name = "buffer",       max_item_count = 5 },
 					{ name = 'orgmode' },
 					{ name = "path" },
@@ -573,13 +577,12 @@ return {
 			local set_hl = vim.api.nvim_set_hl
 
 			set_hl(0, "CmpItemAbbr", { fg = "fg" })
-
+			set_hl(0, "CmpItemKindVariable", { fg = "fg" })
 			set_hl(0, "CmpItemAbbrMatch", { link = "@text.uri" })
 			set_hl(0, "CmpItemAbbrMatchFuzzy", { link = "CmpItemAbbrMatch" })
-
-			set_hl(0, "CmpItemKindVariable", { fg = "fg" })
 			set_hl(0, "CmpItemKindFunction", { link = "Function" })
 			set_hl(0, "CmpItemKindKeyword", { link = "Keyword" })
+
 
 			for k, v in pairs({
 				CmpItemAbbrMatch      = "@text.uri",
@@ -592,6 +595,14 @@ return {
 			}) do
 				set_hl(0, k, { link = v })
 			end
+
+			-- Use autopairs for adding parenthesis to function completions
+			local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+
+			cmp.event:on(
+				'confirm_done',
+				cmp_autopairs.on_confirm_done()
+			)
 		end,
 		dependencies = {
 			"hrsh7th/cmp-buffer",
@@ -611,6 +622,8 @@ return {
 			"hrsh7th/cmp-path",
 			"L3MON4D3/LuaSnip",
 			"saadparwaiz1/cmp_luasnip",
+			"onsails/lspkind.nvim",
+			"windwp/nvim-autopairs",
 		},
 	},
 
@@ -640,7 +653,7 @@ return {
 
 	{
 		"jbyuki/venn.nvim",
-		init = function()
+		config = function()
 			vim.keymap.set("n", "<S-down>", "<C-v>j:VBox<CR>", { noremap = true })
 			vim.keymap.set("n", "<S-up>", "<C-v>k:VBox<CR>", { noremap = true })
 			vim.keymap.set("n", "<S-left>", "<C-v>h:VBox<CR>", { noremap = true })
@@ -664,29 +677,31 @@ return {
 	--------------------------------------------------
 	{
 		"jose-elias-alvarez/null-ls.nvim",
-		config = function()
-			local null_ls = require("null-ls")
-			local builtins = null_ls.builtins
+		dependencies = { 'nvim-lua/plenary.nvim' },
+		config = {
+			debounce = 300,
+			on_attach = require("jmp.lsp.on_attach"),
+		}
+	},
 
-			null_ls.setup({
-				debounce = 300,
-				on_attach = require("jmp.lsp.on_attach"),
-				sources = {
-					-- json
-					builtins.formatting.fixjson,
-
-					-- python
-					builtins.diagnostics.pydocstyle,
-					builtins.formatting.black,
-
-					-- sh
-					builtins.diagnostics.shellcheck,
-
-					-- GitHub actions/yaml
-					builtins.diagnostics.actionlint,
-				},
-			})
-		end
+	{
+		'jay-babu/mason-null-ls.nvim',
+		dependencies = {
+			"williamboman/mason.nvim",
+			"jose-elias-alvarez/null-ls.nvim",
+		},
+		config = {
+			automatic_setup = true,
+			automatic_installation = true,
+			ensure_installed = {
+				"actionlint",
+				"black",
+				"fixjson",
+				"pydocstyle",
+				"shellcheck",
+			},
+			handlers = {}
+		}
 	},
 
 	{
@@ -741,16 +756,14 @@ return {
 
 	{
 		"phaazon/hop.nvim",
-
 		branch = "v2", -- optional but strongly recommended
 		config = {
 			case_insensitive = false,
 			keys = "arstneioqwfpluy;",
 			teasing = false,
 		},
-
 		init = function()
-			vim.keymap.set("n", "'", "<cmd>HopChar1MW<cr>", { silent = true })
+			vim.keymap.set("n", "<F6>", "<cmd>HopChar1MW<cr>", { silent = true })
 		end
 	},
 
@@ -782,7 +795,7 @@ return {
 					layout_strategy = "bottom_pane",
 					layout_config = {
 						prompt_position = "top",
-						height = 35,
+						height = 30,
 						width = 1,
 						vertical = {
 							width = 0.9,
@@ -879,6 +892,32 @@ return {
 	-- UI
 	--------------------------------------------------
 	{
+		"lukas-reineke/indent-blankline.nvim",
+		config = function()
+			require("indent_blankline").setup({
+				char = "├",
+				filetype_exclude = { "fzf", "mason", "packer" },
+				max_indent_increase = 1,
+				show_first_indent_level = false,
+				show_trailing_blankline_indent = false,
+			})
+
+			vim.api.nvim_set_hl(0, "IndentBlanklineChar", { link = "NonText" })
+		end
+	},
+
+	{
+		"NvChad/nvim-colorizer.lua",
+		config = {
+			filetypes = {
+				"css",
+				lua = { names = false },
+				text = { names = false },
+			}
+		}
+	},
+
+	{
 		'kevinhwang91/nvim-hlslens',
 		config = function()
 			local function lens(render, pos_list, nearest, wkg_i, relIdx)
@@ -934,29 +973,19 @@ return {
 	},
 
 	{
-		"lukas-reineke/indent-blankline.nvim",
+		"petertriho/nvim-scrollbar",
 		config = function()
-			require("indent_blankline").setup({
-				char = "├",
-				filetype_exclude = { "fzf", "mason", "packer" },
-				max_indent_increase = 1,
-				show_first_indent_level = false,
-				show_trailing_blankline_indent = false,
+			require("scrollbar").setup({
+				handle = {
+					highlight = "StatusLine",
+				},
+				marks = {
+					Cursor = {
+						highlight = "Comment"
+					}
+				}
 			})
-
-			vim.api.nvim_set_hl(0, "IndentBlanklineChar", { link = "NonText" })
 		end
-	},
-
-	{
-		"NvChad/nvim-colorizer.lua",
-		config = {
-			filetypes = {
-				"css",
-				lua = { names = false },
-				text = { names = false },
-			}
-		}
 	},
 
 	"nvim-tree/nvim-web-devicons",
@@ -1086,7 +1115,14 @@ return {
 				org_indent = "noindent",
 				org_todo_keywords = { "TODO(t)", "BLOCKED", "WAITING", '|', "DONE" },
 
-				win_split_mode = "below 30split"
+				win_split_mode = "below 30split",
+
+				mappings = {
+					org = {
+						org_timestamp_up_day = '<up>',
+						org_timestamp_down_day = '<down>'
+					}
+				}
 			})
 
 			-- TODO: turn off underlining for TSHeadlines
@@ -1134,12 +1170,6 @@ return {
 	--------------------------------------------------
 	-- testing
 	--------------------------------------------------
-
-	{
-		"VidocqH/lsp-lens.nvim",
-		config = true
-	},
-
 	{
 		"utilyre/barbecue.nvim",
 		config = {
@@ -1150,5 +1180,31 @@ return {
 			}
 		},
 		dependencies = { "SmiteshP/nvim-navic" },
-	}
+	},
+
+	{
+		"windwp/nvim-autopairs",
+		config = {
+			break_undo = true,
+			check_ts = false,
+			disable_in_macro = true,
+			disable_in_replace_mode = false,
+			disable_in_visualblock = false,
+			enable_abbr = false,
+			enable_afterquote = false,
+			enable_bracket_in_quote = false,
+			enable_check_bracket_line = true,
+			enable_moveright = false,
+			ignored_next_char = [=[[%w%%%'%[%"%.%`%$]]=],
+			map_bs = true,
+			map_c_h = true,
+			map_c_w = false,
+			map_cr = true,
+			fast_wrap = {
+				map = '<C-w>',
+			}
+		}
+	},
+
+
 }
