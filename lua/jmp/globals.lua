@@ -16,7 +16,6 @@ tools.nonprog_mode = {
 -- ┌─────────┐
 -- │functions│
 -- └─────────┘
-
 --------------------------------------------------
 -- project directories
 --------------------------------------------------
@@ -78,6 +77,11 @@ end
 tools.make_hl_grp = function(grp_name, hi)
 	vim.api.nvim_set_hl(0, grp_name, hi)
 	return tools.make_hl_grp_str(grp_name)
+end
+
+tools.highlight_text = function(grp_name, text)
+	local hl_grp_str = tools.make_hl_grp_str(grp_name)
+	return table.concat({hl_grp_str, text, "%*"})
 end
 
 

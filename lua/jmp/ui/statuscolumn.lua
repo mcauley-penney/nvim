@@ -21,16 +21,16 @@ local fcs = vim.opt.fillchars:get()
 
 -- Stolen from Akinsho
 local function get_fold(lnum)
-  if vim.fn.foldlevel(lnum) <= vim.fn.foldlevel(lnum - 1) then return ' ' end
-  return vim.fn.foldclosed(lnum) == -1 and fcs.foldopen or fcs.foldclose
+	if vim.fn.foldlevel(lnum) <= vim.fn.foldlevel(lnum - 1) then return ' ' end
+	local fold_sym = vim.fn.foldclosed(lnum) == -1 and fcs.foldopen or fcs.foldclose
+	return tools.highlight_text("Folded", fold_sym)
 end
-
 
 local function get_lnum()
 	local cur_num
 	local sep = ','
 
- -- return a visual placeholder if line is wrapped
+	-- return a visual placeholder if line is wrapped
 	if vim.v.virtnum ~= 0 then return '-' end
 
 	-- get absolute lnum if is current line, else relnum
@@ -44,12 +44,6 @@ local function get_lnum()
 	return utils.pad_str(cur_num, 4, "right")
 end
 
-
-local function mk_hl(group, sym)
-	return table.concat({ "%#", group, "#", sym, "%*" })
-end
-
-
 ---@return {name:string, text:string, texthl:string}[]
 local function get_signs()
 	local buf = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
@@ -59,11 +53,9 @@ local function get_signs()
 	end, vim.fn.sign_getplaced(buf, { group = "*", lnum = vim.v.lnum })[1].signs)
 end
 
-
 local function prepare_sign(sign)
-	return sign and mk_hl(sign.texthl, sign.text) or "  "
+	return sign and tools.highlight_text(sign.texthl, sign.text) or "  "
 end
-
 
 _G.get_statuscol = function()
 	local str_tbl = {}
