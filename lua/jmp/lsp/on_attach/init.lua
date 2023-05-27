@@ -11,7 +11,10 @@ return function(client, bufnr)
 	local map = vim.keymap.set
 
 	if client.supports_method("textDocument/formatting") then
-		map('n', "<leader>f", lsp.format, opts("Format with LSP"))
+		map('n', "<leader>f", function()
+				lsp.format({ timeout_ms = 2000 })
+			end,
+			opts("Format with LSP"))
 	end
 
 	if client.supports_method("textDocument/rename") then

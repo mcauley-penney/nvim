@@ -1,7 +1,7 @@
-local utils = require("jmp.ui.status.utils")
+local utils = require("jmp.ui.utils")
 
 local parts = {
-	["fold"] = "%C",
+	["fold"] = nil,
 	["num"] = nil,
 	["sep"] = "%=",
 	["signcol"] = "%s",
@@ -13,37 +13,42 @@ local order = {
 	"sep",
 	"num",
 	"gitsigns",
-	"fold"
+	"fold",
+	"space"
 }
 
-local function get_num()
+local fcs = vim.opt.fillchars:get()
+
+-- Stolen from Akinsho
+local function get_fold(lnum)
+  if vim.fn.foldlevel(lnum) <= vim.fn.foldlevel(lnum - 1) then return ' ' end
+  return vim.fn.foldclosed(lnum) == -1 and fcs.foldopen or fcs.foldclose
+end
+
+
+local function get_lnum()
 	local cur_num
 	local sep = ','
 
-	-- if is current line
-	if vim.v.relnum == 0 then
-		cur_num = vim.v.lnum
-	else
-		cur_num = vim.v.relnum
-	end
+ -- return a visual placeholder if line is wrapped
+	if vim.v.virtnum ~= 0 then return '-' end
 
-	-- if line is wrapped
-	if vim.v.virtnum ~= 0 then
-		cur_num = '-'
-	end
+	-- get absolute lnum if is current line, else relnum
+	cur_num = vim.v.relnum == 0 and vim.v.lnum or vim.v.relnum
 
 	-- insert thousands separators in line numbers
-	-- https://stackoverflow.com/a/42911668
-	if type(cur_num) == "number" then
-		cur_num = tostring(cur_num):reverse():gsub('(%d%d%d)', '%1,'):reverse():gsub('^,', '')
-	end
+	-- viml regex: https://stackoverflow.com/a/42911668
+	-- lua pattern: stolen from Akinsho
+	cur_num = tostring(cur_num):reverse():gsub('(%d%d%d)', '%1' .. sep):reverse():gsub('^,', '')
 
-	return utils.pad_str(cur_num, 4, false, "right")
+	return utils.pad_str(cur_num, 4, "right")
 end
+
 
 local function mk_hl(group, sym)
 	return table.concat({ "%#", group, "#", sym, "%*" })
 end
+
 
 ---@return {name:string, text:string, texthl:string}[]
 local function get_signs()
@@ -54,18 +59,16 @@ local function get_signs()
 	end, vim.fn.sign_getplaced(buf, { group = "*", lnum = vim.v.lnum })[1].signs)
 end
 
-local function prepare_sign(sign)
-	if sign then
-		return mk_hl(sign.texthl, sign.text)
-	end
 
-	return "  "
+local function prepare_sign(sign)
+	return sign and mk_hl(sign.texthl, sign.text) or "  "
 end
+
 
 _G.get_statuscol = function()
 	local str_tbl = {}
 
-	parts["num"] = get_num()
+	parts["num"] = get_lnum()
 
 	local diag_sign, git_sign
 	for _, sign_tbl in ipairs(get_signs()) do
@@ -78,6 +81,7 @@ _G.get_statuscol = function()
 
 	parts["diag"] = prepare_sign(diag_sign)
 	parts["gitsigns"] = prepare_sign(git_sign)
+	parts["fold"] = get_fold(vim.v.lnum)
 
 	for _, val in ipairs(order) do
 		table.insert(str_tbl, parts[val])
@@ -85,3 +89,6 @@ _G.get_statuscol = function()
 
 	return table.concat(str_tbl)
 end
+
+
+vim.o.statuscolumn = "%!v:lua.get_statuscol()"

@@ -34,19 +34,19 @@ vim.ui.input = function(opts, on_confirm)
 	}
 
 	-- set keymaps
-	vim.keymap.set({ "i", "n" }, "<CR>", "<CR><Esc>:close!<CR>:stopinsert<CR>", {
+	vim.keymap.set({ "i", "n" }, "<cr>", "<cr><esc><cmd>close!<cr>:stopinsert<cr>", {
 		silent = true,
 		buffer = buf,
 	})
 
 	-- TODO: janky. Figure out why 'u' doesn't work in prompt buf
-	vim.keymap.set("n", "u", ":undo<CR>", {
+	vim.keymap.set("n", "u", "<cmd>undo<cr>", {
 		silent = true,
 		buffer = buf,
 	})
 
 	for _, lhs in pairs({ "<esc>", "q" }) do
-		vim.keymap.set("n", lhs, "<cmd>close!<CR>", {
+		vim.keymap.set("n", lhs, "<cmd>close!<cr>", {
 			silent = true,
 			buffer = buf,
 		})

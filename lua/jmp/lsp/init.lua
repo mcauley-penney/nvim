@@ -1,4 +1,4 @@
-local ui = require("jmp.ui")
+local ui = require("jmp.style")
 local on_attach = require("jmp.lsp.on_attach")
 
 local servers = {
@@ -51,7 +51,10 @@ local populate_setup = function(servers_tbl, attach_fn)
 		local caps = vim.lsp.protocol.make_client_capabilities()
 		-- TODO: remove when fixed; https://github.com/neovim/neovim/issues/23291
 		caps.workspace.didChangeWatchedFiles.dynamicRegistration = false
-
+		caps.textDocument.foldingRange = {
+			dynamicRegistration = false,
+			lineFoldingOnly = true
+		}
 
 		server_cfg.capabilities = caps
 
@@ -86,7 +89,7 @@ vim.diagnostic.config({
 	update_in_insert = false,
 	virtual_text = {
 		format = function(diag)
-			local prefix = ui.no_hl_icons.diagnostic
+			local prefix = ui.no_hl_icons.square
 			local msg = string.gsub(diag.message, "%s*%c+%s*", ":")
 
 			if diag.source == nil then

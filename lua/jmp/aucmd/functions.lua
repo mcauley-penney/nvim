@@ -5,6 +5,7 @@ local short_indent = {
 	["json"] = true,
 	["lua"] = true,
 	["org"] = true,
+	["yaml"] = true,
 }
 
 local nonstandard_tw = {
@@ -28,7 +29,7 @@ local M = {
 	set_textwidth = function(ft)
 		local tw = nonstandard_tw[ft] or 80
 
-		if vim.g.nonprog_mode[ft] then
+		if tools.nonprog_mode[ft] then
 			tw = 0
 		end
 

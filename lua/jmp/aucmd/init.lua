@@ -15,9 +15,9 @@ aucmd("BufEnter", {
 	-- gitsigns.nvim/lua/manager.lua
 	callback = function()
 		local path = vim.api.nvim_buf_get_name(0)
-		local root = vim.g.get_path_root(path)
+		local root = tools.get_path_root(path)
 
-		vim.g.get_git_branch(root)
+		tools.get_git_branch(root)
 
 		if root ~= nil then
 			vim.cmd(":lcd " .. root)
@@ -30,7 +30,7 @@ aucmd({ "BufEnter", "BufWinEnter" }, {
 	group = grp,
 	callback = function()
 		vim.api.nvim_win_set_option(0, "foldminlines", 3)
-		vim.api.nvim_win_set_option(0, "foldnestmax", 1)
+		vim.api.nvim_win_set_option(0, "foldnestmax", 3)
 		vim.api.nvim_buf_set_option(0, "formatoptions", "2cjnpqrt")
 
 		local ft = buf_get_opt(0, "filetype")

@@ -1,4 +1,4 @@
-local utils = require("jmp.ui.status.utils")
+local utils = require("jmp.ui.utils")
 
 -- see https://vimhelp.org/options.txt.html#%27statusline%27 for part fmt strs
 local stl_parts = {
@@ -29,7 +29,7 @@ local stl_order = {
 --- Create a string containing info for the current git branch
 -- @treturn string: branch info
 local function get_git_branch(root, icon_tbl)
-	local branch = vim.g.get_git_branch(root)
+	local branch = tools.get_git_branch(root)
 
 	return branch and table.concat({ icon_tbl["branch"], ' ', branch, ' ' })
 end
@@ -74,7 +74,7 @@ local function get_diag_str(lsp_signs)
 
 	for _, type in pairs({ "Error", "Warn" }) do
 		count = #vim.diagnostic.get(0, { severity = string.upper(type) })
-		local count_str = utils.pad_str(tostring(count), 3, false, "left")
+		local count_str = utils.pad_str(tostring(count), 3, "left")
 		vim.list_extend(diag_tbl, { lsp_signs[type], ":", count_str })
 	end
 
@@ -87,7 +87,7 @@ local function get_wordcount_str()
 	local lc = "%L lines"
 	local ft = vim.api.nvim_buf_get_option(0, "filetype")
 
-	if not vim.g.nonprog_mode[ft] then
+	if not tools.nonprog_mode[ft] then
 		return lc
 	end
 
@@ -125,7 +125,7 @@ end
 -- Top level function called in options.init to get statusline.
 -- @return str: statusline text to be displayed
 _G.get_statusline = function()
-	local ui = require("jmp.ui")
+	local ui = require("jmp.style")
 	local hl_grps_tbl = ui.hl_grps
 	local hl_icons_tbl = ui.hl_icons
 	local get_bufopt = vim.api.nvim_buf_get_option
@@ -135,7 +135,7 @@ _G.get_statusline = function()
 	end
 
 	local path = vim.api.nvim_buf_get_name(0)
-	local root = vim.g.get_path_root(path)
+	local root = tools.get_path_root(path)
 	local buf = vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
 
 	stl_parts["git_branch"] = get_git_branch(root, hl_icons_tbl)
@@ -159,3 +159,6 @@ _G.get_statusline = function()
 	-- turn all of these pieces into one string
 	return concat_status(stl_order, stl_parts)
 end
+
+
+vim.o.statusline = "%!v:lua.get_statusline()"
