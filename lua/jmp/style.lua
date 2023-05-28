@@ -30,6 +30,9 @@ local ui_icons = {
 local signs = {
 	Error = icons["hamburger"],
 	Warn = icons["hamburger"],
+	Hint = icons["hamburger"],
+	Info = icons["hamburger"],
+	Ok = icons["hamburger"],
 }
 
 
