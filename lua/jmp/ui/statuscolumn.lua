@@ -14,7 +14,6 @@ local order = {
 	"num",
 	"gitsigns",
 	"fold",
-	"space"
 }
 
 local fcs = vim.opt.fillchars:get()
