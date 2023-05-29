@@ -1004,7 +1004,7 @@ return {
 				marks = {
 					Cursor = {
 						highlight = "Comment",
-						text = "■",
+						text = require("jmp.style").no_hl_icons["square"],
 					},
 				},
 			})
@@ -1047,7 +1047,10 @@ return {
 
 					curWidth = curWidth + chunkWidth
 				end
+
+				table.insert(newVirtText, { "  " })
 				table.insert(newVirtText, { suffix, "NormalFloat" })
+
 				return newVirtText
 			end
 
@@ -1055,6 +1058,7 @@ return {
 				fold_virt_text_handler = handler,
 				open_fold_hl_timeout = 0,
 			})
+
 		end,
 		dependencies = {
 			"kevinhwang91/promise-async"
@@ -1293,5 +1297,5 @@ return {
 		'akinsho/git-conflict.nvim',
 		version = "*",
 		config = true,
-	}
+	},
 }
