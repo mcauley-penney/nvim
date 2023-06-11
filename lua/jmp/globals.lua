@@ -12,6 +12,8 @@ tools.nonprog_mode = {
 	["text"] = true,
 }
 
+tools.border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }
+
 
 -- ┌─────────┐
 -- │functions│

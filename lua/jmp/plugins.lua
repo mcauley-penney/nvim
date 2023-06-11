@@ -22,7 +22,7 @@ return {
 		},
 		opts = {
 			ui = {
-				border = "single",
+				border = tools.border,
 				height = 0.8,
 				icons = {
 					package_installed = "✓",
@@ -679,7 +679,7 @@ return {
 				_signs_staged_enable = false,
 				_threaded_diff = true,
 				preview_config = {
-					border = "single",
+					border = tools.border,
 					style = 'minimal',
 					relative = 'cursor',
 					row = 0,
@@ -765,7 +765,7 @@ return {
 			require("telescope").setup({
 				defaults = {
 					border = true,
-					borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
+					borderchars = tools.border,
 					file_ignore_patterns = {
 						"%.DS_Store",
 						"%.jpeg",
@@ -904,6 +904,13 @@ return {
 				},
 			},
 			lsp = {
+				documentation = {
+					opts = {
+						border = {
+							style = tools.border
+						}
+					},
+				},
 				-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
 				override = {
 					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
@@ -1084,7 +1091,7 @@ return {
 			require("toggleterm").setup({
 				direction = "float",
 				float_opts = {
-					border = "single",
+					border = tools.border,
 					width = 120,
 				},
 				highlights = {
@@ -1209,7 +1216,7 @@ return {
 							modern_menu:new({
 								window = {
 									title_pos = "center",
-									border = "single",
+									border = tools.border,
 									zindex = 1000,
 								},
 								icons = {

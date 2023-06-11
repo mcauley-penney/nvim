@@ -78,7 +78,7 @@ require('lazy').setup("jmp.plugins", {
 	},
 	defaults = { lazy = false },
 	ui = {
-		border = "single",
+		border = tools.border,
 		icons = {
 			list = { "•" },
 		}
