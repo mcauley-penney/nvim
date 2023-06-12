@@ -1,4 +1,18 @@
-_G.tools = {}
+_G.tools = {
+	ui = {}
+}
+
+tools.ui.border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }
+
+tools.ui.icons = {
+	branch = '',
+	bullet = '•',
+	ellipses = '┉',
+	hamburger = '≡',
+	lock = '',
+	square = '■'
+}
+
 
 -- ┌────────┐
 -- │settings│

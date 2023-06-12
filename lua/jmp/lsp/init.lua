@@ -89,7 +89,7 @@ vim.diagnostic.config({
 	update_in_insert = false,
 	virtual_text = {
 		format = function(diag)
-			local prefix = ui.no_hl_icons.square
+			local prefix = tools.ui.icons.square
 			local msg = string.gsub(diag.message, "%s*%c+%s*", ":")
 
 			if diag.source == nil then

@@ -1,12 +1,15 @@
 return {
 	"nvim-lua/plenary.nvim",
 
-	-- scheme
+	-- ┌──────────────┐
+	-- │ Colorschemes │
+	-- └──────────────┘
 	{
-		dir = "/home/m/files/projects/hl-dungeon.nvim",
+		"mcauley-penney/ice-cave.nvim",
+		priority = 1000,
 		init = function()
-			vim.cmd.colorscheme("hl-dungeon")
-		end
+			vim.cmd.colorscheme("ice-cave")
+		end,
 	},
 
 	-- ┌─────┐
@@ -22,11 +25,11 @@ return {
 		},
 		opts = {
 			ui = {
-				border = tools.border,
+				border = tools.ui.border,
 				height = 0.8,
 				icons = {
 					package_installed = "✓",
-					package_pending = "→",
+					package_pending = tools.ui.icons.ellipses,
 					package_uninstalled = "✗",
 				},
 			}
@@ -389,7 +392,7 @@ return {
 			local cmp = require("cmp")
 
 			local window_opts = {
-				border = "single",
+				border = tools.ui.border,
 				max_height = 75,
 				max_width = 75,
 				winhighlight = table.concat({
@@ -679,7 +682,7 @@ return {
 				_signs_staged_enable = false,
 				_threaded_diff = true,
 				preview_config = {
-					border = tools.border,
+					border = tools.ui.border,
 					style = 'minimal',
 					relative = 'cursor',
 					row = 0,
@@ -765,7 +768,7 @@ return {
 			require("telescope").setup({
 				defaults = {
 					border = true,
-					borderchars = tools.border,
+					borderchars = tools.ui.border,
 					file_ignore_patterns = {
 						"%.DS_Store",
 						"%.jpeg",
@@ -907,7 +910,7 @@ return {
 				documentation = {
 					opts = {
 						border = {
-							style = tools.border
+							style = tools.ui.border
 						}
 					},
 				},
@@ -1011,7 +1014,7 @@ return {
 				marks = {
 					Cursor = {
 						highlight = "Comment",
-						text = require("jmp.style").no_hl_icons["square"],
+						text = tools.ui.icons.square,
 					},
 				},
 			})
@@ -1024,8 +1027,7 @@ return {
 	{
 		"kevinhwang91/nvim-ufo",
 		config = function()
-			local ui = require("jmp.style")
-			local ellipses = ui.no_hl_icons.ellipses
+			local ellipses = tools.ui.icons.ellipses
 
 			-- From docs
 			local handler = function(virtText, lnum, endLnum, width, truncate)
@@ -1091,7 +1093,7 @@ return {
 			require("toggleterm").setup({
 				direction = "float",
 				float_opts = {
-					border = tools.border,
+					border = tools.ui.border,
 					width = 120,
 				},
 				highlights = {
@@ -1205,8 +1207,7 @@ return {
 		"nvim-orgmode/orgmode",
 		config = function()
 			local files = "/home/m/files/kms/gtd/"
-			local ui = require("jmp.style")
-			local icons = ui["no_hl_icons"]
+			local icons = tools.ui.icons
 			local modern_menu = require("org-modern.menu")
 
 			require('orgmode').setup({
@@ -1216,7 +1217,7 @@ return {
 							modern_menu:new({
 								window = {
 									title_pos = "center",
-									border = tools.border,
+									border = tools.ui.border,
 									zindex = 1000,
 								},
 								icons = {
