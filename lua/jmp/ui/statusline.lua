@@ -144,14 +144,15 @@ end
 --- Create a string of diagnostic information
 -- @tparam lsp_signs: dict of signs used for diagnostics
 -- @treturn diagnostic str: string indicating diagnostics available
-local function get_diag_str(lsp_signs)
+local function get_diag_str(lsp_syms)
 	local count = nil
+	local count_str = nil
 	local diag_tbl = {}
 
 	for _, type in pairs({ "Error", "Warn" }) do
 		count = #vim.diagnostic.get(0, { severity = string.upper(type) })
-		local count_str = utils.pad_str(tostring(count), 3, "left")
-		vim.list_extend(diag_tbl, { lsp_signs[type], ":", count_str })
+		count_str = utils.pad_str(tostring(count), 3, "left")
+		vim.list_extend(diag_tbl, { lsp_syms[type], ' ', count_str })
 	end
 
 	return table.concat(diag_tbl)
@@ -203,9 +204,6 @@ end
 -- See https://github.com/nvimdev/whiskyline.nvim/blob/main/lua/whiskyline/init.lua
 -- for async implementation of statusline
 _G.get_statusline = function()
-	local ui = require("jmp.style")
-	local hl_grps_tbl = ui.hl_grps
-	local hl_icons_tbl = ui.hl_icons
 	local get_bufopt = vim.api.nvim_buf_get_option
 
 	if vim.bo.buftype == "terminal" then
@@ -221,15 +219,15 @@ _G.get_statusline = function()
 	stl_parts["ro"] = get_bufopt(buf, "readonly") and hl_ui_icons["readonly"] or ""
 
 	if not get_bufopt(buf, "modifiable") then
-		stl_parts["mod"] = hl_icons_tbl["nomodifiable"]
+		stl_parts["mod"] = hl_ui_icons["nomodifiable"]
 	elseif get_bufopt(buf, "modified") then
-		stl_parts["mod"] = hl_icons_tbl["modified"]
+		stl_parts["mod"] = hl_ui_icons["modified"]
 	else
 		stl_parts["mod"] = ""
 	end
 
 	if #vim.lsp.get_active_clients({ bufnr = 0 }) > 0 then
-		stl_parts["diag"] = get_diag_str(ui.hl_signs)
+		stl_parts["diag"] = get_diag_str(lsp_signs)
 	end
 
 	stl_parts["wordcount"] = get_wordcount_str()
