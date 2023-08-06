@@ -4,7 +4,7 @@ local utils = require("jmp.ui.utils")
 local stl_parts = {
 	buf_info = nil,
 	diag = nil,
-	git_branch = nil,
+	git_info = nil,
 	modifiable = nil,
 	modified = nil,
 	pad = " ",
@@ -16,7 +16,7 @@ local stl_parts = {
 
 local stl_order = {
 	"pad",
-	"git_branch",
+	"git_info",
 	"path",
 	"ro",
 	"mod",
@@ -101,10 +101,13 @@ local lsp_signs = hl_lsp_icons(signs, hl_grp_tbl)
 
 --- Create a string containing info for the current git branch
 -- @treturn string: branch info
-local function get_git_branch(root, icon_tbl)
+local function get_git_info(root, icon_tbl)
+	local remote = tools.get_git_remote_name(root)
 	local branch = tools.get_git_branch(root)
 
-	return branch and table.concat({ icon_tbl["branch"], ' ', branch, ' ' })
+	if remote and branch then
+		return table.concat({ icon_tbl["branch"], ' ', remote, ':', branch, ' ' })
+	end
 end
 
 local function get_filepath(root, hl_grps)
@@ -197,6 +200,8 @@ end
 
 -- Top level function called in options.init to get statusline.
 -- @return str: statusline text to be displayed
+-- See https://github.com/nvimdev/whiskyline.nvim/blob/main/lua/whiskyline/init.lua
+-- for async implementation of statusline
 _G.get_statusline = function()
 	local ui = require("jmp.style")
 	local hl_grps_tbl = ui.hl_grps
@@ -211,9 +216,9 @@ _G.get_statusline = function()
 	local root = tools.get_path_root(path)
 	local buf = vim.api.nvim_win_get_buf(vim.g.statusline_winid or 0)
 
-	stl_parts["git_branch"] = get_git_branch(root, hl_icons_tbl)
-	stl_parts["path"] = get_filepath(root, hl_grps_tbl) or path
-	stl_parts["ro"] = get_bufopt(buf, "readonly") and hl_icons_tbl["readonly"] or ""
+	stl_parts["git_info"] = get_git_info(root, hl_ui_icons)
+	stl_parts["path"] = get_filepath(root, ui_hl_grps) or path
+	stl_parts["ro"] = get_bufopt(buf, "readonly") and hl_ui_icons["readonly"] or ""
 
 	if not get_bufopt(buf, "modifiable") then
 		stl_parts["mod"] = hl_icons_tbl["nomodifiable"]

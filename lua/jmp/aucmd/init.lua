@@ -17,13 +17,14 @@ aucmd("BufEnter", {
 		local path = vim.api.nvim_buf_get_name(0)
 		local root = tools.get_path_root(path)
 
-		tools.get_git_branch(root)
-
 		if root ~= nil then
 			vim.cmd(":lcd " .. root)
+
+			tools.get_git_branch(root)
+			tools.get_git_remote_name(root)
 		end
 	end,
-	desc = "Set root dir and initialize version control information."
+	desc = "Set root dir and initialize version control branch."
 })
 
 aucmd({ "BufEnter", "BufWinEnter" }, {
@@ -70,6 +71,16 @@ aucmd("CmdlineLeave", {
 		vim.fn.timer_start(3000, function()
 			print(" ")
 		end)
+	end,
+})
+
+aucmd("ShellCmdPost", {
+	group = grp,
+	callback = function()
+		local path = vim.api.nvim_buf_get_name(0)
+		local root = tools.get_path_root(path)
+
+		tools.set_git_branch(root)
 	end,
 })
 

@@ -38,10 +38,12 @@ tools.border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }
 -- provides a place to cache the root
 -- directory for current editing session
 local branch_cache = {}
+local remote_cache = {}
 
 --- get the path to the root of the current file. The
 -- root can be anything we define, such as ".git",
 -- "Makefile", etc.
+-- see https://www.reddit.com/r/neovim/comments/zy5s0l/you_dont_need_vimrooter_usually_or_how_to_set_up/
 -- @tparam  path: file to get root of
 -- @treturn path to the root of the filepath parameter
 tools.get_path_root = function(path)
@@ -65,6 +67,38 @@ tools.get_path_root = function(path)
 	vim.b.path_root = root
 
 	return root
+end
+
+-- get the name of the remote repository
+tools.get_git_remote_name = function(root)
+	if root == nil then return end
+
+	local remote = remote_cache[root]
+	if remote ~= nil then return remote end
+
+	-- see https://stackoverflow.com/a/42543006
+	-- "basename" "-s" ".git" "`git config --get remote.origin.url`"
+	local cmd = table.concat({ "git", "config", "--get remote.origin.url" }, " ")
+	remote = vim.fn.system(cmd)
+
+	if vim.v.shell_error ~= 0 then return nil end
+
+	remote = vim.fs.basename(remote)
+	remote = vim.fn.fnamemodify(remote, ":r")
+	remote_cache[root] = remote
+
+	return remote
+end
+
+tools.set_git_branch = function(root)
+	local cmd = table.concat({ "git", "-C", root, "branch --show-current" }, " ")
+	local branch = vim.fn.system(cmd)
+	if branch == nil then return nil end
+
+	branch = branch:gsub("\n", "")
+	branch_cache[root] = branch
+
+	return branch
 end
 
 tools.get_git_branch = function(root)
