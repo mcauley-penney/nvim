@@ -725,7 +725,7 @@ return {
 		end
 	},
 
-	-- ┌──────────◄─┐
+	-- ┌────────────┐
 	-- │ Navigation │
 	-- └────────────┘
 	{
@@ -776,7 +776,7 @@ return {
 						"%.otf",
 						"%.png",
 						"%.ttf",
-						"^.git*",
+						"^.git/.*$",
 						"^.yarn/",
 						"^node_modules/",
 						"^site-packages/",
@@ -857,7 +857,9 @@ return {
 
 			vim.api.nvim_set_hl(0, "TelescopeNormal", { link = "StatusLine" })
 
-			vim.keymap.set("n", "<C-t>", builtin.find_files, { silent = true })
+			vim.keymap.set("n", "<C-t>", function()
+				builtin.find_files({ hidden = true })
+			end, { silent = true })
 			vim.keymap.set("n", "<C-q>", builtin.quickfix, { silent = true })
 			vim.keymap.set("n", "\\", builtin.buffers, { silent = true })
 			vim.keymap.set("n", "<C-f>", builtin.live_grep, { silent = true })
