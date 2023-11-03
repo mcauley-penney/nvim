@@ -118,14 +118,7 @@ tools.get_git_branch = function(root)
   local branch = branch_cache[root]
   if branch ~= nil then return branch end
 
-  local cmd = table.concat({ "git", "-C", root, "branch --show-current" }, " ")
-  branch = vim.fn.system(cmd)
-  if branch == nil then return nil end
-
-  branch = branch:gsub("\n", "")
-  branch_cache[root] = branch
-
-  return branch
+  return tools.set_git_branch(root)
 end
 
 --------------------------------------------------
