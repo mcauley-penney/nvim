@@ -1,20 +1,25 @@
+local borders = {
+  none = { " ", " ", " ", " ", " ", " ", " ", " " },
+  thin = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+  edge = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }, -- Works in Kitty, Wezterm
+}
+
 _G.tools = {
   ui = {
-    border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+    border = borders.edge,
     icons = {
+      ballot_x = '✘',
       branch = '',
       bullet = '•',
-      ellipses = '┉',
-      hamburger = '≡',
-      lock = '',
-      ballot_x = '✘',
       checkmark = '✔',
       d_chev = '∨',
+      ellipses = '┉',
+      hamburger = '≡',
       info_i = '¡',
+      lock = '',
       r_chev = '>',
       up_tri = '▲',
     },
-
   }
 }
 
