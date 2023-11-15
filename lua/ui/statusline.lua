@@ -127,10 +127,25 @@ local function get_filepath(root)
   })
 end
 
+local function diagnostics_available()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  local diagnostics = vim.lsp.protocol.Methods.textDocument_publishDiagnostics
+
+  for _, cfg in pairs(clients) do
+    if cfg.supports_method(diagnostics) then return true end
+  end
+
+  return false
+end
+
 --- Create a string of diagnostic information
 -- @tparam lsp_signs: dict of signs used for diagnostics
 -- @treturn diagnostic str: string indicating diagnostics available
 local function get_diag_str(lsp_syms)
+  if not diagnostics_available() then
+    return ""
+  end
+
   local count = nil
   local count_str = nil
   local diag_tbl = {}
@@ -225,10 +240,7 @@ _G.get_statusline = function()
     stl_parts["mod"] = ""
   end
 
-  if diagnostics_available() then
-    stl_parts["diag"] = get_diag_str(lsp_signs)
-  end
-
+  stl_parts["diag"] = get_diag_str(lsp_signs)
   stl_parts["wordcount"] = get_wordcount_str()
 
   -- turn all of these pieces into one string
