@@ -1,26 +1,41 @@
 return {
   {
     "mcauley-penney/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-cmdline",
+      "hrsh7th/cmp-emoji",
+
+      {
+        "petertriho/cmp-git",
+        config = function()
+          require("cmp_git").setup()
+        end,
+        requires = "nvim-lua/plenary.nvim",
+        ft = "gitcommit"
+      },
+
+      "kdheepak/cmp-latex-symbols",
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-nvim-lua",
+      "hrsh7th/cmp-path",
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+      "onsails/lspkind.nvim",
+      "windwp/nvim-autopairs",
+    },
     config = function()
       local cmp = require("cmp")
+      local compare = cmp.config.compare
+      local pad_len = 2
 
-      local window_opts = {
-        border = tools.ui.border,
-        max_height = 75,
-        max_width = 75,
-        winhighlight = table.concat({
-            'Normal:NormalFloat',
-            'FloatBorder:FloatBorder',
-          },
-          ','
-        ),
-      }
+      --[[
+          Get completion context, i.e., auto-import/target module location.
+          Depending on the LSP, this information is stored in different places.
+          The process to find them is very manual: log the payloads And see where useful information is stored.
 
-      --- Get completion context, i.e., auto-import/target module location.
-      --- Depending on the LSP this information is stored in different parts of the
-      --- lsp.CompletionItem payload. The process to find them is very manual: log the payloads
-      --- And see where useful information is stored.
-      ---@see https://www.reddit.com/r/neovim/comments/128ndxk/comment/jen9444/?utm_source=share&utm_medium=web2x&context=3
+          See https://www.reddit.com/r/neovim/comments/128ndxk/comment/jen9444/?utm_source=share&utm_medium=web2x&context=3
+      ]]
       local function get_lsp_completion_context(completion, source)
         local ok, source_name = pcall(function() return source.source.client.config.name end)
         if not ok then return nil end
@@ -35,7 +50,7 @@ return {
 
           local import_str = doc.value
 
-          local i, j = string.find(import_str, "<.*>")
+          local i, j = string.find(import_str, "[\"<].*[\">]")
           if i == nil then return end
 
           return string.sub(import_str, i, j)
@@ -44,22 +59,23 @@ return {
 
       cmp.setup({
         formatting = {
-          fields = { "abbr", "kind", "menu" },
+          fields = { "kind", "abbr", "menu" },
           format = function(entry, vim_item)
             local choice = require("lspkind").cmp_format({
-              mode = "symbol_text",
-              maxwidth = 35,
+              ellipsis_char = '…',
+              maxwidth = 40,
+              mode = "symbol",
             })(entry, vim_item)
 
-            choice.abbr = ' ' .. vim.trim(choice.abbr) .. ' '
+            choice.abbr = vim.trim(choice.abbr)
             choice.menu = ""
 
             local cmp_ctx = get_lsp_completion_context(entry.completion_item, entry.source)
             if cmp_ctx ~= nil and cmp_ctx ~= "" then
-              choice.menu = table.concat({ ' → ', cmp_ctx })
+              choice.menu = table.concat({ "  → ", cmp_ctx })
             end
 
-            choice.menu = choice.menu .. ' '
+            choice.menu = choice.menu .. string.rep(" ", pad_len)
 
             return choice
           end,
@@ -87,20 +103,37 @@ return {
         -- needs testing
         sorting = {
           comparators = {
-            cmp.config.compare.offset,
-            cmp.config.compare.exact,
-            cmp.config.compare.score,
-            cmp.config.compare.recently_used,
-            cmp.config.compare.kind,
+            compare.score,
+            compare.offset,
+            compare.recently_used, -- higher
+            -- copied from TJ Devries; cmp-under
+            function(entry1, entry2)
+              local _, entry1_under = entry1.completion_item.label:find "^_+"
+              local _, entry2_under = entry2.completion_item.label:find "^_+"
+              entry1_under = entry1_under or 0
+              entry2_under = entry2_under or 0
+              if entry1_under > entry2_under then
+                return false
+              elseif entry1_under < entry2_under then
+                return true
+              end
+            end,
+            compare.order,
+            compare.exact, -- lower
+            compare.kind,  -- higher (prioritize snippets)
+            compare.locality,
+            compare.length,
           },
         },
         sources = {
           { name = "nvim_lsp", max_item_count = 20 },
           { name = "nvim_lua", max_item_count = 20 },
           { name = "luasnip" },
-          { name = "buffer",   max_item_count = 5 },
+          { name = "buffer",   max_item_count = 20 },
           { name = 'orgmode' },
           { name = "path" },
+          { name = 'emoji' },
+          { name = "git" },
           {
             name = "latex_symbols",
             max_item_count = 10,
@@ -108,9 +141,6 @@ return {
               strategy = 0, -- mixed
             },
           },
-          { name = 'emoji' },
-          { name = "git" },
-          { name = "latex_symbols" },
         },
         view = {
           entries = {
@@ -118,7 +148,29 @@ return {
           }
         },
         window = {
-          documentation = window_opts,
+          documentation = {
+            border = tools.ui.border,
+            max_height = 75,
+            max_width = 75,
+            winhighlight = table.concat({
+                "Normal:NormalFloat",
+                "FloatBorder:FloatBorder",
+              },
+              ','
+            ),
+          },
+          completion = {
+            border = tools.ui.border,
+            col_offset = -2,
+            scrolloff = 10,
+            side_padding = pad_len,
+            winhighlight = table.concat({
+                "Normal:NormalFloat",
+                "FloatBorder:FloatBorder",
+              },
+              ','
+            ),
+          }
         }
       })
 
@@ -131,7 +183,7 @@ return {
       })
 
       for k, v in pairs({
-        CmpItemAbbrMatch      = "Number",
+        CmpItemAbbrMatch      = "Normal",
         CmpItemAbbrMatchFuzzy = "CmpItemAbbrMatch",
         CmpItemKindInterface  = "CmpItemKindVariable",
         CmpItemKindText       = "CmpItemKindVariable",
@@ -150,28 +202,5 @@ return {
         cmp_autopairs.on_confirm_done()
       )
     end,
-    dependencies = {
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-cmdline",
-      "hrsh7th/cmp-emoji",
-
-      {
-        "petertriho/cmp-git",
-        config = function()
-          require("cmp_git").setup()
-        end,
-        requires = "nvim-lua/plenary.nvim",
-        ft = "gitcommit"
-      },
-
-      "kdheepak/cmp-latex-symbols",
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-nvim-lua",
-      "hrsh7th/cmp-path",
-      "L3MON4D3/LuaSnip",
-      "saadparwaiz1/cmp_luasnip",
-      "onsails/lspkind.nvim",
-      "windwp/nvim-autopairs",
-    },
   }
 }
