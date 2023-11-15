@@ -14,7 +14,7 @@ return {
           ["vim.lsp.util.stylize_markdown"] = true,
           ["cmp.entry.get_documentation"] = true,
         },
-        progress = { enabled = true },
+        progress = { enabled = false },
       },
       messages = { enabled = false },
       notify = { enabled = false },
