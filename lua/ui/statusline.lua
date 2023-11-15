@@ -221,7 +221,7 @@ end
 -- See https://github.com/nvimdev/whiskyline.nvim/blob/main/lua/whiskyline/init.lua
 -- for async implementation of statusline
 _G.get_statusline = function()
-  if vim.bo.buftype == "terminal" then
+  if vim.bo.buftype == "terminal" or vim.bo.buftype == "nofile" then
     return "%#StatusLineNC#"
   end
 
