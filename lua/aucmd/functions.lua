@@ -11,6 +11,8 @@ local short_indent = {
 }
 
 local nonstandard_tw = {
+  ["c"] = 120,
+  ["cpp"] = 120,
 	["gitcommit"] = 72,
 	["javascript"] = 120,
 	["javascriptreact"] = 120,

@@ -52,6 +52,7 @@ aucmd("FileType", {
   pattern = "markdown,text",
   callback = function()
     vim.cmd("set spell")
+    vim.cmd("set conceallevel=2")
   end,
 })
 
