@@ -1,65 +1,61 @@
 return {
-  {
     "ibhagwan/fzf-lua",
     config = function()
       local fzf = require("fzf-lua")
       local map = vim.keymap.set
-      local actions = require("fzf-lua.actions")
 
       fzf.setup({
-        files = {
-          --  cwd_header = true,
+        buffers = {
           cwd_prompt = false,
-          prompt = "📂  ",
-          actions = {
-            ["default"] = actions.file_open_in_background,
-          }
+          ignore_current_buffer = true,
+          prompt = "   ",
+        },
+        files = {
+          cwd_prompt = false,
+          prompt = "   ",
         },
         grep = {
-          prompt = "🔎  ",
+          cmd = "rg -o -r '' --column --no-heading --color=never --smart-case",
+          prompt = "   ",
+          fzf_opts = {
+            ['--keep-right'] = '',
+          },
         },
+        global_git_icons = false,
         fzf_colors = {
-          ["bg+"] = { "bg", "visual" },
-          bg      = { "bg", "StatusLine" },
-          ["hl+"] = { "fg", "Statement" },
-          gutter  = { "bg", "StatusLine" },
-          info    = { "fg", "Conditional" },
-
-          --  ["bg"]      = { "bg", "Normal" },
-          --  ["hl"]      = { "fg", "Comment" },
-          --  ["fg+"]     = { "fg", "Normal" },
-          --  ["bg+"]     = { "bg", "CursorLine" },
-          --  ["info"]    = { "fg", "PreProc" },
-          --  ["prompt"]  = { "fg", "Conditional" },
-          --  ["pointer"] = { "fg", "Exception" },
-          --  ["marker"]  = { "fg", "Keyword" },
-          --  ["spinner"] = { "fg", "Label" },
-          --  ["header"]  = { "fg", "Comment" },
-          --  ["gutter"]  = { "bg", "Normal" },
+          ["bg"]        = { "bg", "NormalFloat" },
+          ["bg+"]       = { "bg", "CursorLine" },
+          ["fg+"]       = { "fg", "CursorLine" },
+          ["gutter"]    = { "bg", "NormalFloat" },
+          ["header"]    = { "fg", "NonText" },
+          ["info"]      = { "fg", "NonText" },
+          ["pointer"]   = { "bg", "Cursor" },
+          ["separator"] = { "bg", "NormalFloat" },
+          ["spinner"]   = { "fg", "NonText" },
         },
         fzf_opts = { ['--keep-right'] = '' },
         winopts = {
-          border = tools.ui.border,
-          height = .80,
+          cursorline = true,
+          border = tools.ui.cur_border,
+          height = .35,
+          width = 1,
+          row = 1,
           hl = {
-            normal = "Pmenu",
-            border = "FloatBorder",
-            -- Only valid with the builtin previewer:
-            cursor = "Cursor",         -- cursor highlight (grep/LSP matches)
-            cursorline = "StatusLine", -- cursor line
-            cursorlinenr = "NonText",  -- cursor line number
-            preview_border = "FloatBorder",
-            preview_normal = "Statusline",
-            search = "IncSearch", -- search matches (ctags|help)
-            scrollbar_f = "NonText",
-            title = "StatusLine"
+            border = "NormalFloat",
+            header_bind = "NonText",
+            header_text = "NonText",
+            help_normal = "NonText",
+            normal = "NormalFloat",
+            preview_border = "NormalFloat",
+            preview_normal = "NormalFloat",
+            search = "IncSearch",
+            title = "NormalFloat"
           },
           preview = {
-            layout = "vertical",
+            layout = "horizontal",
             scrollbar = "border",
             vertical = "up:65%",
           },
-          width = .80,
         },
       })
 
@@ -82,5 +78,4 @@ return {
       vim.api.nvim_create_user_command("Highlights", function() require('fzf-lua').highlights() end, {})
       vim.api.nvim_create_user_command("Keymaps", function() fzf.keymaps() end, {})
     end
-  }
 }

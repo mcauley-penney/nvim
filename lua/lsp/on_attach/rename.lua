@@ -6,7 +6,7 @@ local M = {}
 M.rename = function()
 	local curr_name = vim.fn.expand("<cword>")
 	local opts = {
-		prompt = "Rename: ",
+		prompt = " Rename ",
 		default = curr_name,
 	}
 

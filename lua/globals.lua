@@ -1,51 +1,82 @@
+-- See https://www.compart.com/en/unicode to search Unicode
+
 local borders = {
-  none = { " ", " ", " ", " ", " ", " ", " ", " " },
-  thin = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-  edge = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }, -- Works in Kitty, Wezterm
+  none  = { '', '', '', '', '', '', '', '' },
+  invis = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+  thin  = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
+  edge  = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }, -- Works in Kitty, Wezterm
+}
+
+local icons = {
+  branch = '',
+  bullet = '•',
+  o_bullet = '○',
+  check = '✔',
+  d_chev = '∨',
+  ellipses = '…',
+  file = '╼',
+  hamburger = '≡',
+  lock = '',
+  r_chev = '>',
+  ballot_x = ' ',
+  up_tri = ' ',
+  info_i = ' ',
+  square = '▮'
+  --  ballot_x = '✘',
+  --  up_tri = '▲',
+  --  info_i = '¡',
 }
 
 _G.tools = {
   ui = {
-    border = borders.edge,
-    icons = {
-      ballot_x = '✘',
-      branch = '',
-      bullet = '•',
-      checkmark = '✔',
-      d_chev = '∨',
-      ellipses = '┉',
-      hamburger = '≡',
-      info_i = '¡',
-      lock = '',
-      r_chev = '>',
-      up_tri = '▲',
-    },
-  }
-}
+    cur_border = borders.invis,
+    borders = borders,
+    icons = icons,
+    lsp_signs = {
+      Error = icons["ballot_x"],
+      Warn = icons["up_tri"],
+      Hint = icons["info_i"],
+      Info = icons["info_i"],
+      Ok = icons["check"]
+    }
+  },
 
-_G.tools.ui.lsp_signs = {
-  Error = tools.ui.icons["ballot_x"],
-  Warn = tools.ui.icons["up_tri"],
-  Hint = tools.ui.icons["info_i"],
-  Info = tools.ui.icons["info_i"],
-  Ok = tools.ui.icons["checkmark"]
+  nonprog_mode = {
+    ["json"] = true,
+    ["markdown"] = true,
+    ["org"] = true,
+    ["orgagenda"] = true,
+    ["text"] = true,
+  }
 }
 
 
 -- ┌────────┐
 -- │settings│
 -- └────────┘
--- defines what filetypes should not be treated like source code
-tools.nonprog_mode = {
-  ["markdown"] = true,
-  ["org"] = true,
-  ["orgagenda"] = true,
-  ["text"] = true,
-}
+
+-- Stop search highlighting after moving
+-- https://www.reddit.com/r/neovim/comments/zc720y/tip_to_manage_hlsearch/
+vim.on_key(function(char)
+  if vim.fn.mode() == "n" then
+    local new_hlsearch = vim.tbl_contains({
+      "<CR>",
+      "n",
+      "N",
+      "*",
+      "#",
+      "?",
+      "/",
+    }, vim.fn.keytrans(char))
+    if vim.opt.hlsearch:get() ~= new_hlsearch then vim.opt.hlsearch = new_hlsearch end
+  end
+end, vim.api.nvim_create_namespace "auto_hlsearch")
+
 
 -- ┌─────────┐
 -- │functions│
 -- └─────────┘
+
 --------------------------------------------------
 -- project directories
 --------------------------------------------------
@@ -126,51 +157,50 @@ tools.get_git_branch = function(root)
   return tools.set_git_branch(root)
 end
 
+
 --------------------------------------------------
--- Highlights
+-- LSP
 --------------------------------------------------
-tools.make_hl_grpstr = function(grp_name)
-  return table.concat({ "%#", grp_name, "#" }, "")
+tools.diagnostics_available = function()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  local diagnostics = vim.lsp.protocol.Methods.textDocument_publishDiagnostics
+
+  for _, cfg in pairs(clients) do
+    if cfg.supports_method(diagnostics) then return true end
+  end
+
+  return false
 end
 
-tools.make_hl_grp = function(grp_name, hi)
-  vim.api.nvim_set_hl(0, grp_name, hi)
-  return tools.make_hl_grpstr(grp_name)
-end
 
-tools.hl_str_grpstr = function(hl_grp_str, text)
-  return table.concat({ hl_grp_str, text, "%*" })
-end
-
-tools.hl_str_grpname = function(grp_name, text)
-  local hl_grp_str = tools.make_hl_grpstr(grp_name)
-  return tools.hl_str_grpstr(hl_grp_str, text)
-end
-
+--------------------------------------------------
+-- Highlighting
+--------------------------------------------------
 
 -- Stolen from toggleterm.nvim
 --
 ---Convert a hex color to an rgb color
----@param color string
+---@param hex string
 ---@return number
 ---@return number
 ---@return number
-local function hex_to_rgb(color)
-  return tonumber(color:sub(2, 3), 16),
-      tonumber(color:sub(4, 5), 16),
-      tonumber(color:sub(6), 16)
+local function hex_to_rgb(hex)
+  return tonumber(hex:sub(2, 3), 16),
+      tonumber(hex:sub(4, 5), 16),
+      tonumber(hex:sub(6), 16)
 end
+
 
 -- Stolen from toggleterm.nvim
 --
 -- SOURCE: https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
 -- @see: https://stackoverflow.com/questions/37796287/convert-decimal-to-hex-in-lua-4
 --- Shade Color generate
---- @param color string hex color
+--- @param hex string hex color
 --- @param percent number
 --- @return string
-tools.shade_color = function(color, percent)
-  local r, g, b = hex_to_rgb(color)
+tools.tint = function(hex, percent)
+  local r, g, b = hex_to_rgb(hex)
 
   -- If any of the colors are missing return "NONE" i.e. no highlight
   if not r or not g or not b then return "NONE" end
@@ -184,44 +214,20 @@ tools.shade_color = function(color, percent)
 end
 
 
----Get the value a highlight group whilst handling errors, fallbacks as well as returning a gui value
----If no attribute is specified return the entire highlight table
----in the right format
----@param grp string
----@param attr string?
---- @return string
-tools.get_hl_grp_rgb = function(grp, attr)
-  ---@param opts {name: string?, link: boolean?}?
-  ---@param ns integer?
-  local function get_hl_as_hex(opts, ns)
-    opts, ns = opts or {}, ns or 0
-    opts.link = opts.link ~= nil and opts.link or false
-    local hl = vim.api.nvim_get_hl(ns, opts)
+---Get a hl group's rgb
+---Note: Always gets linked colors
+---@param opts table
+---@param ns_id integer?
+---@return table
+tools.get_hl_hex = function(opts, ns_id)
+  opts, ns_id = opts or {}, ns_id or 0
+  assert(opts.name or opts.id, "Error: must have hl group name or ID!")
+  opts.link = true
 
-    hl.fg = hl.fg and ('#%06x'):format(hl.fg)
-    hl.bg = hl.bg and ('#%06x'):format(hl.bg)
+  local hl = vim.api.nvim_get_hl(ns_id, opts)
 
-    return hl
-  end
-
-  assert(grp, 'Cannot get a highlight without specifying a group name')
-  local hl_tbl = get_hl_as_hex({ name = grp })
-
-  local hex_color = hl_tbl[attr]
-  if not hex_color then
-    vim.schedule(function()
-      local msg = string.format(
-        'Failed to get attribute \"%s\" for \"%s\" highlight group\n%s',
-        attr,
-        grp,
-        debug.traceback()
-      )
-
-      vim.notify(msg, vim.log.levels.ERROR)
-    end)
-
-    return 'NONE'
-  end
-
-  return hex_color
+  return {
+    fg = hl.fg and ('#%06x'):format(hl.fg),
+    bg = hl.bg and ('#%06x'):format(hl.bg)
+  }
 end

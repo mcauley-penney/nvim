@@ -1,7 +1,7 @@
 local o, opt = vim.o, vim.opt
 
 o.breakindent = true
-o.breakindentopt = "shift:2"
+o.breakindentopt = "list:-1"
 o.cindent = true
 o.clipboard = "unnamedplus"
 o.cmdwinheight = 30
@@ -19,11 +19,20 @@ o.emoji = true
 o.expandtab = true
 o.fileignorecase = true
 opt.fillchars = {
+  eob = ' ',
+  diff = '╱',
   fold = ' ',
   foldclose = tools.ui.icons.r_chev,
   foldopen = tools.ui.icons.d_chev,
   foldsep = ' ',
-  msgsep = '─',
+  msgsep = '━',
+  horiz = '━',
+  horizup = '┻',
+  horizdown = '┳',
+  vert = '┃',
+  vertleft = '┫',
+  vertright = '┣',
+  verthoriz = '╋'
 }
 o.foldcolumn = '1'
 o.foldlevel = 99
@@ -37,10 +46,11 @@ else
 end
 
 opt.guicursor = {
-  "n-sm-v:block",
+  "n-sm:block",
+  "v:hor50",
   "c-ci-cr-i-ve:ver10",
   "o-r:hor10",
-  "a:Cursor/Cursor"
+  "a:Cursor/Cursor-blinkwait1-blinkon1-blinkoff1"
 }
 o.helpheight = 70
 o.hlsearch = true
@@ -49,10 +59,9 @@ o.ignorecase = true
 o.laststatus = 3
 o.list = true
 opt.listchars = {
-  --  eol = "¬",
-  nbsp = "◆",
-  tab = "  ",
-  trail = "·",
+  nbsp = '▬',
+  tab = '  ',
+  trail = '·',
 }
 o.linebreak = true
 o.modeline = false
@@ -73,11 +82,15 @@ o.showtabline = 1
 o.sidescrolloff = 5
 o.signcolumn = "yes:1"
 o.smartcase = true
+o.splitbelow = true
 o.splitkeep = "screen"
+o.splitright = true
 o.swapfile = false
 o.synmaxcol = 1000
 o.termguicolors = true
 o.timeout = false
+o.title = true
+o.titlestring = "nvim: %t"
 o.undofile = true
 o.updatetime = 350 -- used for swap file and cursorhold
 opt.viewoptions = {
@@ -88,5 +101,4 @@ o.virtualedit = "all"
 o.wildignore = "*.o"
 o.wildmode = "longest:full"
 o.wildoptions = "pum"
-o.winbar = " "
 o.writebackup = false

@@ -25,6 +25,7 @@ local servers = {
   lua_ls = {
     settings = {
       Lua = {
+        completion = { callSnippet = "Both" },
         format = {
           enable = true,
           defaultConfig = {
@@ -51,13 +52,25 @@ local populate_setup = function(servers_tbl, attach_fn)
     server_cfg.on_attach = attach
     --  server_cfg.hints = { enabled = true }
 
-    local caps = vim.lsp.protocol.make_client_capabilities()
-    -- TODO: remove when fixed; https://github.com/neovim/neovim/issues/23291
-    caps.workspace.didChangeWatchedFiles.dynamicRegistration = false
-    caps.textDocument.foldingRange = {
-      dynamicRegistration = false,
-      lineFoldingOnly = true
-    }
+    local caps = vim.tbl_deep_extend(
+      'force',
+      vim.lsp.protocol.make_client_capabilities(),
+      -- nvim-cmp supports additional completion capabilities, so broadcast that to servers.
+      require('cmp_nvim_lsp').default_capabilities(),
+      {
+        textDocument = {
+          completion = {
+            completionItem = {
+              snippetSupport = true
+            }
+          },
+          foldingRange = {
+            dynamicRegistration = false,
+            lineFoldingOnly = true
+          }
+        },
+      }
+    )
 
     server_cfg.capabilities = caps
 
@@ -81,6 +94,7 @@ local populate_setup = function(servers_tbl, attach_fn)
 end
 
 require("mason-lspconfig").setup_handlers(populate_setup(servers, on_attach))
+
 
 vim.diagnostic.config({
   underline = true,

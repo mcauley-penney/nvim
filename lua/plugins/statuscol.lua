@@ -3,7 +3,7 @@ local function get_lnum()
   local sep = ','
 
   -- return a visual placeholder if line is wrapped
-  if vim.v.virtnum ~= 0 then return '-' end
+  if vim.v.virtnum ~= 0 then return '│' end
 
   -- get absolute lnum if is current line, else relnum
   cur_num = vim.v.relnum == 0 and vim.v.lnum or vim.v.relnum
@@ -17,23 +17,54 @@ local function get_lnum()
     cur_num = tostring(cur_num)
   end
 
-  local utils = require("ui.utils")
-  return utils.pad_str(cur_num, 3, "right")
+  return require("ui.utils").pad_str(cur_num, 3, "right")
 end
 
 return {
-  {
-    "luukvbaal/statuscol.nvim",
-    config = function()
-      local builtin = require("statuscol.builtin")
-      require("statuscol").setup({
-        segments = {
-          { sign = { name = { "Diagnostic" }, maxwidth = 1 } },
-          { text = { "%=", get_lnum, " " } },
-          { sign = { namespace = { "gitsigns" }, maxwidth = 1, colwidth = 1 } },
-          { text = { " ", builtin.foldfunc, " " } },
-        }
-      })
-    end
-  },
+  "luukvbaal/statuscol.nvim",
+  -- TODO: remove when 0.10 is latest release
+  branch = "0.10",
+  config = function()
+    require("statuscol").setup({
+      ft_ignore = { "help", "neo-tree" },
+      segments = {
+        {
+          sign = {
+            namespace = { "diagnostic" },
+          },
+          condition = {
+            function()
+              return vim.api.nvim_get_option_value("modifiable", { buf = 0 }) and
+                  tools.diagnostics_available()
+            end
+          }
+        },
+        {
+          text = { "%=", get_lnum, " " },
+        },
+        {
+          sign = {
+            namespace = { "gitsigns" },
+            maxwidth = 2,
+            colwidth = 1,
+          },
+          condition = {
+            function()
+              local root = tools.get_path_root(vim.api.nvim_buf_get_name(0))
+              return tools.get_git_remote_name(root)
+            end
+          }
+        },
+        {
+          text = { require("statuscol.builtin").foldfunc },
+          condition = {
+            function()
+              return vim.api.nvim_get_option_value("modifiable", { buf = 0 })
+            end
+          }
+        },
+        { text = { " " }, hl = "Normal" }
+      }
+    })
+  end
 }

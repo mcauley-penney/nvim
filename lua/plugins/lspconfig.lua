@@ -1,95 +1,101 @@
 return {
   "neovim/nvim-lspconfig",
-
-  {
-    "williamboman/mason.nvim",
-    build = ":MasonUpdate",
-    dependencies = {
-      "neovim/nvim-lspconfig"
+  config = function()
+    require("lspconfig.ui.windows").default_options.border = tools.ui.cur_border
+    vim.api.nvim_set_hl(0, "LspInfoBorder", { link = "FloatBorder" })
+  end,
+  dependencies = {
+    {
+      "williamboman/mason.nvim",
+      opts = {
+        max_concurrent_installers = 20,
+        ui = {
+          border = tools.ui.cur_border,
+          height = 0.8,
+          icons = {
+            package_installed = tools.ui.icons.bullet,
+            package_pending = tools.ui.icons.ellipses,
+            package_uninstalled = tools.ui.icons.o_bullet,
+          },
+        }
+      },
     },
-    opts = {
-      ui = {
-        border = tools.ui.border,
-        height = 0.8,
-        icons = {
-          package_installed = "✓",
-          package_pending = tools.ui.icons.ellipses,
-          package_uninstalled = "✗",
+
+    {
+      "williamboman/mason-lspconfig.nvim",
+      opts = {
+        ensure_installed = {
+          "clangd",
+          "dockerls",
+          "jsonls",
+          "lua_ls",
+          "pyright",
+          "tsserver"
         },
       }
     },
-  },
 
-  {
-    "jose-elias-alvarez/null-ls.nvim",
-    dependencies = { 'nvim-lua/plenary.nvim' },
-    config = {
-      debounce = 300,
-      on_attach = require("lsp.on_attach"),
-    }
-  },
-
-  {
-    "folke/neodev.nvim",
-    dependencies = {
-      "neovim/nvim-lspconfig",
+    {
+      "nvimtools/none-ls.nvim",
+      dependencies = { 'nvim-lua/plenary.nvim' },
+      opts = {
+        debounce = 300,
+        on_attach = require("lsp.on_attach"),
+      }
     },
-    ft = "lua",
-  },
 
-  {
-    "williamboman/mason-lspconfig.nvim",
-    dependencies = {
-      "mason.nvim",
+    {
+      'jay-babu/mason-null-ls.nvim',
+      opts = {
+        automatic_installation = true,
+        ensure_installed = {
+          "actionlint",
+          "black",
+        },
+        handlers = {}
+      }
     },
-    config = {
-      ensure_installed = {
-        "clangd",
-        "html",
-        "jsonls",
-        "lua_ls",
-        "pyright",
-        "tsserver"
-      },
-    }
-  },
 
-  {
-    'jay-babu/mason-null-ls.nvim',
-    dependencies = {
-      "williamboman/mason.nvim",
-      "jose-elias-alvarez/null-ls.nvim",
+    {
+      "folke/neodev.nvim",
+      ft = "lua",
     },
-    config = {
-      automatic_installation = true,
-      ensure_installed = {
-        "actionlint",
-        "black",
-        "fixjson",
-        "pydocstyle",
-        "shellcheck",
-      },
-      handlers = {}
-    }
-  },
 
-  {
-    "onsails/lspkind.nvim",
-    config = function()
-      local lspkind = require('lspkind')
+    {
+      "onsails/lspkind.nvim",
+      config = function()
+        local lspkind = require('lspkind')
 
-      for _, tbl in pairs(lspkind.presets) do
-        for name, icon in pairs(tbl) do
-          tbl[name] = icon .. ' '
+        for _, tbl in pairs(lspkind.presets) do
+          for name, icon in pairs(tbl) do
+            tbl[name] = icon .. ' '
+          end
         end
-      end
 
-      lspkind.init({
-        preset = "codicons",
-      })
-    end,
-    dependencies = {
-      "neovim/nvim-lspconfig",
+        lspkind.init({
+          preset = "codicons",
+        })
+      end,
+    },
+
+    {
+      "j-hui/fidget.nvim",
+      opts = {
+        progress = {
+          suppress_on_insert = true,
+          display = {
+            done_ttl = 2,
+            progress_icon = { pattern = "grow_horizontal", period = 0.75 },
+          },
+        },
+        notification = {
+          window = {
+            border = tools.ui.cur_border,
+            normal_hl = "NormalFloat",
+            winblend = 0
+          }
+        }
+      }
     }
-  },
+  }
 }

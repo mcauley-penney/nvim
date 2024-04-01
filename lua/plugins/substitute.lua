@@ -1,7 +1,7 @@
 return {
 	{
 		"gbprod/substitute.nvim",
-		config = {
+		opts = {
 			highlight_substituted_text = {
 				timer = 200,
 			},

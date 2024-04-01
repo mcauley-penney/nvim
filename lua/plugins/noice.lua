@@ -26,23 +26,10 @@ return {
         excluded_filetypes = {},
       },
       views = {
-        mini = {
-          position = {
-            row = -2,
-          },
+        hover = {
+          border = { style = tools.ui.cur_border },
         },
       },
     },
-    config = function(_, opts)
-      require("noice").setup(opts)
-      local hl = vim.api.nvim_set_hl
-      local prg = "NoiceLspProgress"
-
-      hl(0, "NoiceMini", { link = "LspInlayHint" })
-      hl(0, "NoiceFormatProgressDone", { link = "Normal" })
-      hl(0, prg .. "Client", { link = "LspInlayHint" })
-      hl(0, prg .. "Title", { link = "LspInlayHint" })
-      hl(0, prg .. "Spinner", { link = "LspInlayHint" })
-    end
   }
 }

@@ -1,16 +1,16 @@
-local tools = "lsp.on_attach."
+local attach = "lsp.on_attach."
 local methods = vim.lsp.protocol.Methods
 
 --- Sets up LSP keymaps and autocommands for the given buffer.
----@param client lsp.Client
----@param bufnr integer
+--- @param client lsp.Client
+--- @param bufnr integer
 return function(client, bufnr)
   local lsp = vim.lsp.buf
 
-  ---@param mode string|string[]
-  ---@param lhs string
-  ---@param rhs string|function
-  ---@param desc string
+  --- @param mode string|string[]
+  --- @param lhs string
+  --- @param rhs string|function
+  --- @param desc string
   local function map(mode, lhs, rhs, desc)
     mode = mode or 'n'
     vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
@@ -20,14 +20,18 @@ return function(client, bufnr)
     map('n', "<leader>f", function() lsp.format({ timeout_ms = 2000 }) end, "Format with LSP")
   end
 
+  -- https://github.com/neovim/neovim/commit/448907f65d6709fa234d8366053e33311a01bdb9
   -- https://reddit.com/r/neovim/s/eDfG5BfuxW
   if client.supports_method(methods.textDocument_inlayHint) then
-    map('n', "<leader>th", function() vim.lsp.inlay_hint(bufnr, nil) end, "[t]oggle inlay [h]ints")
+    map('n', "<leader>th", function()
+      local hint = vim.lsp.inlay_hint
+      hint.enable(bufnr, not hint.is_enabled(bufnr))
+    end, "[t]oggle inlay [h]ints")
   end
 
-  if client.supports_method(methods.textDocument_hover) then
+  if client.supports_method(methods.textDocument_rename) then
     --  map("n", "<leader>r", lsp.rename, {})
-    map('n', "<leader>r", require(tools .. "rename").rename, "LSP [r]ename")
+    map('n', "<leader>r", require(attach .. "rename").rename, "LSP [r]ename")
   end
 
   if client.supports_method(methods.textDocument_declaration) then
@@ -58,8 +62,9 @@ return function(client, bufnr)
 
   map('n', "<leader>vd", function()
     vim.diagnostic.open_float({
-      height = 15,
-      width = 50,
+      border = tools.ui.cur_border,
+      --  height = 15,
+      --  width = 50,
     })
   end, "View Diagnostic Float")
 end

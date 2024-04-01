@@ -47,13 +47,11 @@ aucmd("BufWinEnter", {
   command = "silent! loadview",
 })
 
-aucmd("FileType", {
+-- See https://vi.stackexchange.com/a/12710
+aucmd("BufWinEnter", {
   group = grp,
-  pattern = "markdown,text",
-  callback = function()
-    vim.cmd("set spell")
-    vim.cmd("set conceallevel=2")
-  end,
+  command = [[call matchadd("String", '\v[a-zA-Z0-9._%+-]+\@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')]],
+  desc = "Highlight email addresses."
 })
 
 ----------------------------------------
@@ -77,6 +75,7 @@ vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "BufEnter" }, {
     local off = math.min(vim.o.scrolloff, math.floor(win_h / 2))
     local dist = vim.fn.line "$" - vim.fn.line "."
     local rem = vim.fn.line "w$" - vim.fn.line "w0" + 1
+
     if dist < off and win_h - rem + dist < off then
       local view = vim.fn.winsaveview()
       view.topline = view.topline + off - (win_h - rem + dist)
@@ -103,7 +102,7 @@ vim.api.nvim_create_autocmd('VimResized', {
 vim.api.nvim_create_autocmd('TextYankPost', {
   group = grp,
   callback = function()
-    vim.highlight.on_yank { higroup = "CursorLine" }
+    vim.highlight.on_yank({ higroup = "Visual", timeout = 190 })
   end,
   pattern = '*',
 })
@@ -116,14 +115,4 @@ grp = augrp("Leaving", { clear = true })
 aucmd("BufWinLeave", {
   group = grp,
   command = "silent! mkview",
-})
-
-vim.api.nvim_create_autocmd("BufWritePre", {
-  group = grp,
-  callback = function()
-    local ft = get_opt("filetype", {})
-    if not ft == "markdown" then
-      vim.lsp.buf.format()
-    end
-  end,
 })

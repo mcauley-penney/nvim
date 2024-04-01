@@ -23,7 +23,6 @@ return {
           "make",
           "markdown",
           "markdown_inline",
-          "org",
           "python",
           "r",
           "regex",
@@ -42,9 +41,6 @@ return {
           -- editor, and you may see some duplicate highlights. Instead of true
           -- it can also be a list of languages
           enable = true,
-          -- ORG: Required for spellcheck, some LaTex highlights and code
-          -- block highlights that do not have ts grammar
-          additional_vim_regex_highlighting = { 'org' },
         },
         textobjects = {
           lookahead = true,
@@ -53,16 +49,18 @@ return {
             enable = true,
             set_jumps = true,
             goto_next_start = {
-              ["]f"] = "@function.outer",
               ["]]"] = "@class.outer",
+              ["]f"] = "@function.outer",
+              ["]a"] = "@parameter.inner",
             },
             goto_next_end = {
-              ["]F"] = "@function.outer",
               ["]["] = "@class.outer",
+              ["]F"] = "@function.outer",
             },
             goto_previous_start = {
               ["[f"] = "@function.outer",
               ["[["] = "@class.outer",
+              ["[a"] = "@parameter.inner",
             },
             goto_previous_end = {
               ["[F"] = "@function.outer",
@@ -105,7 +103,8 @@ return {
 
   {
     "danymat/neogen",
-    config = {
+    dependencies = "nvim-treesitter/nvim-treesitter",
+    opts = {
       languages = {
         lua = {
           template = {
@@ -119,7 +118,6 @@ return {
         },
       },
     },
-    dependencies = "nvim-treesitter/nvim-treesitter",
     init = function()
       vim.keymap.set("n", "<leader>id", require('neogen').generate, {})
     end
@@ -127,6 +125,7 @@ return {
 
   {
     "echasnovski/mini.splitjoin",
+    dependencies = "nvim-treesitter/nvim-treesitter",
     config = function()
       local MiniSplitjoin = require('mini.splitjoin')
 
@@ -157,6 +156,44 @@ return {
         join  = { hooks_post = { del_pair_commas } },
       }
     end,
-    dependencies = "nvim-treesitter/nvim-treesitter",
+  },
+
+  {
+    "Bekaboo/dropbar.nvim",
+    opts = {
+      general = {
+        update_interval = 100,
+      },
+      bar = {
+        sources = function(buf, _)
+          local sources = require('dropbar.sources')
+          local utils = require('dropbar.utils')
+
+          if vim.bo[buf].ft == 'markdown' then return { sources.markdown } end
+          if vim.bo[buf].buftype == 'terminal' then return { sources.terminal } end
+          return {
+            utils.source.fallback({
+              sources.lsp,
+              sources.treesitter,
+            }),
+          }
+        end
+      },
+      icons = {
+        ui = { bar = { separator = ' ' .. tools.ui.icons.r_chev .. ' ' } },
+      }
+    },
+    config = function(opts)
+      local dropbar_icons = require('dropbar.configs').opts.icons.kinds.symbols
+      local lspkind_icons = require("lspkind").symbol_map
+
+      local joined_icons = vim.tbl_extend("force", dropbar_icons, lspkind_icons)
+      joined_icons = vim.tbl_map(function(value) return value .. ' ' end, joined_icons)
+
+      opts.opts.icons["kinds"] = {
+        symbols = joined_icons
+      }
+      require("dropbar").setup(opts.opts)
+    end
   },
 }

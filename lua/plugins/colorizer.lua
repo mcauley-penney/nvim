@@ -1,12 +1,10 @@
 return {
-	{
-		"NvChad/nvim-colorizer.lua",
-		config = {
-			filetypes = {
-				"css",
-				lua = { names = false },
-				text = { names = false },
-			}
-		}
-	}
+  "NvChad/nvim-colorizer.lua",
+  opts = {
+    filetypes = {
+      "css",
+      lua = { names = false },
+      text = { names = false },
+    }
+  }
 }

@@ -5,64 +5,66 @@
 -- @tparam  opts
 -- @tparam  on_confirm
 vim.ui.input = function(opts, on_confirm)
-	-- defer the on_confirm callback so that it is
-	-- executed after the prompt window is closed
-	local deferred_callback = function(input)
-		vim.defer_fn(function()
-			on_confirm(input)
-		end, 10)
-	end
+  -- defer the on_confirm callback so that it is
+  -- executed after the prompt window is closed
+  local deferred_callback = function(input)
+    vim.defer_fn(function()
+      on_confirm(input)
+    end, 10)
+  end
 
-	-- create a "prompt" buffer that will be deleted once focus is lost
-	local buf = vim.api.nvim_create_buf(false, false)
-	vim.bo[buf].buftype = "prompt"
-	vim.bo[buf].bufhidden = "wipe"
+  -- create a "prompt" buffer that will be deleted once focus is lost
+  local buf = vim.api.nvim_create_buf(false, false)
+  vim.bo[buf].buftype = "prompt"
+  vim.bo[buf].bufhidden = "wipe"
 
-	local default_text = opts.default or ""
-	local prompt = (" " .. opts.prompt) or " "
+  local default_text = opts.default or ""
+  local prompt = opts.prompt or ""
 
-	local win_opts = {
-		border = "none",
-		col = 0,
-		focusable = true,
-		height = 2,
-		relative = "cursor",
-		row = 1,
-		style = "minimal",
-		width = #prompt + #default_text + 15
-	}
+  local win_opts = {
+    border = tools.ui.cur_border,
+    col = 0,
+    focusable = true,
+    height = 1,
+    relative = "cursor",
+    row = 1,
+    style = "minimal",
+    width = #default_text + 15,
+    title = { { prompt, "Pmenu" } },
+    title_pos = "left"
+  }
 
-	-- set keymaps
-	vim.keymap.set({ "i", "n" }, "<cr>", "<cr><esc><cmd>close!<cr><cmd>stopinsert<cr>", {
-		silent = true,
-		buffer = buf,
-	})
+  -- set keymaps
+  vim.keymap.set({ "i", "n" }, "<cr>", "<cr><esc><cmd>close!<cr><cmd>stopinsert<cr>", {
+    silent = true,
+    buffer = buf,
+  })
 
-	vim.keymap.set("n", "u", "<cmd>undo<cr>", {
-		silent = true,
-		buffer = buf,
-	})
+  vim.keymap.set("n", "u", "<cmd>undo<cr>", {
+    silent = true,
+    buffer = buf,
+  })
 
-	for _, lhs in pairs({ "<esc>", "q" }) do
-		vim.keymap.set("n", lhs, "<cmd>close!<cr>", {
-			silent = true,
-			buffer = buf,
-		})
-	end
+  for _, lhs in pairs({ "<esc>", "q" }) do
+    vim.keymap.set("n", lhs, "<cmd>close!<cr>", {
+      silent = true,
+      buffer = buf,
+    })
+  end
 
-	-- set prompt and callback (CR) for prompt buffer
-	vim.fn.prompt_setprompt(buf, prompt)
-	vim.fn.prompt_setcallback(buf, deferred_callback)
+  -- set prompt and callback (CR) for prompt buffer
+  vim.fn.prompt_setprompt(buf, ' ')
+  vim.fn.prompt_setcallback(buf, deferred_callback)
 
-	-- open the floating window pointing to our buffer and show the prompt
-	vim.api.nvim_open_win(buf, true, win_opts)
+  -- open the floating window pointing to our buffer and show the prompt
+  vim.api.nvim_open_win(buf, true, win_opts)
 
-	vim.cmd("startinsert")
+  vim.cmd("startinsert")
 
-	-- set the default text (needs to be deferred until after the prompt is drawn)
-	vim.defer_fn(function()
-		vim.api.nvim_buf_set_text(buf, 0, #prompt, 0, #prompt, { default_text })
-		vim.cmd("stopinsert")
-		vim.api.nvim_win_set_cursor(0, { 1, #prompt + 1 })
-	end, 10)
+  -- set the default text (needs to be deferred until after the prompt is drawn)
+  vim.defer_fn(function()
+    vim.api.nvim_buf_set_text(buf, 0, 1, 0, 1, { default_text })
+    vim.cmd("stopinsert")
+    vim.api.nvim_win_set_cursor(0, { 1, 2 })
+  end, 10)
 end
