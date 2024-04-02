@@ -19,5 +19,7 @@ return {
   },
   init = function()
     vim.keymap.set({ 'n', 'x', 'o' }, '<F6>', function() require('flash').jump() end, { desc = 'Flash' })
+
+    vim.api.nvim_set_hl(0, "FlashLabel", { link = "CurSearch" })
   end,
 }

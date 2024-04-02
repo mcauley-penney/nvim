@@ -146,6 +146,8 @@ local function get_git_info(root, icon_tbl)
   if remote and branch then
     return table.concat({ icon_tbl["branch"], ' ', remote, ':', branch })
   end
+
+  return ''
 end
 
 
