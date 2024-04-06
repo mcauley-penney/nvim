@@ -20,7 +20,6 @@ local stl_parts = {
 
 local stl_order = {
   "pad",
-  --  "mode",
   "git_info",
   "path",
   "ro",
@@ -96,10 +95,15 @@ local function hl_lsp_icons(lsp_icons, hl_grps)
   local hl_syms = {}
   local sign_hl
 
-  for diag_type, sym in pairs(lsp_icons) do
-    sign_hl = table.concat({ "DiagnosticSign", diag_type })
+  local name = nil
+  local sym = nil
+  for i, icon_data in ipairs(lsp_icons) do
+    name = icon_data["name"]
+    sym = icon_data["sym"]
+
+    sign_hl = table.concat({ "DiagnosticSign", name})
     vim.fn.sign_define(sign_hl, { text = sym, texthl = sign_hl })
-    hl_syms[diag_type] = make_stl_hl_str(hl_grps[diag_type], sym)
+    hl_syms[i] = make_stl_hl_str(hl_grps[name], sym)
   end
 
   return hl_syms
@@ -168,14 +172,15 @@ local function get_diag_str(lsp_syms)
     return ""
   end
 
-  local count = nil
-  local count_str = nil
+  local num_diag = nil
+  local diag_str = nil
   local diag_tbl = {}
+  local total = vim.diagnostic.count()
 
-  for _, type in pairs({ "Error", "Warn" }) do
-    count = #vim.diagnostic.get(0, { severity = string.upper(type) })
-    count_str = utils.pad_str(tostring(count), 3, "left")
-    vim.list_extend(diag_tbl, { lsp_syms[type], ' ', count_str, ' ' })
+  for i = 1, 2 do
+    num_diag = total[i] or 0
+    diag_str = utils.pad_str(tostring(num_diag), 3, "left")
+    vim.list_extend(diag_tbl, { lsp_syms[i], ' ', diag_str, ' ' })
   end
 
   return table.concat(diag_tbl)
@@ -269,50 +274,6 @@ local get_py_venv = function()
 
   return nil
 end
-
---  local function get_mode()
---    -- Note that: \19 = ^S and \22 = ^V.
---    local mode_to_str = {
---      ['n'] = 'NORMAL',
---      ['no'] = 'OP-PENDING',
---      ['nov'] = 'OP-PENDING',
---      ['noV'] = 'OP-PENDING',
---      ['no\22'] = 'OP-PENDING',
---      ['niI'] = 'NORMAL',
---      ['niR'] = 'NORMAL',
---      ['niV'] = 'NORMAL',
---      ['nt'] = 'NORMAL',
---      ['ntT'] = 'NORMAL',
---      ['v'] = 'CHAR VISUAL',
---      ['vs'] = 'VISUAL',
---      ['V'] = 'LINE VISUAL',
---      ['Vs'] = 'VISUAL',
---      ['\22'] = 'BLOCK VISUAL',
---      ['\22s'] = 'VISUAL',
---      ['s'] = 'SELECT',
---      ['S'] = 'SELECT',
---      ['\19'] = 'SELECT',
---      ['i'] = 'INSERT',
---      ['ic'] = 'INSERT',
---      ['ix'] = 'INSERT',
---      ['R'] = 'REPLACE',
---      ['Rc'] = 'REPLACE',
---      ['Rx'] = 'REPLACE',
---      ['Rv'] = 'VIRT REPLACE',
---      ['Rvc'] = 'VIRT REPLACE',
---      ['Rvx'] = 'VIRT REPLACE',
---      ['c'] = 'COMMAND',
---      ['cv'] = 'VIM EX',
---      ['ce'] = 'EX',
---      ['r'] = 'PROMPT',
---      ['rm'] = 'MORE',
---      ['r?'] = 'CONFIRM',
---      ['!'] = 'SHELL',
---      ['t'] = 'TERMINAL',
---    }
---
---    return mode_to_str[vim.api.nvim_get_mode().mode] or 'UNKNOWN'
---  end
 
 
 --- Creates statusline

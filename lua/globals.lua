@@ -1,5 +1,7 @@
 -- See https://www.compart.com/en/unicode to search Unicode
 
+local sev = vim.diagnostic.severity
+
 local borders = {
   none  = { '', '', '', '', '', '', '', '' },
   invis = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
@@ -21,7 +23,6 @@ local icons = {
   ballot_x = ' ',
   up_tri = ' ',
   info_i = ' ',
-  square = '▮'
   --  ballot_x = '✘',
   --  up_tri = '▲',
   --  info_i = '¡',
@@ -33,11 +34,10 @@ _G.tools = {
     borders = borders,
     icons = icons,
     lsp_signs = {
-      Error = icons["ballot_x"],
-      Warn = icons["up_tri"],
-      Hint = icons["info_i"],
-      Info = icons["info_i"],
-      Ok = icons["check"]
+      [sev.ERROR] = { name = "Error", sym = icons["ballot_x"] },
+      [sev.WARN] = { name = "Warn", sym = icons["up_tri"] },
+      [sev.INFO] = { name = "Info", sym = icons["info_i"] },
+      [sev.HINT] = { name = "Hint", sym = icons["info_i"] },
     }
   },
 
