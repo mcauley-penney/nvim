@@ -7,6 +7,7 @@ return {
         ensure_installed = {
           "bash",
           "c",
+          "comment",
           "cpp",
           "diff",
           "dockerfile",

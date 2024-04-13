@@ -244,18 +244,6 @@ return {
     end,
   },
 
-  -- Replacement for treesitter comments for now
-  {
-    "folke/todo-comments.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    opts = {
-      highlight = {
-        keyword = "wide_bg",
-        after = "",
-      },
-    }
-  },
-
   {
     "akinsho/git-conflict.nvim",
     version = "*",
