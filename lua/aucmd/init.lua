@@ -68,7 +68,7 @@ aucmd("CmdlineLeave", {
   end,
 })
 
-vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "BufEnter" }, {
+vim.api.nvim_create_autocmd({ "CursorMoved", "BufEnter" }, {
   group = grp,
   callback = function()
     local win_h = vim.api.nvim_win_get_height(0)
