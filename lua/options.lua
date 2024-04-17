@@ -38,13 +38,6 @@ o.foldcolumn = '1'
 o.foldlevel = 99
 o.foldmethod = "indent"
 o.gdefault = true
-
-if vim.fn.executable("rg") > 0 then
-  o.grepprg = [[rg --glob "!.git" --hidden --smart-case  --vimgrep]]
-else
-  o.grepprg = [[grep -nrH ]]
-end
-
 opt.guicursor = {
   "n-sm:block",
   "v:hor50",
