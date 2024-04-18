@@ -68,7 +68,7 @@ aucmd("CmdlineLeave", {
   end,
 })
 
-vim.api.nvim_create_autocmd({ "CursorMoved", "BufEnter" }, {
+vim.api.nvim_create_autocmd({ "BufEnter", "CursorMoved", "CursorHoldI" }, {
   group = grp,
   callback = function()
     local win_h = vim.api.nvim_win_get_height(0)
@@ -82,6 +82,7 @@ vim.api.nvim_create_autocmd({ "CursorMoved", "BufEnter" }, {
       vim.fn.winrestview(view)
     end
   end,
+  desc = "When at eob, bring the current line towards center screen"
 })
 
 aucmd("ShellCmdPost", {
