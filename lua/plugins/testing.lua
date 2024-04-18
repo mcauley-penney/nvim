@@ -141,8 +141,7 @@ return {
 
         return {
           { '', guibg = norm_hl.bg, guifg = float_hl.bg },
-          ft_icon and { ft_icon, guifg = ft_color } or '',
-          ft_icon and ' ',
+          ft_icon and { ft_icon .. ' ', guifg = ft_color } or {},
           filename,
           { '', guibg = norm_hl.bg, guifg = float_hl.bg },
         }
