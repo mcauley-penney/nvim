@@ -208,11 +208,15 @@ return {
 
     cmp.setup.cmdline(':', {
       mapping = {
-        ["<Tab>"] = cmp.mapping.confirm({ select = true }),
-        ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-        ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-        ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-d>'] = cmp.mapping.scroll_docs(4),
+        ["<Tab>"] = {
+          c = cmp.mapping.confirm({ select = true })
+        },
+        ['<C-n>'] = {
+          c = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select })
+        },
+        ['<C-p>'] = {
+          c = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+        }
       },
       sources = cmp.config.sources({
         {
