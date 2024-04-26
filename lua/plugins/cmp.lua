@@ -71,11 +71,28 @@ return {
 
             local choice = require("lspkind").cmp_format({
               ellipsis_char = tools.ui.icons.ellipses,
-              maxwidth = abbr_width_max,
+              maxwidth = abbr_width_max + menu_width_max,
               mode = "symbol",
             })(entry, vim_item)
 
             choice.abbr = vim.trim(choice.abbr)
+
+            local cmp_ctx = get_lsp_completion_context(entry.completion_item, entry.source)
+            if cmp_ctx ~= nil and cmp_ctx ~= "" then
+              choice.menu = cmp_ctx
+              local menu_width = string.len(choice.menu)
+
+              if menu_width > menu_width_max then
+                choice.menu = vim.fn.strcharpart(choice.menu, 0, menu_width_max - 1)
+                choice.menu = choice.menu .. tools.ui.icons.ellipses
+              else
+                local padding = string.rep(' ', menu_width_max - menu_width)
+                choice.menu = padding .. choice.menu
+              end
+            else
+              choice.menu = ""
+              abbr_width_max = abbr_width_max + (menu_width_max / 2)
+            end
 
             -- give padding until min/max width is met
             -- https://github.com/hrsh7th/nvim-cmp/issues/980#issuecomment-1121773499
@@ -85,25 +102,9 @@ return {
               vim_item.abbr = choice.abbr .. padding
             end
 
-            local cmp_ctx = get_lsp_completion_context(entry.completion_item, entry.source)
-            if cmp_ctx ~= nil and cmp_ctx ~= "" then
-              choice.menu = cmp_ctx
-            else
-              choice.menu = ""
-            end
-
-            local menu_width = string.len(choice.menu)
-            if menu_width > menu_width_max then
-              choice.menu = vim.fn.strcharpart(choice.menu, 0, menu_width_max - 1)
-              choice.menu = choice.menu .. tools.ui.icons.ellipses
-            else
-              local padding = string.rep(' ', menu_width_max - menu_width)
-              choice.menu = padding .. choice.menu
-            end
-
             return choice
           else
-            local abbr_width_min = 20
+            local abbr_width_min = 12
             local abbr_width_max = 50
 
             local choice = require("lspkind").cmp_format({
