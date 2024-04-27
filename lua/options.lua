@@ -62,6 +62,7 @@ o.modelines = 0
 o.mouse = ""
 o.nrformats = "alpha"
 o.number = true
+o.pumheight = 15
 o.redrawtime = 150
 o.relativenumber = true
 o.ruler = false
