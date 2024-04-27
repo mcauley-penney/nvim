@@ -103,4 +103,3 @@ vim.keymap.set('n', '<leader>pm', '<cmd>Lazy<cr>', { desc = "Open [p]ackage [m]a
 
 
 require("ui")
-require("lsp")
