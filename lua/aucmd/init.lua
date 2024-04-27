@@ -21,7 +21,7 @@ aucmd("BufEnter", {
       tools.get_git_remote_name(root)
     end
   end,
-  desc = "Set root dir and initialize version control branch."
+  desc = "Set root dir and initialize version control branch"
 })
 
 aucmd({ "BufEnter", "BufWinEnter" }, {
@@ -39,7 +39,7 @@ aucmd("BufNewFile", {
   group = grp,
   command = "silent! 0r "
       .. vim.fn.stdpath("config") .. "/templates/skeleton.%:e",
-  desc = "If one exists, use a template when opening a new file."
+  desc = "If one exists, use a template when opening a new file"
 })
 
 aucmd("BufWinEnter", {
@@ -51,7 +51,7 @@ aucmd("BufWinEnter", {
 aucmd("BufWinEnter", {
   group = grp,
   command = [[call matchadd("String", '\v[a-zA-Z0-9._%+-]+\@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')]],
-  desc = "Highlight email addresses."
+  desc = "Highlight email addresses"
 })
 
 ----------------------------------------
@@ -71,10 +71,10 @@ aucmd("CmdlineLeave", {
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorMoved", "CursorHoldI" }, {
   group = grp,
   callback = function()
-    local win_h = vim.api.nvim_win_get_height(0)
-    local off = math.min(vim.o.scrolloff, math.floor(win_h / 2))
-    local dist = vim.fn.line "$" - vim.fn.line "."
-    local rem = vim.fn.line "w$" - vim.fn.line "w0" + 1
+    local win_h = vim.api.nvim_win_get_height(0)                 -- height of window
+    local off = math.min(vim.o.scrolloff, math.floor(win_h / 2)) -- scroll offset
+    local dist = vim.fn.line "$" - vim.fn.line "."               -- distance from current line to last line
+    local rem = vim.fn.line "w$" - vim.fn.line "w0" + 1          -- num visible lines in current window
 
     if dist < off and win_h - rem + dist < off then
       local view = vim.fn.winsaveview()
@@ -83,16 +83,6 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorMoved", "CursorHoldI" }, {
     end
   end,
   desc = "When at eob, bring the current line towards center screen"
-})
-
-aucmd("ShellCmdPost", {
-  group = grp,
-  callback = function()
-    local path = vim.api.nvim_buf_get_name(0)
-    local root = tools.get_path_root(path)
-
-    tools.set_git_branch(root)
-  end,
 })
 
 vim.api.nvim_create_autocmd('VimResized', {
