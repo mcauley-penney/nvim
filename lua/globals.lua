@@ -101,14 +101,8 @@ tools.get_path_root = function(path)
     ".git"
   }
 
-  root = vim.fs.find(root_items, {
-    path = path,
-    upward = true,
-    type = "directory"
-  })[1]
+  root = vim.fs.root(0, root_items)
   if root == nil then return nil end
-
-  root = vim.fs.dirname(root)
   vim.b.path_root = root
 
   return root
