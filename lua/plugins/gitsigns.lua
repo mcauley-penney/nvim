@@ -66,7 +66,7 @@ return {
         map('n', '<leader>gd', gs.diffthis)
         map('n', '<leader>gD', function() gs.diffthis('~') end)
         map("n", "<leader>gt", gs.toggle_signs)
-        map("n", "<leader>hp", gs.preview_hunk_inline)
+        map("n", "<leader>hp", gs.preview_hunk)
         map("n", "<leader>hu", gs.undo_stage_hunk)
 
         map({ "n", "v" }, "<leader>hs", ':Gitsigns stage_hunk<CR>')
