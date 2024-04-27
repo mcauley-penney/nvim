@@ -57,8 +57,6 @@ M.on_attach = function(client, bufnr)
     vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
   end
 
-  map('n', "[d", vim.diagnostic.goto_prev, "Previous diagnostic")
-  map('n', "]d", vim.diagnostic.goto_next, "Next diagnostic")
   map('n', "<leader>vd", function()
     vim.diagnostic.open_float({ border = tools.ui.cur_border, })
   end, "[v]iew [d]iagnostic float")
