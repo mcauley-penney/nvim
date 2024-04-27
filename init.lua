@@ -79,16 +79,24 @@ require('lazy').setup("plugins", {
   },
   defaults = { lazy = false },
   ui = {
-    backdrop = 80,
+    backdrop = 70,
     border = tools.ui.cur_border,
     icons = tools.ui.bullet,
   },
 })
 
 vim.api.nvim_set_hl(0, "LazyButton", { link = "Visual" })
-vim.api.nvim_set_hl(0, "LazyButtonActive", { link = "CursorLine" })
+vim.api.nvim_set_hl(0, "LazyButtonActive", { link = "LazyH1" })
 vim.api.nvim_set_hl(0, "LazyProgressDone", { link = "LazyComment" })
 vim.api.nvim_set_hl(0, "LazyProgressTodo", { link = "FloatBorder" })
+vim.api.nvim_set_hl(0, "LazyReasonCmd", { link = "Comment" })
+vim.api.nvim_set_hl(0, "LazyReasonColorscheme", { link = "Comment" })
+vim.api.nvim_set_hl(0, "LazyReasonEvent", { link = "Comment" })
+vim.api.nvim_set_hl(0, "LazyReasonFt", { link = "Comment" })
+vim.api.nvim_set_hl(0, "LazyReasonPlugin", { link = "Comment" })
+vim.api.nvim_set_hl(0, "LazyReasonRequire", { link = "Comment" })
+vim.api.nvim_set_hl(0, "LazyReasonSource", { link = "Comment" })
+vim.api.nvim_set_hl(0, "LazyReasonStart", { link = "Comment" })
 vim.api.nvim_set_hl(0, "LazySpecial", { link = "Comment" })
 
 vim.keymap.set('n', '<leader>pm', '<cmd>Lazy<cr>', { desc = "Open [p]ackage [m]anager" })
