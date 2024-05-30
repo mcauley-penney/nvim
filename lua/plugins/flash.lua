@@ -1,4 +1,3 @@
--- Navigation with jump motions.
 return {
   'folke/flash.nvim',
   opts = {
@@ -13,7 +12,6 @@ return {
         autojump = true,
         nohlsearch = true,
       },
-      search = { enabled = false },
     },
     label = { uppercase = false, }
   },

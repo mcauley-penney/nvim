@@ -26,11 +26,18 @@ return {
   branch = "0.10",
   config = function()
     require("statuscol").setup({
-      ft_ignore = { "help", "neo-tree" },
+      ft_ignore = {
+        "aerial",
+        "help",
+        "neo-tree",
+        "toggleterm",
+      },
       segments = {
+        { text = { ' ' } },
         {
           sign = {
             namespace = { "diagnostic" },
+            colwidth = 1,
           },
           condition = {
             function()
@@ -39,13 +46,11 @@ return {
             end
           }
         },
-        {
-          text = { "%=", get_lnum, " " },
-        },
+        { text = { "%=", get_lnum, " " } },
         {
           sign = {
             namespace = { "gitsigns" },
-            maxwidth = 2,
+            maxwidth = 1,
             colwidth = 1,
           },
           condition = {

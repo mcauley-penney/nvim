@@ -3,10 +3,10 @@
 local sev = vim.diagnostic.severity
 
 local borders = {
-  none  = { '', '', '', '', '', '', '', '' },
-  invis = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-  thin  = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
-  edge  = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }, -- Works in Kitty, Wezterm
+  none = { '', '', '', '', '', '', '', '' },
+  invs = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+  thin = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
+  edge = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }, -- Works in Kitty, Wezterm
 }
 
 local icons = {
@@ -20,17 +20,18 @@ local icons = {
   hamburger = '≡',
   lock = '',
   r_chev = '>',
-  ballot_x = ' ',
-  up_tri = ' ',
-  info_i = ' ',
-  --  ballot_x = '✘',
-  --  up_tri = '▲',
-  --  info_i = '¡',
+  ballot_x = '✘',
+  up_tri = '▲',
+  info_i = '¡',
+  location = '⌘',
+  --  ballot_x = ' ',
+  --  up_tri = '',
+  --  info_i = '󰋼',
 }
 
 _G.tools = {
   ui = {
-    cur_border = borders.invis,
+    cur_border = borders.invs,
     borders = borders,
     icons = icons,
     lsp_signs = {

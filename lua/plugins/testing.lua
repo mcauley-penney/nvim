@@ -3,13 +3,33 @@ return {
   --  "idbrii/vim-textconv",
 
   {
-    "sindrets/diffview.nvim",
-    config = true
+    "amrbashir/nvim-docs-view",
+    lazy = true,
+    cmd = "DocsViewToggle",
+    opts = {
+      position = "bottom",
+      width = 60
+    }
   },
 
   {
-    -- use with 'ga'
-    "tpope/vim-characterize"
+    "sindrets/diffview.nvim",
+    opts = {
+      enhanced_diff_hl = true,
+      hooks = {
+        diff_buf_read = function()
+          local opt = vim.opt_local
+          opt.wrap, opt.list, opt.relativenumber = false, false, false
+        end,
+      },
+      config = function()
+        --  vim.api.nvim_set_hl(0, "DiffviewStatusAdded", { link = 'DiffAddedChar' })
+        --  vim.api.nvim_set_hl(0, "DiffviewStatusModified", { link = 'DiffChangedChar' })
+        --  vim.api.nvim_set_hl(0, "DiffviewStatusRenamed", { link = 'DiffChangedChar' })
+        --  vim.api.nvim_set_hl(0, "DiffviewStatusUnmerged", { link = 'DiffChangedChar' })
+        --  vim.api.nvim_set_hl(0, "DiffviewStatusUntracked", { link = 'DiffAddedChar' })
+      end
+    },
   },
 
   {
@@ -105,7 +125,7 @@ return {
       local root = tools.get_path_root(path)
 
       if root == nil then
-        root = path
+        root = vim.fn.expand("%:h")
       end
 
       vim.api.nvim_create_user_command("Tree", "Neotree action=show reveal=true toggle=true dir=" .. root,
@@ -252,6 +272,7 @@ return {
   {
     'lukas-reineke/headlines.nvim',
     dependencies = "nvim-treesitter/nvim-treesitter",
+    ft = { "markdown", "org" },
     config = function()
       require("headlines").setup({
         markdown = {
@@ -266,42 +287,9 @@ return {
           fat_headlines = false,
           bullets = { '○' }
         },
-        quarto = {
-          query = vim.treesitter.query.parse(
-            "markdown",
-            [[
-            (atx_heading [
-              (atx_h1_marker)
-              (atx_h2_marker)
-              (atx_h3_marker)
-              (atx_h4_marker)
-              (atx_h5_marker)
-              (atx_h6_marker)
-            ] @headline)
-
-            (thematic_break) @dash
-
-            (fenced_code_block) @codeblock
-
-            (block_quote_marker) @quote
-            (block_quote (paragraph (inline (block_continuation) @quote)))
-          ]]
-          ),
-
-          treesitter_language = "markdown",
-          codeblock_highlight = "CodeBlock",
-          dash_highlight = "Dash",
-          quote_highlight = "Quote",
-          quote_string = "┃",
-          fat_headlines = false,
-        },
       })
 
-      vim.api.nvim_set_hl(0, "CodeBlock", { link = "@markup.raw.block" })
+      vim.api.nvim_set_hl(0, "CodeBlock", { link = "markdownCodeBlock" })
     end
-  },
-
-  {
-    "dhruvasagar/vim-table-mode",
   },
 }

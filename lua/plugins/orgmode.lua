@@ -31,11 +31,12 @@ return {
     local set_hl = vim.api.nvim_set_hl
 
     set_hl(0, "OrgAgendaScheduled", { link = "Normal" })
-    set_hl(0, "@org.keyword.done.org", { link = "DiagnosticOk" })
-    set_hl(0, "@org.checkbox.org", { link = "NormalFloat" })
+    set_hl(0, "@org.bullet.org", { link = "markdownListMarker" })
+    set_hl(0, "@org.checkbox.org", { link = "NonText" })
     set_hl(0, "@org.checkbox.checked.org", { link = "DiagnosticOk" })
     set_hl(0, "@org.checkbox.halfchecked.org", { link = "DiagnosticWarn" })
     set_hl(0, "@org.hyperlink", { link = "String" })
+    set_hl(0, "@org.keyword.done.org", { link = "DiagnosticOk" })
 
 
     local grp = vim.api.nvim_create_augroup("org", { clear = true })

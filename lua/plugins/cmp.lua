@@ -59,6 +59,8 @@ return {
 
         return string.sub(import_str, i, j)
       end
+
+      return nil
     end
 
     cmp.setup({
@@ -185,7 +187,7 @@ return {
           name = "latex_symbols",
           max_item_count = 10,
           option = {
-            strategy = 0,   -- mixed
+            strategy = 0, -- mixed
           },
         },
       },

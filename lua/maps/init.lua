@@ -88,8 +88,3 @@ map({ "n", "i" }, "<S-cr>", "<Cmd>call append(line('.') - 1, repeat([''], v:coun
 map({ "n", "i" }, "<C-cr>", "<Cmd>call append(line('.'), repeat([''], v:count1))<CR>")
 
 map("n", "<leader>s", [[:%s/<C-r><C-w>//gI<Left><Left><Left>]])
-
---  map('n', '<leader>oo', function()
---    -- get current line
---    -- insert empty line above and below it
---  end)

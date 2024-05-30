@@ -49,6 +49,11 @@ return {
     )
 
     ls.add_snippets("markdown", {
+      s("cap", {
+        t('<sub>'),
+        i(1),
+        t('</sub>'),
+      }),
       s("link", {
         t('['),
         i(1),

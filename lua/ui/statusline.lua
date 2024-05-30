@@ -52,6 +52,7 @@ local ui_icons = {
   ["nomodifiable"] = { "Warn", icons["bullet"] },
   ["modified"] = { "Error", icons["bullet"] },
   ["readonly"] = { "Warn", icons["lock"] },
+  ["searchcount"] = {"Info", icons["location"]}
 }
 
 local signs = tools.ui.lsp_signs
@@ -93,16 +94,12 @@ end
 
 local function hl_lsp_icons(lsp_icons, hl_grps)
   local hl_syms = {}
-  local sign_hl
 
   local name = nil
   local sym = nil
   for i, icon_data in ipairs(lsp_icons) do
     name = icon_data["name"]
     sym = icon_data["sym"]
-
-    sign_hl = table.concat({ "DiagnosticSign", name})
-    vim.fn.sign_define(sign_hl, { text = sym, texthl = sign_hl })
     hl_syms[i] = make_stl_hl_str(hl_grps[name], sym)
   end
 
@@ -113,7 +110,6 @@ end
 --------------------------------------------------
 -- Utilities
 --------------------------------------------------
-
 -- Get fmt strs from dict and concatenate them into one string.
 -- @param key_list: table of keys to use to access fmt strings
 -- @param dict: associative array to get fmt strings from
@@ -135,7 +131,6 @@ end
 --------------------------------------------------
 -- Rendering
 --------------------------------------------------
-
 local hl_grp_tbl = make_ui_hl_grps(palette)
 local hl_ui_icons = hl_icons(ui_icons, hl_grp_tbl)
 local lsp_signs = hl_lsp_icons(signs, hl_grp_tbl)
@@ -228,8 +223,19 @@ local function get_fileinfo_str(icon_tbl)
     cc = nil
   }
 
-  local ft = get_opt("filetype", {})
+  if vim.v.hlsearch == 1 then
+    local sinfo = vim.fn.searchcount()
+    print(vim.inspect(sinfo))
+    local search_stat = sinfo.incomplete > 0 and 'press enter'
+        or sinfo.total > 0 and ('%s/%s'):format(sinfo.current, sinfo.total)
+        or nil
 
+    if search_stat ~= nil then
+      return table.concat({icon_tbl.searchcount, ' ', search_stat, ' '})
+    end
+  end
+
+  local ft = get_opt("filetype", {})
   if not tools.nonprog_mode[ft] then
     return ordered_tbl_concat(count_parts_order, count_parts)
   end

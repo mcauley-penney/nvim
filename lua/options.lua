@@ -46,6 +46,7 @@ opt.guicursor = {
   "a:Cursor/Cursor-blinkwait1-blinkon1-blinkoff1"
 }
 o.helpheight = 70
+o.equalalways = true
 o.hlsearch = true
 o.inccommand = "split"
 o.ignorecase = true
@@ -82,11 +83,12 @@ o.splitright = true
 o.swapfile = false
 o.synmaxcol = 1000
 o.termguicolors = true
-o.timeout = false
+o.timeout = true
+o.timeoutlen = 500
 o.title = true
 o.titlestring = "nvim: %t"
 o.undofile = true
-o.updatetime = 350 -- used for swap file and cursorhold
+o.updatetime = 250 -- used for swap file and cursorhold
 opt.viewoptions = {
   "cursor",
   "folds",
