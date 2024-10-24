@@ -29,6 +29,10 @@ aucmd({ "BufEnter", "BufWinEnter" }, {
   callback = function()
     vim.api.nvim_set_option_value("formatoptions", "2cjnpqrt", {})
 
+    local flp = vim.api.nvim_get_option_value("formatlistpat", {})
+    flp = table.concat({ flp, [[\|^\s*\d\+\s*)]], [[\|^>\s]] })
+    vim.api.nvim_set_option_value("formatlistpat", flp, {})
+
     local ft = get_opt("filetype", {})
     require("aucmd.functions").set_indent(ft)
     require("aucmd.functions").set_textwidth(ft)
