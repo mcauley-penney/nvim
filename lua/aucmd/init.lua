@@ -49,6 +49,7 @@ aucmd("BufNewFile", {
 aucmd("BufWinEnter", {
   group = grp,
   command = "silent! loadview",
+  desc = "Restore view settings"
 })
 
 -- See https://vi.stackexchange.com/a/12710
@@ -110,4 +111,5 @@ grp = augrp("Leaving", { clear = true })
 aucmd("BufWinLeave", {
   group = grp,
   command = "silent! mkview",
+  desc = "Create view settings"
 })

@@ -4,8 +4,12 @@ return {
     config = function()
       require('illuminate').configure({
         delay = 150,
+        filetypes_denylist = {
+          'aerial',
+          'neo-tree',
+        },
         modes_denylist = { 'v', 'V' },
-        providers = { 'regex' },
+        --  providers = { 'regex' },
         under_cursor = false,
       })
     end,

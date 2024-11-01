@@ -3,6 +3,7 @@ return {
   opts = {
     filetypes = {
       "css",
+      js = { names = false },
       lua = { names = false },
       text = { names = false },
     }

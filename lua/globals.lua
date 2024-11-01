@@ -1,7 +1,5 @@
 -- See https://www.compart.com/en/unicode to search Unicode
 
-local sev = vim.diagnostic.severity
-
 local borders = {
   none = { '', '', '', '', '', '', '', '' },
   invs = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
@@ -9,40 +7,29 @@ local borders = {
   edge = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }, -- Works in Kitty, Wezterm
 }
 
-local icons = {
-  branch = '',
-  bullet = '•',
-  o_bullet = '○',
-  check = '✔',
-  d_chev = '∨',
-  ellipses = '…',
-  file = '╼',
-  hamburger = '≡',
-  lock = '',
-  r_chev = '>',
-  ballot_x = '✘',
-  up_tri = '▲',
-  info_i = '¡',
-  location = '⌘',
-  --  ballot_x = ' ',
-  --  up_tri = '',
-  --  info_i = '󰋼',
-}
-
 _G.tools = {
   ui = {
     cur_border = borders.invs,
     borders = borders,
-    icons = icons,
-    lsp_signs = {
-      [sev.ERROR] = { name = "Error", sym = icons["ballot_x"] },
-      [sev.WARN] = { name = "Warn", sym = icons["up_tri"] },
-      [sev.INFO] = { name = "Info", sym = icons["info_i"] },
-      [sev.HINT] = { name = "Hint", sym = icons["info_i"] },
+    icons = {
+      branch = '',
+      bullet = '•',
+      o_bullet = '○',
+      check = '✔',
+      d_chev = '∨',
+      ellipses = '…',
+      file = '╼ ',
+      hamburger = '≡',
+      lock = '',
+      r_chev = '>',
+      location = '⌘',
+      square = '⏹ ',
+      ballot_x = '🗴',
+      up_tri = '▲',
+      info_i = '¡',
     }
   },
-
-  nonprog_mode = {
+  nonprog_modes = {
     ["json"] = true,
     ["markdown"] = true,
     ["org"] = true,
@@ -50,7 +37,6 @@ _G.tools = {
     ["text"] = true,
   }
 }
-
 
 -- ┌────────┐
 -- │settings│
@@ -77,9 +63,8 @@ end, vim.api.nvim_create_namespace "auto_hlsearch")
 -- ┌─────────┐
 -- │functions│
 -- └─────────┘
-
 --------------------------------------------------
--- project directories
+-- files and directories
 --------------------------------------------------
 -- provides a place to cache the root
 -- directory for current editing session
@@ -152,6 +137,10 @@ tools.get_git_branch = function(root)
   return tools.set_git_branch(root)
 end
 
+tools.is_nonprog_ft = function()
+  return tools.nonprog_modes[vim.bo.filetype] ~= nil
+end
+
 
 --------------------------------------------------
 -- LSP
@@ -171,7 +160,6 @@ end
 --------------------------------------------------
 -- Highlighting
 --------------------------------------------------
-
 -- Stolen from toggleterm.nvim
 --
 ---Convert a hex color to an rgb color
@@ -180,6 +168,9 @@ end
 ---@return number
 ---@return number
 local function hex_to_rgb(hex)
+  if hex == nil then
+    hex = "#000000"
+  end
   return tonumber(hex:sub(2, 3), 16),
       tonumber(hex:sub(4, 5), 16),
       tonumber(hex:sub(6), 16)
@@ -225,4 +216,16 @@ tools.get_hl_hex = function(opts, ns_id)
     fg = hl.fg and ('#%06x'):format(hl.fg),
     bg = hl.bg and ('#%06x'):format(hl.bg)
   }
+end
+
+-- insert grouping separators in numbers
+-- viml regex: https://stackoverflow.com/a/42911668
+-- lua pattern: stolen from Akinsho
+tools.group_number = function(num, sep)
+  if num < 999 then
+    return tostring(num)
+  else
+    num = tostring(num)
+    return num:reverse():gsub('(%d%d%d)', '%1' .. sep):reverse():gsub('^,', '')
+  end
 end

@@ -12,7 +12,6 @@ return {
       },
       org_default_notes_file = files .. "inbox.org",
       org_ellipsis = table.concat({ " ", icons["ellipses"], " " }),
-      org_hide_leading_stars = true,
       org_indent = "noindent",
       org_log_done = "time",
       org_todo_keywords = { "TODO(t)", "BLOCKED", "WAITING", '|', "DONE" },

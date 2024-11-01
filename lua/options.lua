@@ -36,6 +36,7 @@ opt.fillchars = {
 }
 o.foldcolumn = '1'
 o.foldlevel = 99
+o.foldtext = 'v:lua.vim.treesitter.foldtext()'
 o.foldmethod = "indent"
 o.gdefault = true
 opt.guicursor = {
@@ -45,7 +46,7 @@ opt.guicursor = {
   "o-r:hor10",
   "a:Cursor/Cursor-blinkwait1-blinkon1-blinkoff1"
 }
-o.helpheight = 70
+--  o.helpheight = 70
 o.equalalways = true
 o.hlsearch = true
 o.inccommand = "split"
@@ -83,8 +84,7 @@ o.splitright = true
 o.swapfile = false
 o.synmaxcol = 1000
 o.termguicolors = true
-o.timeout = true
-o.timeoutlen = 500
+o.timeout = false
 o.title = true
 o.titlestring = "nvim: %t"
 o.undofile = true

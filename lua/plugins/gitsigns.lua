@@ -5,9 +5,9 @@ return {
 
     local red = "DiagnosticError"
     local ylw = "DiagnosticWarn"
-    local add_sym = '│'
-    local change_sym = '│'
-    local del_sym = '│'
+    local add_sym = '┃'
+    local change_sym = '┃'
+    local del_sym = '┃'
 
     local sign_tbl = {}
     local dim_hl, fg

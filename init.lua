@@ -79,7 +79,7 @@ require('lazy').setup("plugins", {
   },
   defaults = { lazy = false },
   ui = {
-    backdrop = 70,
+    backdrop = 100,
     border = tools.ui.cur_border,
     icons = tools.ui.bullet,
   },

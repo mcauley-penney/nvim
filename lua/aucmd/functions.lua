@@ -4,7 +4,6 @@ local short_indent = {
   ["javascriptreact"] = true,
   ["json"] = true,
   ["lua"] = true,
-  ["markdown"] = true,
   ["org"] = true,
   ["text"] = true,
   ["yaml"] = true,
@@ -20,6 +19,8 @@ local nonstandard_tw = {
   ["lua"] = 120,
   ["python"] = 120,
   ["tex"] = 0,
+  ["trans"] = 0,
+  ["txt"] = 0
 }
 
 local M = {
@@ -33,7 +34,7 @@ local M = {
 
   set_textwidth = function(ft)
     local tw = nonstandard_tw[ft] or 80
-    tw = tools.nonprog_mode[ft] and 0 or tw
+    tw = tools.nonprog_modes[ft] and 0 or tw
 
     vim.api.nvim_set_option_value("textwidth", tw, {})
   end,

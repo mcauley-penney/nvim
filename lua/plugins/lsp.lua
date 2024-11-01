@@ -30,14 +30,14 @@ return {
           "jsonls",
           "lua_ls",
           "pyright",
-          "tsserver"
+          "ts_ls"
         },
       },
       init = function()
         local populate_setup = function(servers_tbl, attach_fn)
           local init_server = function(server_name, server_cfg, attach, default_caps)
             server_cfg.on_attach = attach
-            --  server_cfg.hints = { enabled = true }
+            server_cfg.hints = { enabled = true }
             server_cfg.capabilities = default_caps
             require("lspconfig")[server_name].setup(server_cfg)
           end
@@ -115,7 +115,7 @@ return {
 
         for _, tbl in pairs(lspkind.presets) do
           for name, icon in pairs(tbl) do
-            tbl[name] = icon .. ' '
+            tbl[name] = table.concat({ ' ', icon, ' ' })
           end
         end
 
@@ -141,12 +141,24 @@ return {
         },
         notification = {
           window = {
-            border_hl = "Normal",
+            border = tools.ui.cur_border,
+            border_hl = "NonText",
             normal_hl = "NonText",
-            winblend = 0
+            winblend = 0,
           }
         }
       }
+    },
+
+    {
+      'Wansmer/symbol-usage.nvim',
+      event = 'LspAttach',
+      opts = {
+        hl = { link = 'NonText' },
+        references = { enabled = true, include_declaration = false },
+        definition = { enabled = true },
+        implementation = { enabled = true }
+      },
     }
   }
 }

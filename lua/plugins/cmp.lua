@@ -1,5 +1,7 @@
 return {
-  "hrsh7th/nvim-cmp",
+  'iguanacucumber/magazine.nvim',
+  name = 'nvim-cmp',
+  event = { 'CmdlineEnter', 'InsertEnter' },
   dependencies = {
     "hrsh7th/cmp-buffer",
     "hrsh7th/cmp-cmdline",
@@ -42,7 +44,7 @@ return {
         return nil
       end
 
-      if source_name == "tsserver" then
+      if source_name == "ts_ls" then
         return completion.detail
       elseif source_name == "pyright" and completion.labelDetails ~= nil then
         return completion.labelDetails.description
@@ -178,7 +180,7 @@ return {
         { name = "luasnip" },
         { name = "nvim_lsp", max_item_count = 20 },
         { name = "nvim_lua", max_item_count = 20 },
-        { name = "buffer",   max_item_count = 20 },
+        { name = "buffer",   max_item_count = 5 },
         { name = 'orgmode' },
         { name = "path" },
         { name = 'emoji' },
@@ -233,14 +235,37 @@ return {
     })
 
     for k, v in pairs({
-      CmpItemAbbrMatch      = "Number",
-      CmpItemMenu           = "NonText",
+      CmpItemAbbrDeprecated = { strikethrough = true },
+    }) do
+      vim.api.nvim_set_hl(0, k, v)
+    end
+
+    for k, v in pairs({
+      CmpItemAbbrMatch = "PmenuMatch",
+      CmpItemKindVariable = "Directory",
+      CmpItemKindFunction = "Constant",
+      CmpItemKindKeyword = "StatusLine",
+      CmpItemKindClass = "SpecialComment",
       CmpItemAbbrMatchFuzzy = "CmpItemAbbrMatch",
-      CmpItemKindInterface  = "CmpItemKindVariable",
-      CmpItemKindText       = "CmpItemKindVariable",
-      CmpItemKindMethod     = "CmpItemKindFunction",
-      CmpItemKindProperty   = "CmpItemKindKeyword",
-      CmpItemKindUnit       = "CmpItemKindKeyword",
+
+      CmpItemKindProperty = "CmpItemKindVariable",
+      CmpItemKindField = "CmpItemKindVariable",
+      CmpItemKindInterface = "CmpItemKindVariable",
+      CmpItemKindOperator = "CmpItemKindVariable",
+
+      CmpItemKindText = "CmpItemKindKeyword",
+
+      CmpItemKindMethod = "CmpItemKindFunction",
+      CmpItemKindConstant = "CmpItemKindFunction",
+      CmpItemKindValue = "CmpItemKindFunction",
+      CmpItemKindEnum = "CmpItemKindFunction",
+      CmpItemKindEnumMember = "CmpItemKindFunction",
+
+      CmpItemKindUnit = "CmpItemKindKeyword",
+      CmpItemKindSnippet = "CmpItemKindKeyword",
+
+      CmpItemKindModule = "CmpItemKindClass",
+      CmpItemKindStruct = "CmpItemKindClass",
     }) do
       vim.api.nvim_set_hl(0, k, { link = v })
     end

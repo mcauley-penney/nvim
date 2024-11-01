@@ -6,7 +6,8 @@ local map = vim.keymap.set
 local silent = { silent = true }
 local expr = { expr = true, silent = true }
 
-vim.g.mapleader = "m"
+vim.g.mapleader = 'm'
+vim.g.localmapleader = ','
 
 local function swap_map(lhs, rhs, mode)
   map(mode or "", lhs, rhs, {})

@@ -1,7 +1,7 @@
 return {
-  --  "lukas-reineke/virt-column.nvim",
-  --  opts = {
-  --    char = "│",
-  --    highlight = "VertSplit"
-  --  },
+  "lukas-reineke/virt-column.nvim",
+  opts = {
+    char = "│",
+    highlight = "VertSplit"
+  },
 }

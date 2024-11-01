@@ -8,6 +8,7 @@ return {
         "c",
         "comment",
         "cpp",
+        "css",
         "diff",
         "dockerfile",
         "gitcommit",
@@ -28,17 +29,17 @@ return {
         "r",
         "regex",
         "ssh_config",
+        "svelte",
+        "typescript",
         "vimdoc",
         "yaml"
       },
-      -- Install languages synchronously (only applied to `ensure_installed`)
       sync_install = false,
-      -- List of parsers to ignore installing
       ignore_install = {},
       highlight = { enable = true, },
+      fold = { enable = true, },
       textobjects = {
         lookahead = true,
-
         move = {
           enable = true,
           set_jumps = true,
@@ -61,7 +62,6 @@ return {
             ["[C"] = "@class.outer",
           },
         },
-
         select = {
           enable = true,
           keymaps = {
@@ -75,14 +75,11 @@ return {
             ["al"] = "@loop.outer",
           },
         },
-
         swap = { enable = false, },
       },
-
     },
-    config = function()
-      require("nvim-treesitter.configs").setup({
-      })
+    config = function(_, opts)
+      require('nvim-treesitter.configs').setup(opts)
     end
   },
 
@@ -108,7 +105,8 @@ return {
         },
       },
     },
-    init = function()
+    config = function(_, opts)
+      require("neogen").setup(opts)
       vim.keymap.set("n", "<leader>id", require('neogen').generate, {})
     end
   },
@@ -151,10 +149,8 @@ return {
   {
     "Bekaboo/dropbar.nvim",
     opts = {
-      general = {
-        update_interval = 100,
-      },
       bar = {
+        update_debounce = 100,
         sources = function(buf, _)
           local sources = require('dropbar.sources')
           local utils = require('dropbar.utils')

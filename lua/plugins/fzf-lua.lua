@@ -5,6 +5,11 @@ return {
     local map = vim.keymap.set
 
     fzf.setup({
+      keymap = {
+        fzf = {
+          ["ctrl-q"] = "select-all+accept",
+        },
+      },
       buffers = {
         cwd_prompt = false,
         ignore_current_buffer = true,
@@ -26,7 +31,7 @@ return {
       fzf_colors = {
         ["bg"]        = { "bg", "NormalFloat" },
         ["bg+"]       = { "bg", "CursorLine" },
-        ["fg"]        = { "fg", "Pmenu" },
+        ["fg"]        = { "fg", "Comment" },
         ["fg+"]       = { "fg", "Normal" },
         ["hl"]        = { "fg", "CmpItemAbbrMatch" },
         ["hl+"]       = { "fg", "CmpItemAbbrMatch" },
@@ -39,12 +44,13 @@ return {
       },
       fzf_opts = { ['--keep-right'] = '' },
       winopts = {
+        backdrop   = 100,
+        border     = tools.ui.cur_border,
         cursorline = true,
-        border = tools.ui.cur_border,
-        height = .35,
-        width = 1,
-        row = 1,
-        hl = {
+        height     = .35,
+        width      = 1,
+        row        = 1,
+        hl         = {
           border = "FloatBorder",
           header_bind = "NonText",
           header_text = "NonText",
@@ -55,7 +61,7 @@ return {
           search = "CmpItemAbbrMatch",
           title = "FloatTitle"
         },
-        preview = {
+        preview    = {
           layout = "horizontal",
           scrollbar = "border",
           vertical = "up:65%",
