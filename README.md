@@ -1,1 +1,1 @@
-![image](https://github.com/mcauley-penney/nvim/assets/59481467/7e881bac-1721-4827-ac24-3e327b1a9d92)
+![fancy_showbreak](https://github.com/user-attachments/assets/d5e20b6b-b392-4ce7-85df-a714a39f4c02)
