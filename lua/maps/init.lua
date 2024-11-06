@@ -88,11 +88,11 @@ map(
 
 map('n', 'p', function()
     local cur_pos = vim.api.nvim_win_get_cursor(0)
-    if vim.fn.getregtype('"') == 'v' then
-      vim.cmd('normal! "0p')
-      vim.api.nvim_win_set_cursor(0, { cur_pos[1], cur_pos[2] })
-    else
-      vim.cmd('put')
+    local reg = '+'
+
+    vim.cmd('normal!"' .. reg .. 'p')
+
+    if vim.fn.getregtype(reg) == 'V' then
       vim.api.nvim_win_set_cursor(0, { cur_pos[1] + 1, cur_pos[2] })
     end
   end,
@@ -101,11 +101,11 @@ map('n', 'p', function()
 
 map('n', 'P', function()
     local cur_pos = vim.api.nvim_win_get_cursor(0)
-    if vim.fn.getregtype('"') == 'v' then
-      vim.cmd('normal! "0P')
-      vim.api.nvim_win_set_cursor(0, { cur_pos[1], cur_pos[2] })
-    else
-      vim.cmd('put!')
+    local reg = '+'
+
+    vim.cmd('normal!"' .. reg .. 'P')
+
+    if vim.fn.getregtype(reg) == 'V' then
       vim.api.nvim_win_set_cursor(0, { cur_pos[1], cur_pos[2] })
     end
   end,
