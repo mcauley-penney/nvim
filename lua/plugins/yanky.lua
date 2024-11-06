@@ -18,10 +18,4 @@ return {
       enabled = true,
     },
   },
-  init = function()
-    vim.keymap.set("n", "p", "<Plug>(YankyPutAfter)", {})
-    vim.keymap.set("n", "P", "<Plug>(YankyPutBefore)", {})
-    vim.keymap.set("x", "p", "<Plug>(YankyPutAfter)", {})
-    vim.keymap.set("x", "P", "<Plug>(YankyPutBefore)", {})
-  end,
 }

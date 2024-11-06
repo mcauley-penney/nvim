@@ -1,6 +1,3 @@
--- vim.keymap.set: https://github.com/neovim/neovim/pull/16594
--- Unused keys: https://vim.fandom.com/wiki/Unused_keys
-
 local func = require("maps.functions")
 local map = vim.keymap.set
 local silent = { silent = true }
@@ -78,14 +75,39 @@ map("i", "<home>", "<C-o>^", {}) -- move in front of first non-blank char
 -- tabs and buffers
 map("n", "<leader>bq", ":bd<CR>", silent)
 map("n", "<leader>tq", ":tabclose<CR>", silent)
-map("n", "<C-Pageup>", ":bp<CR>", silent)
-map("n", "<C-Pagedown>", ":bn<CR>", silent)
 
 -- search in visual selection
 map("v", "/", "<Esc>/\\%V")
 
--- Prepend and append new lines
-map({ "n", "i" }, "<S-cr>", "<Cmd>call append(line('.') - 1, repeat([''], v:count1))<CR>")
-map({ "n", "i" }, "<C-cr>", "<Cmd>call append(line('.'), repeat([''], v:count1))<CR>")
+map(
+  "n",
+  "<leader>s",
+  [[:%s/<C-r><C-w>//gI<Left><Left><Left>]],
+  { desc = "open %s//gI with cword" }
+)
 
-map("n", "<leader>s", [[:%s/<C-r><C-w>//gI<Left><Left><Left>]])
+map('n', 'p', function()
+    local cur_pos = vim.api.nvim_win_get_cursor(0)
+    if vim.fn.getregtype('"') == 'v' then
+      vim.cmd('normal! "0p')
+      vim.api.nvim_win_set_cursor(0, { cur_pos[1], cur_pos[2] })
+    else
+      vim.cmd('put')
+      vim.api.nvim_win_set_cursor(0, { cur_pos[1] + 1, cur_pos[2] })
+    end
+  end,
+  { desc = "Maintain column position when pasting below" }
+)
+
+map('n', 'P', function()
+    local cur_pos = vim.api.nvim_win_get_cursor(0)
+    if vim.fn.getregtype('"') == 'v' then
+      vim.cmd('normal! "0P')
+      vim.api.nvim_win_set_cursor(0, { cur_pos[1], cur_pos[2] })
+    else
+      vim.cmd('put!')
+      vim.api.nvim_win_set_cursor(0, { cur_pos[1], cur_pos[2] })
+    end
+  end,
+  { desc = "Maintain column position when pasting above" }
+)
