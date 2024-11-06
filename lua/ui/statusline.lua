@@ -102,7 +102,7 @@ local function get_path_info(root, fname, icon_tbl)
   local file_icon, icon_hl = require("mini.icons").get('file', file_name)
   file_icon = file_name ~= "" and hl_str(icon_hl, file_icon) or ""
 
-  local file_icon_name = table.concat({ ' ', file_icon, '  ', file_name })
+  local file_icon_name = table.concat({ file_icon, file_name })
 
   if vim.bo.buftype == "help" then
     return table.concat({ icon_tbl["file"], file_icon_name })
