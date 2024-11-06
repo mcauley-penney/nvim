@@ -22,8 +22,8 @@ local stl_parts = {
 local stl_order = {
   "pad",
   "path",
-  "ro",
   "mod",
+  "ro",
   "sep",
   "venv",
   "sep",
@@ -290,11 +290,11 @@ M.render = function()
   stl_parts["ro"] = get_opt("readonly", { buf = buf_num }) and hl_ui_icons["readonly"] or ""
 
   if not get_opt("modifiable", { buf = buf_num }) then
-    stl_parts["mod"] = ' ' .. hl_ui_icons["nomodifiable"]
+    stl_parts["mod"] = hl_ui_icons["nomodifiable"]
   elseif get_opt("modified", { buf = buf_num }) then
-    stl_parts["mod"] = ' ' .. hl_ui_icons["modified"]
+    stl_parts["mod"] = hl_ui_icons["modified"]
   else
-    stl_parts["mod"] = ""
+    stl_parts["mod"] = " "
   end
 
   -- middle
