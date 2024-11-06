@@ -3,9 +3,9 @@ return {
   opts = {
     backends = { "lsp", "treesitter" },
     guides = {
-      mid_item = " ├─",
-      last_item = " └─",
-      nested_top = " │",
+      mid_item = "  ├",
+      last_item = "  └",
+      nested_top = "  │",
     },
     layout = {
       close_on_select = false,
