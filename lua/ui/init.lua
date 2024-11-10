@@ -1,4 +1,5 @@
 require("ui.statusline")
+require("ui.foldtext")
 
 local S = vim.diagnostic.severity
 local icons = tools.ui.icons

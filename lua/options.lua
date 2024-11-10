@@ -36,8 +36,8 @@ opt.fillchars = {
 }
 o.foldcolumn = '1'
 o.foldlevel = 99
-o.foldtext = 'v:lua.vim.treesitter.foldtext()'
-o.foldmethod = "indent"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+o.foldmethod = "expr"
 o.gdefault = true
 opt.guicursor = {
   "n-sm:block",
