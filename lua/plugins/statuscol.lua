@@ -1,17 +1,13 @@
 local function get_num_wraps()
-  -- Calculate the actual buffer width, accounting for splits, number columns, and other padding
-  local wrapped_lines = vim.api.nvim_win_call(0, function()
-    local winid = vim.api.nvim_get_current_win()
+  local winid = vim.api.nvim_get_current_win()
 
-    local winfo = vim.fn.getwininfo(winid)[1]
-    local bufwidth = winfo["width"] - winfo["textoff"]
-    local line_length = vim.fn.strdisplaywidth(vim.fn.getline(vim.v.lnum))
+  local winfo = vim.fn.getwininfo(winid)[1]
+  local bufwidth = winfo["width"] - winfo["textoff"]
+  local line_length = vim.fn.strdisplaywidth(vim.fn.getline(vim.v.lnum))
 
-    return math.floor(line_length / bufwidth)
-  end)
-
-  return wrapped_lines
+  return math.floor(line_length / bufwidth)
 end
+
 
 return {
   "luukvbaal/statuscol.nvim",
@@ -46,20 +42,47 @@ return {
             ' ',
             "%=",
             function(args)
-              if vim.v.virtnum == 0 then
+              local mode = vim.fn.mode()
+              local normalized_mode = vim.fn.strtrans(mode):lower():gsub("%W", "")
+
+              -- case 1
+              if normalized_mode ~= 'v' and vim.v.virtnum == 0 then
                 return require("statuscol.builtin").lnumfunc(args)
-              elseif vim.v.virtnum < 0 then
+              end
+
+              if vim.v.virtnum < 0 then
                 return '-'
-              else
+              end
+
+              local line = require("statuscol.builtin").lnumfunc(args)
+
+              if vim.v.virtnum > 0 then
                 local num_wraps = get_num_wraps()
-                local hl = vim.api.nvim_win_get_cursor(0)[1] == vim.v.lnum and "CursorLineNr" or "LineNr"
 
                 if vim.v.virtnum == num_wraps then
-                  return tools.hl_str(hl, '└')
+                  line = '└'
                 else
-                  return tools.hl_str(hl, '├')
+                  line = '├'
                 end
               end
+
+              -- Highlight cases
+              if normalized_mode == 'v' then
+                local pos_list = vim.fn.getregionpos(
+                  vim.fn.getpos('v'),
+                  vim.fn.getpos('.'),
+                  { type = mode, eol = true }
+                )
+                local s_row, e_row = pos_list[1][1][2], pos_list[#pos_list][2][2]
+
+                if vim.v.lnum >= s_row and vim.v.lnum <= e_row then
+                  return tools.hl_str("CursorLineNr", line)
+                end
+              end
+
+              return vim.fn.line('.') == vim.v.lnum and
+                  tools.hl_str("CursorLineNr", line) or
+                  tools.hl_str("LineNr", line)
             end,
             ' ',
           }
