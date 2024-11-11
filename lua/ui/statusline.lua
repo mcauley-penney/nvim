@@ -51,15 +51,11 @@ local ui_icons = {
 --------------------------------------------------
 -- Utilities
 --------------------------------------------------
-local function hl_str(hl, str)
-  return "%#" .. hl .. "#" .. str .. "%*"
-end
-
 local function hl_icons(icon_list)
   local hl_syms = {}
 
   for name, list in pairs(icon_list) do
-    hl_syms[name] = hl_str(list[1], list[2])
+    hl_syms[name] = tools.hl_str(list[1], list[2])
   end
 
   return hl_syms
@@ -100,7 +96,7 @@ local function get_path_info(root, fname, icon_tbl)
   local file_name = vim.fn.fnamemodify(fname, ":t")
 
   local file_icon, icon_hl = require("mini.icons").get('file', file_name)
-  file_icon = file_name ~= "" and hl_str(icon_hl, file_icon) or ""
+  file_icon = file_name ~= "" and tools.hl_str(icon_hl, file_icon) or ""
 
   local file_icon_name = table.concat({ file_icon, file_name })
 
@@ -227,7 +223,7 @@ local function get_fileinfo_widget(icon_tbl)
   else
     -- Visual selection mode: line count, word count, and char count
     return table.concat({
-      hl_str("DiagnosticInfo", '‹›'),
+      tools.hl_str("DiagnosticInfo", '‹›'),
       ' ',
       get_vlinecount_str(),
       " lines  ",
@@ -280,7 +276,7 @@ local function get_scrollbar()
   local i = math.floor((cur_line - 1) / lines * #sbar_chars) + 1
   local sbar = string.rep(sbar_chars[i], 2)
 
-  return hl_str("Substitute", sbar)
+  return tools.hl_str("Substitute", sbar)
 end
 
 

@@ -160,6 +160,10 @@ end
 --------------------------------------------------
 -- Highlighting
 --------------------------------------------------
+tools.hl_str = function(hl, str)
+  return "%#" .. hl .. "#" .. str .. "%*"
+end
+
 -- Stolen from toggleterm.nvim
 --
 ---Convert a hex color to an rgb color

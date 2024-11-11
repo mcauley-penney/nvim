@@ -37,23 +37,29 @@ return {
           }
         },
         {
+          condition = {
+            function()
+              return vim.wo.number or vim.wo.relativenumber
+            end
+          },
           text = {
             ' ',
             "%=",
             function(args)
-              if vim.v.virtnum < 0 then
+              if vim.v.virtnum == 0 then
+                return require("statuscol.builtin").lnumfunc(args)
+              elseif vim.v.virtnum < 0 then
                 return '-'
-              elseif vim.v.virtnum > 0 and (vim.wo.number or vim.wo.relativenumber) then
+              else
                 local num_wraps = get_num_wraps()
+                local hl = vim.api.nvim_win_get_cursor(0)[1] == vim.v.lnum and "CursorLineNr" or "LineNr"
 
                 if vim.v.virtnum == num_wraps then
-                  return '└'
+                  return tools.hl_str(hl, '└')
                 else
-                  return '├'
+                  return tools.hl_str(hl, '├')
                 end
               end
-
-              return require("statuscol.builtin").lnumfunc(args)
             end,
             ' ',
           }
