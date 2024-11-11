@@ -20,12 +20,9 @@ return {
   },
 
   {
-    "aaron-p1/match-visual.nvim",
+    "mcauley-penney/match-visual.nvim",
     opts = {
       min_length = 3
     },
-    init = function()
-      vim.api.nvim_set_hl(0, "VisualMatch", { link = "MatchParen" })
-    end
   },
 }
