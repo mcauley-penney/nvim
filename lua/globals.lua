@@ -30,7 +30,6 @@ _G.tools = {
     }
   },
   nonprog_modes = {
-    ["json"] = true,
     ["markdown"] = true,
     ["org"] = true,
     ["orgagenda"] = true,
