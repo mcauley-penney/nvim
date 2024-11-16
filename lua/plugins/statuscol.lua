@@ -3,7 +3,10 @@ local function get_num_wraps()
 
   local winfo = vim.fn.getwininfo(winid)[1]
   local bufwidth = winfo["width"] - winfo["textoff"]
-  local line_length = vim.fn.strdisplaywidth(vim.fn.getline(vim.v.lnum))
+
+  -- subtract one to solve issue where the cursor is right on the edge of a line
+  -- and makes it so that the last line should be the end of the wraps but isn't
+  local line_length = vim.fn.strdisplaywidth(vim.fn.getline(vim.v.lnum)) - 1
 
   return math.floor(line_length / bufwidth)
 end
