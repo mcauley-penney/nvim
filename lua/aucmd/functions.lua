@@ -19,7 +19,7 @@ local nonstandard_tw = {
   ["lua"] = 120,
   ["python"] = 120,
   ["tex"] = 0,
-  ["trans"] = 0,
+  ["whsp"] = 0,
   ["txt"] = 0
 }
 
