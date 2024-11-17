@@ -4,6 +4,7 @@ return {
   opts = {
     delay = 500,
     icons = {
+      separator = "→",
       mappings = false,
     },
     layout = { align = 'center' },
