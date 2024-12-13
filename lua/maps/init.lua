@@ -1,7 +1,5 @@
 local func = require("maps.functions")
 local map = vim.keymap.set
-local silent = { silent = true }
-local expr = { expr = true, silent = true }
 
 vim.g.mapleader = 'm'
 vim.g.localmapleader = ','
@@ -40,8 +38,8 @@ for _, pairs in ipairs(colemak_maps) do
 end
 
 for _, mode in pairs({ "n", "v" }) do
-  map(mode, "e", "v:count == 0 ? 'gk' : 'k'", expr)
-  map(mode, "n", "v:count == 0 ? 'gj' : 'j'", expr)
+  map(mode, "e", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+  map(mode, "n", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 end
 
 
@@ -50,13 +48,10 @@ end
 --------------------------------------------------
 map("n", "<F1>", "za", {})
 
-map("i", "<F6>", func.send_comment, expr)
-map("i", "<F1>", "- ", {})
+map("i", "<F6>", func.send_comment, { expr = true, silent = true })
 
--- CR to enter cmd mode
-for _, mode in pairs({ "n", "v" }) do
-  map(mode, "<CR>", ":", {})
-end
+map('n', "<CR>", ":", { desc = "Enter command mode" })
+map('v', "<CR>", ":", { desc = "Enter command mode" })
 
 -- space for insert mode
 map("n", "<Space>", "a", { remap = true })
@@ -69,12 +64,12 @@ swap_map("`", "~", { 'n', 'v' })
 map("n", "<tab>", ">>", {})
 map("n", "<bs>", "<<", {})
 
-map("", "<home>", "^", {})       -- move to first non-blank char
-map("i", "<home>", "<C-o>^", {}) -- move in front of first non-blank char
+map("", "<home>", "^", { desc = "move to first non-blank char in line" })
+map("i", "<home>", "<C-o>^", { desc = "move in front of first non-blank char in line" })
 
 -- tabs and buffers
-map("n", "<leader>bq", ":bd<CR>", silent)
-map("n", "<leader>tq", ":tabclose<CR>", silent)
+map("n", "<leader>bq", ":bd<CR>", { silent = true })
+map("n", "<leader>tq", ":tabclose<CR>", { silent = true })
 
 -- search in visual selection
 map("v", "/", "<Esc>/\\%V")
@@ -86,28 +81,4 @@ map(
   { desc = "open %s//gI with cword" }
 )
 
-map('n', 'p', function()
-    local cur_pos = vim.api.nvim_win_get_cursor(0)
-    local reg = '+'
-
-    vim.cmd('normal!"' .. reg .. 'p')
-
-    if vim.fn.getregtype(reg) == 'V' then
-      vim.api.nvim_win_set_cursor(0, { cur_pos[1] + 1, cur_pos[2] })
-    end
-  end,
-  { desc = "Maintain column position when pasting below" }
-)
-
-map('n', 'P', function()
-    local cur_pos = vim.api.nvim_win_get_cursor(0)
-    local reg = '+'
-
-    vim.cmd('normal!"' .. reg .. 'P')
-
-    if vim.fn.getregtype(reg) == 'V' then
-      vim.api.nvim_win_set_cursor(0, { cur_pos[1], cur_pos[2] })
-    end
-  end,
-  { desc = "Maintain column position when pasting above" }
-)
+vim.keymap.set("v", "*", "y/<C-R>0<CR>", { desc = "Search for visual selection" })
