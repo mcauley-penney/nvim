@@ -24,19 +24,23 @@ aucmd("BufEnter", {
   desc = "Set root dir and initialize version control branch"
 })
 
+-- TODO: break these up by filetype instead, and use this one for the general ones?
 aucmd({ "BufEnter", "BufWinEnter" }, {
   group = grp,
   callback = function()
     vim.api.nvim_set_option_value("formatoptions", "2cjnpqrt", {})
 
-    local flp = vim.api.nvim_get_option_value("formatlistpat", {})
-    flp = table.concat({ flp, [[\|^\s*\d\+\s*)]], [[\|^>\s]] })
-    vim.api.nvim_set_option_value("formatlistpat", flp, {})
+    -- allow lettered lists
+    vim.opt.formatlistpat:append([[\|^\s*\w\+[\]:.)}\t ]\s\+]])
+
+    -- indend on '>' for markdown quotes
+    vim.opt.formatlistpat:append([[\|^>\s]])
 
     local ft = get_opt("filetype", {})
     require("aucmd.functions").set_indent(ft)
     require("aucmd.functions").set_textwidth(ft)
   end,
+  desc = "Set options for formatting"
 })
 
 aucmd("BufNewFile", {
@@ -58,6 +62,21 @@ aucmd("BufWinEnter", {
   command = [[call matchadd("String", '\v[a-zA-Z0-9._%+-]+\@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')]],
   desc = "Highlight email addresses"
 })
+
+
+----------------------------------------
+-- LSP
+----------------------------------------
+aucmd("LspAttach", {
+  group = grp,
+  callback = function(args)
+    local cur_client = vim.lsp.get_client_by_id(args.data.client_id)
+    if not cur_client then return end
+
+    require("aucmd.functions").on_attach(cur_client, args.buf)
+  end,
+})
+
 
 ----------------------------------------
 -- During editing

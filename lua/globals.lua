@@ -155,7 +155,6 @@ tools.diagnostics_available = function()
   return false
 end
 
-
 --------------------------------------------------
 -- Highlighting
 --------------------------------------------------
