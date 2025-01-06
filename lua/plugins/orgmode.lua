@@ -1,5 +1,6 @@
 return {
   "nvim-orgmode/orgmode",
+  ft = "org",
   config = function()
     local files = "/home/m/files/kms/gtd/"
     local icons = tools.ui.icons
@@ -7,9 +8,6 @@ return {
     require('orgmode').setup({
       org_agenda_files = files .. "agenda/*",
       org_archive_location = files .. "archive.org",
-      org_capture_templates = {
-        t = { description = 'Task', template = '* TODO %?\n  %U' },
-      },
       org_default_notes_file = files .. "inbox.org",
       org_ellipsis = table.concat({ " ", icons["ellipses"], " " }),
       org_indent = "noindent",

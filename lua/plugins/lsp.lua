@@ -25,64 +25,84 @@ return {
 
   {
     "williamboman/mason-lspconfig.nvim",
-    dependencies = "neovim/nvim-lspconfig",
     opts = {
       ensure_installed = {
         "clangd",
+        "dockerls",
         "jsonls",
         "lua_ls",
         "pyright",
         "ts_ls"
       },
-      handlers = {
-        function(name)
-          require("lspconfig")[name].setup {}
-        end,
-        -- see $clangd -h, https://clangd.llvm.org/installation
-        ["clangd"] = function()
-          cmd = {
-            "clangd",
-            "-j=6",
-            "--all-scopes-completion",
-            "--background-index", -- should include a compile_commands.json or .txt
-            "--clang-tidy",
-            "--cross-file-rename",
-            "--completion-style=detailed",
-            "--fallback-style=Microsoft",
-            "--function-arg-placeholders",
-            "--header-insertion-decorators",
-            "--header-insertion=never",
-            "--limit-results=10",
-            "--pch-storage=memory",
-            "--query-driver=/usr/include/*",
-            "--suggest-missing-includes",
-          }
-        end,
-        -- https://github.com/sumneko/lua-language-server/blob/f7e0e7a4245578af8cef9eb5e3ec9ce65113684e/locale/en-us/setting.lua
-        ["lua_ls"] = function()
-          local lspconfig = require("lspconfig")
-          lspconfig.lua_ls.setup {
-          settings = {
-            Lua = {
-              completion = { callSnippet = "Both" },
-              format = {
-                enable = true,
+    },
+    init = function()
+      local populate_setup = function(servers_tbl, attach_fn)
+        local init_server = function(server_name, server_cfg, attach, default_caps)
+          server_cfg.on_attach = attach
+          server_cfg.hints = { enabled = true }
+          server_cfg.capabilities = default_caps
+          require("lspconfig")[server_name].setup(server_cfg)
+        end
+
+        local caps = vim.tbl_deep_extend(
+          'force',
+          vim.lsp.protocol.make_client_capabilities(),
+          {
+            textDocument = {
+              completion = {
+                completionItem = {
+                  snippetSupport = true
+                }
               },
-              hint = { enable = true },
-              telemetry = { enable = false },
-              workspace = { checkThirdParty = false },
+              foldingRange = {
+                dynamicRegistration = false,
+                lineFoldingOnly = true
+              }
             },
           }
+        )
+
+        local setup_tbl = {
+          function(server_name)
+            init_server(server_name, {}, attach_fn, caps)
+          end
         }
-      end,
-        ["ts_ls"] = function()
-          init_options = {
-            preferences = { includeCompletionsForModuleExports = false }
-          }
-        end,
-        }
+
+        for name, cfg in pairs(servers_tbl) do
+          setup_tbl[name] = function()
+            init_server(name, cfg, attach_fn, caps)
+          end
+        end
+
+        return setup_tbl
+      end
+
+      local lsp = require("lsp")
+      require("mason-lspconfig").setup_handlers(populate_setup(lsp.servers, lsp.on_attach))
+    end
+  },
+
+  {
+    "nvimtools/none-ls.nvim",
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    opts = {
+      debounce = 300,
+      on_attach = require("lsp").on_attach
+    }
+  },
+
+  {
+    'jay-babu/mason-null-ls.nvim',
+    opts = {
+      automatic_installation = true,
+      ensure_installed = {
+        "actionlint",
+        "black",
+        "bibtex-tidy"
       },
-    },
+      handlers = {}
+    }
+  },
 
   {
     "folke/lazydev.nvim",
@@ -110,7 +130,7 @@ return {
 
   {
     "j-hui/fidget.nvim",
-    dependencies = "neovim/nvim-lspconfig",
+    event = "LspAttach",
     opts = {
       progress = {
         suppress_on_insert = true,

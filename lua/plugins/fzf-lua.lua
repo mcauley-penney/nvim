@@ -2,32 +2,40 @@ return {
   "ibhagwan/fzf-lua",
   config = function()
     local fzf = require("fzf-lua")
+    local actions = require("fzf-lua.actions")
     local map = vim.keymap.set
 
     fzf.setup({
-      keymap = {
+      actions    = {
+        files = {
+          ["enter"] = actions.file_edit,
+        }
+      },
+      keymap     = {
         fzf = {
           ["ctrl-q"] = "select-all+accept",
         },
       },
-      buffers = {
+      buffers    = {
         cwd_prompt = false,
         ignore_current_buffer = true,
         prompt = "Buffers: ",
       },
-      files = {
+      files      = {
         cwd_prompt = false,
         prompt = "Files: ",
         formatter = "path.filename_first"
       },
-      grep = {
+      grep       = {
         cmd = "rg -o -r '' --column --no-heading --smart-case",
         prompt = "Text: ",
       },
-      lsp = {
+      lsp        = {
         prompt_postfix = ': ',
       },
-      global_git_icons = false,
+      defaults   = {
+        git_icons = false,
+      },
       fzf_colors = {
         ["bg"]        = { "bg", "NormalFloat" },
         ["bg+"]       = { "bg", "CursorLine" },
@@ -42,25 +50,26 @@ return {
         ["separator"] = { "bg", "NormalFloat" },
         ["spinner"]   = { "fg", "NonText" },
       },
-      fzf_opts = { ['--keep-right'] = '' },
-      winopts = {
+      fzf_opts   = { ['--keep-right'] = '' },
+      hls        = {
+        border = "FloatBorder",
+        header_bind = "NonText",
+        header_text = "NonText",
+        help_normal = "NonText",
+        normal = "NormalFloat",
+        preview_border = "FloatBorder",
+        preview_normal = "NormalFloat",
+        search = "CmpItemAbbrMatch",
+        title = "FloatTitle"
+      },
+      winopts    = {
         backdrop   = 100,
-        border     = tools.ui.cur_border,
+        border     = tools.ui.borders.thin,
         cursorline = true,
         height     = .35,
         width      = 1,
         row        = 1,
-        hl         = {
-          border = "FloatBorder",
-          header_bind = "NonText",
-          header_text = "NonText",
-          help_normal = "NonText",
-          normal = "NormalFloat",
-          preview_border = "FloatBorder",
-          preview_normal = "NormalFloat",
-          search = "CmpItemAbbrMatch",
-          title = "FloatTitle"
-        },
+
         preview    = {
           layout = "horizontal",
           scrollbar = "border",
@@ -75,7 +84,6 @@ return {
     map("n", "\\", fzf.buffers, { desc = 'Select Buffer' })
 
     map("n", "<C-f>", '<cmd>FzfLua live_grep_glob<cr>', { desc = "Grep" })
-    map("n", "<leader>f<", '<cmd>FzfLua resume<cr>', { desc = 'Resume last command' })
 
     --  LSP
     map("n", "<leader>df", fzf.lsp_definitions, { silent = true, desc = "LSP [d]e[f]initions" })

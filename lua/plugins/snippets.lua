@@ -1,30 +1,28 @@
-local types = require('luasnip.util.types')
-
 return {
   "L3MON4D3/LuaSnip",
+  event = "InsertEnter",
   build = "make install_jsregexp",
-  opts = {
-    enable_autosnippets = true,
-    history = true,
-    region_check_events = "CursorMoved,CursorHold,InsertEnter",
-    delete_check_events = "InsertLeave",
-    ext_opts = {
-      [types.choiceNode] = {
-        active = {
-          hl_mode = 'combine',
-          virt_text = { { '●', 'Operator' } },
+  config = function()
+    require("luasnip").config.setup({
+      enable_autosnippets = true,
+      history = true,
+      region_check_events = "CursorMoved,CursorHold,InsertEnter",
+      delete_check_events = "InsertLeave",
+      ext_opts = {
+        [require('luasnip.util.types').choiceNode] = {
+          active = {
+            hl_mode = 'combine',
+            virt_text = { { '●', 'Operator' } },
+          },
+        },
+        [require('luasnip.util.types').insertNode] = {
+          active = {
+            hl_mode = 'combine',
+            virt_text = { { '●', 'Operator' } },
+          },
         },
       },
-      [types.insertNode] = {
-        active = {
-          hl_mode = 'combine',
-          virt_text = { { '●', 'Type' } },
-        },
-      },
-    },
-  },
-  config = function(_, opts)
-    require("luasnip").config.setup(opts)
+    })
 
     local ls = require("luasnip")
     local s = ls.snippet
@@ -33,17 +31,17 @@ return {
     local rep = require("luasnip.extras").rep
 
     -- <c-l> is selecting within a list of options.
-    vim.keymap.set({ 'i' }, '<C-l>', function()
+    vim.keymap.set('i', '<C-l>', function()
       if ls.choice_active() then ls.change_choice(1) end
     end)
 
     -- forward
-    vim.keymap.set({ 'i' }, '<C-n>', function()
+    vim.keymap.set('i', '<C-n>', function()
       if ls.expand_or_jumpable() then ls.expand_or_jump() end
     end)
 
     -- back
-    vim.keymap.set({ 'i' }, '<C-p>', function()
+    vim.keymap.set('i', '<C-p>', function()
       if ls.jumpable(-1) then ls.jump(-1) end
     end
     )
@@ -69,16 +67,16 @@ return {
         t({ "", "  - " }), i(1),
         t({ "", "---" }),
       }),
-      s("table", {
+      s("tbl", {
         --[[
-              |-----------------+--------------------------+------------|
-              | name            | address                  | phone      |
-              |-----------------+--------------------------+------------|
-              | John Adams      | 1600 Pennsylvania Avenue | 0123456789 |
-              |-----------------+--------------------------+------------|
-              | Sherlock Holmes | 221B Baker Street        | 0987654321 |
-              |-----------------+--------------------------+------------|
-          ]]
+               |-----------------+--------------------------+------------|
+               | name            | address                  | phone      |
+               |-----------------+--------------------------+------------|
+               | John Adams      | 1600 Pennsylvania Avenue | 0123456789 |
+               |-----------------+--------------------------+------------|
+               | Sherlock Holmes | 221B Baker Street        | 0987654321 |
+               |-----------------+--------------------------+------------|
+           ]]
         t("|-----------------|--------------------------|------------|"),
         t({ "", "| name            | address                  | phone      |" }),
         t({ "", "|-----------------|--------------------------|------------|" }),
@@ -98,7 +96,7 @@ return {
     })
 
     ls.add_snippets("lua", {
-      s("ins", {
+      s("inspect", {
         t("vim.inspect("), i(1), t(")"),
       })
     })

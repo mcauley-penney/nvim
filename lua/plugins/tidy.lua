@@ -1,7 +1,8 @@
 return {
   "mcauley-penney/tidy.nvim",
-  branch = "improved-ft-detect",
+  branch = "only-modified",
   opts = {
+    only_insert_lines = false,
     filetype_exclude = { "diff" },
     provide_undefined_editorconfig_behavior = true
   },

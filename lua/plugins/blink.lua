@@ -37,14 +37,22 @@ end
 
 return {
   "saghen/blink.cmp",
+  event = { 'CmdlineEnter', 'InsertEnter' },
   version = 'v0.*',
+  dependencies = {
+    "moyiz/blink-emoji.nvim",
+  },
   opts = {
     sources = {
-      default = { "lsp", "path", "luasnip", "lazydev", "buffer" },
+      default = { "lsp", "path", "luasnip", "lazydev", "buffer", "emoji" },
       providers = {
         buffer = {
           name = "buffer",
           max_items = 4,
+        },
+        emoji = {
+          module = "blink-emoji",
+          name = "Emoji",
         },
         lazydev = {
           name = "LazyDev",
@@ -63,7 +71,29 @@ return {
         },
       },
     },
-    keymap = { preset = 'super-tab' },
+    keymap = {
+      ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
+      ['<C-e>'] = { 'hide', 'fallback' },
+
+      ['<Tab>'] = {
+        function(cmp)
+          if cmp.snippet_active() then
+            return cmp.accept()
+          else
+            return cmp.select_and_accept()
+          end
+        end,
+        'snippet_forward',
+        'fallback'
+      },
+      ['<S-Tab>'] = { 'snippet_backward', 'fallback' },
+
+      ['<C-p>'] = { 'select_prev', 'fallback' },
+      ['<C-n>'] = { 'select_next', 'fallback' },
+
+      ['<C-b>'] = { 'scroll_documentation_up', 'fallback' },
+      ['<C-f>'] = { 'scroll_documentation_down', 'fallback' },
+    },
     completion = {
       list = {
         selection = "auto_insert",
@@ -72,22 +102,20 @@ return {
       },
       documentation = {
         window = {
-          min_width = 15,
-          max_width = 50,
-          max_height = 15,
-          border = tools.ui.borders.thin,
+          min_width = 40,
+          max_width = 70,
+          border = tools.ui.borders.invs,
         },
         auto_show = true,
-        auto_show_delay_ms = 250,
-      },
-      ghost_text = {
-        enabled = false,
+        auto_show_delay_ms = 100,
       },
       menu = {
         min_width = 42,
         max_height = 10,
         border = tools.ui.borders.none,
         draw = {
+          treesitter = { "lsp" },
+          align_to = "cursor",
           padding = 2,
           gap = 3,
           columns = { { 'kind_icon', gap = 2, 'label' }, { 'label_description' } },

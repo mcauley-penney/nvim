@@ -27,7 +27,6 @@ return {
         "org",
         "printf",
         "python",
-        "r",
         "regex",
         "ssh_config",
         "svelte",
@@ -39,6 +38,13 @@ return {
       ignore_install = {},
       highlight = { enable = true, },
       fold = { enable = true, },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          node_incremental = "v",
+          node_decremental = "V",
+        },
+      },
       textobjects = {
         lookahead = true,
         move = {
@@ -63,6 +69,8 @@ return {
             ["[C"] = "@class.outer",
           },
         },
+
+
         select = {
           enable = true,
           keymaps = {
@@ -91,7 +99,6 @@ return {
 
   {
     "danymat/neogen",
-    dependencies = "nvim-treesitter/nvim-treesitter",
     opts = {
       languages = {
         lua = {

@@ -1,5 +1,6 @@
 return {
   "windwp/nvim-autopairs",
+  event = "InsertEnter",
   opts = {
     break_undo = true,
     check_ts = true,
@@ -31,8 +32,8 @@ return {
 
     require("nvim-autopairs").add_rules {
       rule("<", ">", "lua"):with_pair(is_node_type { "string", "string_content" }),
-      rule("<", ">", { "html", "vim", "xml" }),               -- keymaps & tags
-      rule("![", "]()", "markdown"):set_end_pair_length(1),   -- images
+      rule("<", ">", { "html", "vim", "xml" }),             -- keymaps & tags
+      rule("![", "]()", "markdown"):set_end_pair_length(1), -- images
 
       -- git conventional commit with scope: auto-append `:`
       rule("^%a+%(%)", ":", "gitcommit")

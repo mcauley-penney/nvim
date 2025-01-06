@@ -1,7 +1,12 @@
 return {
   "stevearc/aerial.nvim",
   opts = {
-    backends = { "lsp", "treesitter" },
+    backends = { "treesitter", "lsp" },
+    close_automatic_events = {
+      "unfocus",
+      "switch_buffer",
+      "unsupported",
+    },
     guides = {
       mid_item = "  ├",
       last_item = "  └",
@@ -11,6 +16,9 @@ return {
       close_on_select = false,
       max_width = 35,
       min_width = 35,
+    },
+    ignore = {
+      buftypes = {}
     },
     show_guides = true,
     open_automatic = function(bufnr)

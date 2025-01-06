@@ -1,22 +1,15 @@
 return {
   {
     "mcauley-penney/visual-whitespace.nvim",
-    branch = "async",
-    config = function()
-      local ws_bg = tools.get_hl_hex({ name = "Visual" })["bg"]
-      local ws_fg = tools.get_hl_hex({ name = "Comment" })["fg"]
-
-      require("visual-whitespace").setup({
-        highlight = { bg = ws_bg, fg = ws_fg },
-        nl_char = '¬',
-        excluded = {
-          filetypes = { "aerial" },
-          buftypes = { "help" }
-        }
-      })
-
-      vim.keymap.set('n', "<leader>vw", require("visual-whitespace").toggle, {})
-    end
+    branch = "incremental-hl",
+    keys = { 'v', 'V', '<C-v>' },
+    opts = {
+      nl_char = '¬',
+      excluded = {
+        filetypes = { "aerial" },
+        buftypes = { "help" }
+      }
+    }
   },
 
   {
@@ -24,5 +17,9 @@ return {
     opts = {
       min_length = 3
     },
+    config = function(_, opts)
+      require("match-visual").setup(opts)
+      vim.api.nvim_set_hl(0, "VisualMatch", { link = "Search" })
+    end
   },
 }

@@ -17,5 +17,5 @@ syntax match WhspTimeBlock "\v(^\[|])"
 highlight link WhspComment Comment
 highlight link WhspSpeaker Operator
 highlight link WhspTime Keyword
-highlight link WhspTimeBlock Keyword
+highlight link WhspTimeBlock Comment
 highlight link WhspTimeDelta Comment

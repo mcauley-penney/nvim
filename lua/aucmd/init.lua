@@ -3,6 +3,7 @@ local aucmd = vim.api.nvim_create_autocmd
 local get_opt = vim.api.nvim_get_option_value
 local grp
 
+
 ----------------------------------------
 -- Upon entering
 ----------------------------------------
@@ -24,21 +25,34 @@ aucmd("BufEnter", {
   desc = "Set root dir and initialize version control branch"
 })
 
--- TODO: break these up by filetype instead, and use this one for the general ones?
 aucmd({ "BufEnter", "BufWinEnter" }, {
   group = grp,
   callback = function()
     vim.api.nvim_set_option_value("formatoptions", "2cjnpqrt", {})
 
-    -- allow lettered lists
-    vim.opt.formatlistpat:append([[\|^\s*\w\+[\]:.)}\t ]\s\+]])
+    vim.opt.formatlistpat:append([[\|^\s*\w\+[\]:.)}\t ]\s\+]]) -- Lettered lists
+    vim.opt.formatlistpat:append([[\|^>\s]])                    -- Markdown blockquotes
 
-    -- indend on '>' for markdown quotes
-    vim.opt.formatlistpat:append([[\|^>\s]])
+    -- Dynamically append commentstring-based pattern
+    local commentstring = vim.bo.commentstring:match("^(.*)%%s$")
+    if commentstring then
+      vim.opt.formatlistpat:append([[\|^\s*]] .. commentstring .. [[\s*]])
+    end
 
     local ft = get_opt("filetype", {})
     require("aucmd.functions").set_indent(ft)
     require("aucmd.functions").set_textwidth(ft)
+
+    -- set foldmethod
+    -- we also set via LSP. This is a fallback for when there is no language server
+    -- https://www.reddit.com/r/neovim/comments/w4ckuf/config_if_treesitter_is_active/
+    local ok, parser = pcall(vim.treesitter.get_parser)
+    if ok and parser then
+      vim.o.foldmethod = "expr"
+      vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    else
+      vim.o.foldmethod = "indent"
+    end
   end,
   desc = "Set options for formatting"
 })
@@ -63,19 +77,18 @@ aucmd("BufWinEnter", {
   desc = "Highlight email addresses"
 })
 
-
 ----------------------------------------
 -- LSP
 ----------------------------------------
-aucmd("LspAttach", {
-  group = grp,
-  callback = function(args)
-    local cur_client = vim.lsp.get_client_by_id(args.data.client_id)
-    if not cur_client then return end
-
-    require("aucmd.functions").on_attach(cur_client, args.buf)
-  end,
-})
+--  aucmd("LspAttach", {
+--    group = grp,
+--    callback = function(args)
+--      local cur_client = vim.lsp.get_client_by_id(args.data.client_id)
+--      if not cur_client then return end
+--  
+--      require("lsp").on_attach(cur_client, args.buf)
+--    end,
+--  })
 
 
 ----------------------------------------

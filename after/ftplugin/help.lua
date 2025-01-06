@@ -6,8 +6,10 @@ vim.o.concealcursor = "nc"
 vim.api.nvim_create_autocmd('BufWinEnter', {
   pattern = '*',
   callback = function(event)
-    if vim.bo[event.buf].filetype == 'help' then vim.cmd.only() end
-    vim.bo[event.buf].buflisted = true
+    if vim.bo[event.buf].filetype == 'help' then
+      vim.cmd.only()
+      vim.bo[event.buf].buflisted = true
+    end
   end,
   desc = "Open help pages in a listed buffer in the current window."
 })

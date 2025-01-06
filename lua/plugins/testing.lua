@@ -1,15 +1,4 @@
 return {
-  --  {
-  --    "folke/trouble.nvim",
-  --    config = function()
-  --      require("trouble").setup()
-
-  --      vim.api.nvim_create_autocmd("DiagnosticChanged", {
-  --        command = "Trouble diagnostics open"
-  --      })
-  --    end
-  --  },
-
   {
     "LunarVim/bigfile.nvim",
     opts = {
@@ -60,45 +49,47 @@ return {
     opts = {
       render_modes = true,
       code = {
-        width = "block",
+        -- sign = true breaks something somewhere
+        sign = false,
+        width = "full",
         position = 'left',
-        highlight = "markdownCodeBlock",
-        language_pad = 2,
+        highlight = "@markup.raw.block",
+        language_pad = 0,
         left_pad = 2,
-        right_pad = 2
+        right_pad = 3,
+        inline_pad = 1,
+        highlight_inline = "@markup.raw.markdown_inline",
       },
       heading = {
-        border = false,
+        width = 'block',
         position = "inline",
         backgrounds = {
-          'makdownH1',
+          '@markup.heading.1.markdown',
         },
-        icons = { '󰉫 ', '󰉬 ', '󰉭 ', '󰉮 ', '󰉯 ', '󰉰 ', },
+        icons = { '፠ 1 ', '፠ 2 ', '፠ 3 ', '፠ 4 ', '፠ 5 ', '፠ 6 ', },
       },
       quote = {
         highlight = "NonText",
         repeat_linebreak = true,
       },
-      win_options = {
-        conceallevel = { rendered = 3, },
+      bullet = {
+        icons = { '●', '○', '◆', '◊' },
+      },
+      link = {
+        --  enabled = false,
+        image = '󰥶  ',
+        email = '󰀓  ',
+        hyperlink = '  ',
+        custom = {
+          web = { pattern = '^http', icon = '  ' },
+          sweb = { pattern = '^https', icon = '  ' },
+          youtube = { pattern = 'youtube%.com', icon = '󰗃  ' },
+          github = { pattern = 'github%.com', icon = '󰊤  ' },
+          stackoverflow = { pattern = 'stackoverflow%.com', icon = '󰓌  ' },
+          discord = { pattern = 'discord%.com', icon = '󰙯  ' },
+          reddit = { pattern = 'reddit%.com', icon = '󰑍  ' },
+        },
       },
     },
   },
-
-  --  {
-  --    'tzachar/highlight-undo.nvim',
-  --    keys = { { "u" }, { "<C-r>" } },
-  --    opts = {
-  --      keymaps = {
-  --        paste = { disabled = true },
-  --        Paste = { disabled = true },
-  --      },
-  --    },
-  --    config = function(_, opts)
-  --      require('highlight-undo').setup({ opts })
-
-  --      vim.api.nvim_set_hl(0, "HighlightUndo", { link = "DiffChange" })
-  --      vim.api.nvim_set_hl(0, "HighlightRedo", { link = "DiffAdd" })
-  --    end
-  --  }
 }

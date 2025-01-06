@@ -108,7 +108,7 @@ return {
 
               return tools.hl_str("LineNr", line)
             end,
-            ' ',
+            ' '
           },
           condition = {
             function()
@@ -130,7 +130,7 @@ return {
           }
         },
         {
-          text = { " " }
+          text = { ' ' }
         },
         {
           text = { require("statuscol.builtin").foldfunc },
@@ -141,7 +141,7 @@ return {
           }
         },
         {
-          text = { " " }
+          text = { ' ' }
         }
       }
     })

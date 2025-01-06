@@ -37,10 +37,10 @@ for _, pairs in ipairs(colemak_maps) do
   swap_map(mvmnt_lhs, mvmnt_rhs)
 end
 
-for _, mode in pairs({ "n", "v" }) do
-  map(mode, "e", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-  map(mode, "n", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-end
+map('n', "e", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+map('n', "n", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+map('v', "e", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+map('v', "n", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 
 --------------------------------------------------
@@ -68,7 +68,7 @@ map("", "<home>", "^", { desc = "move to first non-blank char in line" })
 map("i", "<home>", "<C-o>^", { desc = "move in front of first non-blank char in line" })
 
 -- tabs and buffers
-map("n", "<leader>bq", ":bd<CR>", { silent = true })
+map("n", "<leader>bq", ":bd<CR>", {})
 map("n", "<leader>tq", ":tabclose<CR>", { silent = true })
 
 -- search in visual selection

@@ -1,4 +1,4 @@
--- See https://www.compart.com/en/unicode to search Unicode
+-- https://www.compart.com/en/unicode to search Unicode
 
 local borders = {
   none = { '', '', '', '', '', '', '', '' },
@@ -23,7 +23,7 @@ _G.tools = {
       lock = '',
       r_chev = '>',
       location = '⌘',
-      square = '⏹ ',
+      square = '🗊',
       ballot_x = '🗴',
       up_tri = '▲',
       info_i = '¡',
@@ -117,9 +117,18 @@ tools.get_git_remote_name = function(root)
 end
 
 tools.set_git_branch = function(root)
-  local cmd = table.concat({ "git", "-C", root, "branch --show-current" }, " ")
+  -- For commit numbers
+  --  local cmd = table.concat({ "git", "-C", root, "rev-parse --short HEAD" }, " ")
+
+  local cmd = table.concat({
+    "git", "-C", root,
+    "rev-parse --abbrev-ref HEAD || git rev-parse --short HEAD"
+  }, " ")
+
   local branch = vim.fn.system(cmd)
-  if branch == nil then return nil end
+  if branch == nil then
+    return nil
+  end
 
   branch = branch:gsub("\n", "")
   branch_cache[root] = branch
@@ -136,8 +145,8 @@ tools.get_git_branch = function(root)
   return tools.set_git_branch(root)
 end
 
-tools.is_nonprog_ft = function()
-  return tools.nonprog_modes[vim.bo.filetype] ~= nil
+tools.is_nonprog_ft = function(ft)
+  return tools.nonprog_modes[ft]
 end
 
 

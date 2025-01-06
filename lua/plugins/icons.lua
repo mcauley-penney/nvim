@@ -4,9 +4,9 @@ return {
   config = function()
     local mini = require("mini.icons")
 
-    local make_icon_tbl = function(category, postfix)
+    local make_icon_tbl = function(category)
       local res = {}
-      postfix = postfix or " "
+      local postfix = "  "
 
       -- get list of keys, access keys, modify them, then store and return
       -- output format: key = { glyph = "" }
@@ -21,8 +21,12 @@ return {
       default   = make_icon_tbl("default"),
       directory = make_icon_tbl("directory"),
       extension = make_icon_tbl("extension"),
-      file      = make_icon_tbl("file"),
-      filetype  = make_icon_tbl("filetype", "  "),
+      -- https://github.com/echasnovski/mini.nvim/issues/1384
+      file      = {
+        ['init.lua'] = { glyph = ' 󰢱  ', hl = 'MiniIconsAzure' },
+        ['README.md'] = { glyph = ' 󰍔  ', hl = 'MiniIconsCyan' },
+      },
+      filetype  = make_icon_tbl("filetype"),
       lsp       = make_icon_tbl("lsp")
     })
   end

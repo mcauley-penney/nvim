@@ -105,14 +105,21 @@ local function get_path_info(root, fname, icon_tbl)
   end
 
   local remote = tools.get_git_remote_name(root)
+
+  -- FIXME: doesn't return anything for HEAD
   local branch = tools.get_git_branch(root)
   local dir_path = vim.fn.fnamemodify(fname, ":h") .. "/"
+
+  -- FIXME: how much we show should depend on how long
+  -- the total statusline string is, not just the len
+  -- of the directory itself
   local win_width = vim.api.nvim_win_get_width(0)
   local dir_threshold_width = 15
   local repo_threshold_width = 10
 
   local repo_info = ""
   if remote and branch then
+    --  print("BRANCH: ", branch)
     dir_path = string.gsub(dir_path, "^" .. escape_str(root) .. "/", "")
 
     repo_info = table.concat({
@@ -158,21 +165,6 @@ local function get_diag_str()
 end
 
 
--- FILEINFO WIDGET
-local function get_filesize()
-  local suffix = { 'b', 'k', 'M', 'G', 'T', 'P', 'E' }
-  local fsize = vim.fn.getfsize(vim.api.nvim_buf_get_name(0))
-
-  -- Handle invalid file size
-  if fsize < 0 then return "0b" end
-
-  local i = math.floor(math.log(fsize) / math.log(1024))
-  -- Ensure index is within suffix range
-  i = math.min(i, #suffix - 1)
-
-  return string.format("%.1f%s", fsize / 1024 ^ i, suffix[i + 1])
-end
-
 local function get_vlinecount_str()
   local raw_count = vim.fn.line('.') - vim.fn.line('v')
   raw_count = raw_count < 0 and raw_count - 1 or raw_count + 1
@@ -213,8 +205,6 @@ local function get_fileinfo_widget(icon_tbl)
     return table.concat({
       icon_tbl.fileinfo,
       ' ',
-      get_filesize(),
-      '  ',
       lines,
       " lines  ",
       tools.group_number(wc_table.words, ','),

@@ -35,9 +35,9 @@ opt.fillchars = {
   verthoriz = '╋'
 }
 o.foldcolumn = '1'
+o.foldenable = false
 o.foldlevel = 99
-vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-o.foldmethod = "expr"
+o.foldtext = vim.lsp.foldtext()
 o.gdefault = true
 opt.guicursor = {
   "n-sm:block",
@@ -46,7 +46,6 @@ opt.guicursor = {
   "o-r:hor10",
   "a:Cursor/Cursor-blinkwait1-blinkon1-blinkoff1"
 }
---  o.helpheight = 70
 o.equalalways = true
 o.hlsearch = true
 o.inccommand = "split"
@@ -57,6 +56,7 @@ opt.listchars = {
   nbsp = '▬',
   tab = '  ',
   trail = '·',
+  --  trail = '∙',
 }
 o.linebreak = true
 o.modeline = false
@@ -64,6 +64,7 @@ o.modelines = 0
 o.mouse = ""
 o.nrformats = "alpha"
 o.number = true
+o.numberwidth = 3
 o.pumheight = 15
 o.redrawtime = 150
 o.relativenumber = true
