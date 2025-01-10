@@ -66,7 +66,7 @@ return {
         backgrounds = {
           '@markup.heading.1.markdown',
         },
-        icons = { '፠ 1 ', '፠ 2 ', '፠ 3 ', '፠ 4 ', '፠ 5 ', '፠ 6 ', },
+        icons = { '፠  1 ', '፠  2 ', '፠  3 ', '፠  4 ', '፠  5 ', '፠  6 ', },
       },
       quote = {
         highlight = "NonText",
