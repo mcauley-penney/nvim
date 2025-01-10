@@ -40,19 +40,20 @@ return {
   event = { 'CmdlineEnter', 'InsertEnter' },
   version = 'v0.*',
   dependencies = {
+    "echasnovski/mini.snippets",
     "moyiz/blink-emoji.nvim",
   },
   opts = {
     sources = {
-      default = { "lsp", "path", "luasnip", "lazydev", "buffer", "emoji" },
+      default = { "lazydev", "lsp", "snippets", "path", "buffer", "emoji" },
       providers = {
         buffer = {
           name = "buffer",
           max_items = 4,
         },
         emoji = {
-          module = "blink-emoji",
           name = "Emoji",
+          module = "blink-emoji",
         },
         lazydev = {
           name = "LazyDev",
@@ -63,14 +64,15 @@ return {
           name = "LSP",
         },
         path = {
-          name = "Path",
+          name = "path",
           opts = { get_cwd = vim.uv.cwd },
         },
         snippets = {
-          name = "Snippets",
+          name = "snippets",
         },
       },
     },
+    snippets = { preset = 'mini_snippets' },
     keymap = {
       ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
       ['<C-e>'] = { 'hide', 'fallback' },
@@ -96,7 +98,7 @@ return {
     },
     completion = {
       list = {
-        selection = "auto_insert",
+        selection = { preselect = true, auto_insert = false },
         cycle = { from_top = false },
         max_items = 50,
       },

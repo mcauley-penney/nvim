@@ -1,0 +1,10 @@
+{
+  "Link": {
+    "prefix": "link",
+    "body": "[${1:title}](${2:link})"
+  },
+  "Caption": {
+    "prefix": "caption",
+    "body": "<sub>${1:text}</sub>"
+  }
+}
