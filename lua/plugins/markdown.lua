@@ -1,44 +1,20 @@
 return {
   {
-    "LunarVim/bigfile.nvim",
-    opts = {
-      features = {
-        "illuminate",
-        "treesitter",
-        "syntax",
-        "matchparen",
-        "vimopts",
-      },
-    }
-  },
-
-  {
-    "mcauley-penney/autolist.nvim",
-    ft = {
-      "markdown",
-      "plaintex",
-      "tex",
-      "text",
-    },
-    config = function()
-      require("autolist").setup()
-
-      vim.keymap.set("i", "<tab>", "<cmd>AutolistTab<cr>")
-      vim.keymap.set("i", "<s-tab>", "<cmd>AutolistShiftTab<cr>")
-
-      vim.keymap.set("i", "<CR>", "<CR><cmd>AutolistNewBullet<cr>")
-      vim.keymap.set("n", "m<CR>", "o<cmd>AutolistNewBullet<cr>")
-      vim.keymap.set("n", "m<SPACE>", "O<cmd>AutolistNewBulletBefore<cr>")
-      vim.keymap.set("n", "<C-Space>", "<cmd>AutolistToggleCheckbox<cr><CR>")
-      vim.keymap.set("n", "<leader>lr", "<cmd>AutolistRecalculate<cr>")
-
-      -- cycle list types with dot-repeat
-      vim.keymap.set("n", "<leader>cn", require("autolist").cycle_next_dr, { expr = true })
-      vim.keymap.set("n", "<leader>cp", require("autolist").cycle_prev_dr, { expr = true })
-
-      -- functions to recalculate list on edit
-      vim.keymap.set("n", ">>", ">><cmd>AutolistRecalculate<cr>")
-      vim.keymap.set("n", "<<", "<<<cmd>AutolistRecalculate<cr>")
+    "iamcco/markdown-preview.nvim",
+    ft = "markdown",
+    build = function()
+      vim.fn["mkdp#util#install"]()
+    end,
+    init = function()
+      local g = vim.g
+      g.mkdp_auto_start = 0
+      g.mkdp_auto_close = 1
+      g.mkdp_page_title = "${name}.md"
+      g.mkdp_preview_options = {
+        disable_sync_scroll = 0,
+        disable_filename = 1,
+      }
+      g.mkdp_theme = "dark"
     end,
   },
 
@@ -55,7 +31,7 @@ return {
         position = 'left',
         highlight = "@markup.raw.block",
         language_pad = 0,
-        left_pad = 2,
+        left_pad = 1,
         right_pad = 3,
         inline_pad = 1,
         highlight_inline = "@markup.raw.markdown_inline",
@@ -75,6 +51,11 @@ return {
       bullet = {
         icons = { '●', '○', '◆', '◊' },
       },
+      pipe_table = {
+        style = "none",
+        cell = "raw",
+      },
+      html = { comment = { conceal = false } },
       link = {
         --  enabled = false,
         image = '󰥶  ',
@@ -91,5 +72,5 @@ return {
         },
       },
     },
-  },
+  }
 }
