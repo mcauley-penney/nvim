@@ -14,6 +14,16 @@ local function swap(start_val, end_val)
   return start_val, end_val
 end
 
+local function get_number_col_text(args, num_wraps)
+  local line = require("statuscol.builtin").lnumfunc(args)
+
+  if args.virtnum > 0 then
+    line = args.virtnum == num_wraps and '└' or '├'
+  end
+
+  return line
+end
+
 
 return {
   "luukvbaal/statuscol.nvim",
@@ -46,15 +56,6 @@ return {
             ' ',
             "%=",
             function(args)
-              local mode = vim.fn.mode()
-              local normed_mode = vim.fn.strtrans(mode):lower():gsub("%W", "")
-
-              local line = require("statuscol.builtin").lnumfunc(args)
-              -- get character for cur line
-              if normed_mode ~= 'v' and args.virtnum == 0 then
-                return line
-              end
-
               if args.virtnum < 0 then
                 return '-'
               end
@@ -62,51 +63,51 @@ return {
               local num_wraps = vim.api.nvim_win_text_height(args.win, {
                 start_row = args.lnum - 1,
                 end_row = args.lnum - 1,
-              })["all"]
-
-              if args.virtnum > 0 then
-                line = args.virtnum == num_wraps - 1 and '└' or '├'
-              end
+              })["all"] - 1
 
               local e_row = vim.fn.line('.')
 
-              -- if the line is wrapped and we are not in visual mode
-              if normed_mode ~= 'v' then
+              local cur_text = get_number_col_text(args, num_wraps)
+
+              local is_visual = vim.fn.strtrans(vim.fn.mode()):lower():gsub("%W", "") == 'v'
+              if not is_visual then
+                if args.virtnum == 0 then
+                  return require("statuscol.builtin").lnumfunc(args)
+                end
+
                 return e_row == args.lnum and
-                    tools.hl_str("CursorLineNr", line) or
-                    tools.hl_str("LineNr", line)
+                    tools.hl_str("CursorLineNr", cur_text) or
+                    tools.hl_str("LineNr", cur_text)
               end
 
-              local s_row = vim.fn.line('v')
-              local normed_s_row, normed_e_row = swap(s_row, e_row)
+              local s_row
+              s_row, e_row = swap(vim.fn.line('v'), e_row)
 
               -- if the line number is outside our visual selection
-              if args.lnum < normed_s_row or args.lnum > normed_e_row then
-                return tools.hl_str("LineNr", line)
+              if args.lnum < s_row or args.lnum > e_row then
+                return tools.hl_str("LineNr", cur_text)
               end
 
-              -- if the line number is visually selected and not wrapped
-              if args.virtnum == 0 and num_wraps == 1 then
-                return tools.hl_str("CursorLineNr", line)
+              -- if the line is visually selected and not wrapped
+              if num_wraps == 0  or (s_row < args.lnum and args.lnum < e_row) then
+                return tools.hl_str("CursorLineNr", cur_text)
               end
 
-              -- if the line is visually selected and wrapped, only highlight selected screen lines
+              -- Here, the line is visually selected and wrapped
               local buf_width = get_buf_width()
-              local vis_start_wrap = math.floor((vim.fn.virtcol('v') - 1) / buf_width)
-              local vis_end_wrap = math.floor((vim.fn.virtcol('.') - 1) / buf_width)
-              local normed_vis_start_wrap, normed_vis_end_wrap = swap(vis_start_wrap, vis_end_wrap)
+              local start_wrap = math.floor((vim.fn.virtcol('v') - 1) / buf_width)
+              local end_wrap = math.floor((vim.fn.virtcol('.') - 1) / buf_width)
 
-              if normed_s_row < args.lnum and (args.virtnum <= normed_vis_end_wrap or normed_e_row > args.lnum) then
-                return tools.hl_str("CursorLineNr", line)
+              if start_wrap == 0 and args.lnum < e_row then
+                start_wrap = end_wrap
+                end_wrap = num_wraps
               end
 
-              if normed_s_row == args.lnum and
-                  (normed_e_row == args.lnum and args.virtnum >= normed_vis_start_wrap and args.virtnum <= normed_vis_end_wrap) or
-                  (normed_e_row > args.lnum and args.virtnum >= vis_end_wrap) then
-                return tools.hl_str("CursorLineNr", line)
+              if start_wrap <= args.virtnum and args.virtnum <= end_wrap then
+                return tools.hl_str("CursorLineNr", cur_text)
               end
 
-              return tools.hl_str("LineNr", line)
+              return tools.hl_str("LineNr", cur_text)
             end,
             ' '
           },
