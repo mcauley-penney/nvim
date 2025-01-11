@@ -5,6 +5,7 @@ local short_indent = {
   ["json"] = true,
   ["lua"] = true,
   ["org"] = true,
+  ["tex"] = true,
   ["text"] = true,
   ["yaml"] = true,
 }
