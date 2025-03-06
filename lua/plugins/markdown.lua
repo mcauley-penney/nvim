@@ -25,9 +25,8 @@ return {
     opts = {
       render_modes = true,
       code = {
-        -- sign = true breaks something somewhere
         sign = false,
-        width = "full",
+        width = "block",
         position = 'left',
         highlight = "@markup.raw.block",
         language_pad = 0,
@@ -37,12 +36,12 @@ return {
         highlight_inline = "@markup.raw.markdown_inline",
       },
       heading = {
+        enabled = false,
         width = 'block',
         position = "inline",
         backgrounds = {
           '@markup.heading.1.markdown',
         },
-        icons = { '፠  1 ', '፠  2 ', '፠  3 ', '፠  4 ', '፠  5 ', '፠  6 ', },
       },
       quote = {
         highlight = "NonText",
@@ -52,7 +51,8 @@ return {
         icons = { '●', '○', '◆', '◊' },
       },
       pipe_table = {
-        style = "none",
+        --  preset = "round",
+        style = "normal",
         cell = "raw",
       },
       html = { comment = { conceal = false } },
