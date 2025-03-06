@@ -14,8 +14,6 @@ vim.diagnostic.config({
   virtual_text = {
     prefix = "",
     format = function(diagnostic)
-      local limit = 0
-      local total = (#vim.diagnostic.get(0, { lnum = diagnostic.lnum })) - 1
       local prefix = tools.ui.icons["square"]
       local clean_src_names = {
         ['Lua Diagnostics.'] = 'lua',
@@ -23,9 +21,6 @@ vim.diagnostic.config({
       }
 
       local msg = prefix
-      if total > limit then
-        msg = string.format("%s +%s ", msg, total)
-      end
 
       msg = string.format("%s %s", msg, diagnostic.message)
 
@@ -38,6 +33,8 @@ vim.diagnostic.config({
           msg = msg .. ']'
         end
       end
+
+      msg = msg .. ' '
 
       return msg
     end,
