@@ -78,20 +78,6 @@ aucmd("BufWinEnter", {
 })
 
 ----------------------------------------
--- LSP
-----------------------------------------
---  aucmd("LspAttach", {
---    group = grp,
---    callback = function(args)
---      local cur_client = vim.lsp.get_client_by_id(args.data.client_id)
---      if not cur_client then return end
---  
---      require("lsp").on_attach(cur_client, args.buf)
---    end,
---  })
-
-
-----------------------------------------
 -- During editing
 ----------------------------------------
 grp = augrp("Editing", { clear = true })
@@ -127,13 +113,13 @@ vim.api.nvim_create_autocmd('VimResized', {
   command = [[tabdo wincmd =]]
 })
 
-vim.api.nvim_create_autocmd('TextYankPost', {
-  group = grp,
-  callback = function()
-    vim.highlight.on_yank({ higroup = "Visual", timeout = 190 })
-  end,
-  pattern = '*',
-})
+--  vim.api.nvim_create_autocmd('TextYankPost', {
+--    group = grp,
+--    callback = function()
+--      vim.highlight.on_yank({ higroup = "Visual", timeout = 190 })
+--    end,
+--    pattern = '*',
+--  })
 
 ----------------------------------------
 -- Upon leaving a buffer
