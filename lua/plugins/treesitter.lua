@@ -24,7 +24,6 @@ return {
         "make",
         "markdown",
         "markdown_inline",
-        "org",
         "printf",
         "python",
         "regex",
