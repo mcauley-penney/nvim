@@ -27,7 +27,7 @@ return {
         formatter = "path.filename_first"
       },
       grep       = {
-        cmd = "rg -o -r '' --column --no-heading --smart-case",
+        cmd = "rg -o -n -r '' --column --no-heading --smart-case",
         prompt = "Text: ",
       },
       lsp        = {
@@ -66,7 +66,7 @@ return {
         backdrop   = 100,
         border     = tools.ui.borders.thin,
         cursorline = true,
-        height     = .35,
+        height     = .25,
         width      = 1,
         row        = 1,
 
