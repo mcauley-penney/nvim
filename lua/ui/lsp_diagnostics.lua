@@ -44,9 +44,9 @@ vim.diagnostic.config({
   },
   float = {
     header = ' ',
-    border = tools.ui.cur_border,
+    border = table.concat(tools.ui.cur_border, ''),
     source = 'if_many',
-    title = { { ' 󰌶 Diagnostics ', 'FloatTitle' } },
+    title = tools.ui.icons.square .. ' Diagnostics ',
     prefix = function(diag)
       local lsp_sym = lsp_signs[diag.severity].sym
       local prefix = string.format(" %s  ", lsp_sym)
