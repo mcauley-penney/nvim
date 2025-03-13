@@ -1,7 +1,6 @@
 return {
   {
     "rrethy/vim-illuminate",
-    branch = "fix-encoding",
     config = function()
       require('illuminate').configure({
         delay = 150,
