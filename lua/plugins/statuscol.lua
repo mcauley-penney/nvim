@@ -14,7 +14,7 @@ local function swap(start_val, end_val)
   return start_val, end_val
 end
 
-local function get_number_col_text(args, num_wraps)
+local function get_numcol_text(args, num_wraps)
   local line = require("statuscol.builtin").lnumfunc(args)
 
   if args.virtnum > 0 then
@@ -53,7 +53,6 @@ return {
         },
         {
           text = {
-            ' ',
             "%=",
             function(args)
               if args.virtnum < 0 then
@@ -67,7 +66,7 @@ return {
 
               local e_row = vim.fn.line('.')
 
-              local cur_text = get_number_col_text(args, num_wraps)
+              local text = get_numcol_text(args, num_wraps)
 
               local is_visual = vim.fn.strtrans(vim.fn.mode()):lower():gsub("%W", "") == 'v'
               if not is_visual then
@@ -76,8 +75,8 @@ return {
                 end
 
                 return e_row == args.lnum and
-                    tools.hl_str("CursorLineNr", cur_text) or
-                    tools.hl_str("LineNr", cur_text)
+                    tools.hl_str("CursorLineNr", text) or
+                    tools.hl_str("LineNr", text)
               end
 
               local s_row
@@ -85,12 +84,12 @@ return {
 
               -- if the line number is outside our visual selection
               if args.lnum < s_row or args.lnum > e_row then
-                return tools.hl_str("LineNr", cur_text)
+                return tools.hl_str("LineNr", text)
               end
 
               -- if the line is visually selected and not wrapped
               if num_wraps == 0  or (s_row < args.lnum and args.lnum < e_row) then
-                return tools.hl_str("CursorLineNr", cur_text)
+                return tools.hl_str("CursorLineNr", text)
               end
 
               -- Here, the line is visually selected and wrapped
@@ -104,10 +103,10 @@ return {
               end
 
               if start_wrap <= args.virtnum and args.virtnum <= end_wrap then
-                return tools.hl_str("CursorLineNr", cur_text)
+                return tools.hl_str("CursorLineNr", text)
               end
 
-              return tools.hl_str("LineNr", cur_text)
+              return tools.hl_str("LineNr", text)
             end,
             ' '
           },
