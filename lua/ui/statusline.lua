@@ -43,7 +43,6 @@ local ui_icons = {
   ["nomodifiable"] = { "DiagnosticWarn", icons["bullet"] },
   ["modified"] = { "DiagnosticError", icons["bullet"] },
   ["readonly"] = { "DiagnosticWarn", icons["lock"] },
-  ["searchcount"] = { "DiagnosticInfo", icons["location"] },
   ["error"] = { "DiagnosticError", icons["ballot_x"] },
   ["warn"] = { "DiagnosticWarn", icons["up_tri"] },
 }
@@ -106,7 +105,6 @@ local function get_path_info(root, fname, icon_tbl)
 
   local remote = tools.get_git_remote_name(root)
 
-  -- FIXME: doesn't return anything for HEAD
   local branch = tools.get_git_branch(root)
   local dir_path = vim.fn.fnamemodify(fname, ":h") .. "/"
 
@@ -119,7 +117,6 @@ local function get_path_info(root, fname, icon_tbl)
 
   local repo_info = ""
   if remote and branch then
-    --  print("BRANCH: ", branch)
     dir_path = string.gsub(dir_path, "^" .. escape_str(root) .. "/", "")
 
     repo_info = table.concat({
@@ -172,25 +169,9 @@ local function get_vlinecount_str()
   return tools.group_number(math.abs(raw_count), ',')
 end
 
-local function is_user_typing_search()
-  local cmd_type = vim.fn.getcmdtype()
-  return cmd_type == "/" or cmd_type == "?"
-end
-
 --- Get wordcount for current buffer or visual selection
 --- @return string word count
 local function get_fileinfo_widget(icon_tbl)
-  if vim.v.hlsearch == 1 and not is_user_typing_search() then
-    local sinfo = vim.fn.searchcount()
-    local search_stat = sinfo.incomplete > 0 and 'press enter'
-        or sinfo.total > 0 and ('%s/%s'):format(sinfo.current, sinfo.total)
-        or nil
-
-    if search_stat ~= nil then
-      return table.concat({ icon_tbl.searchcount, ' ', search_stat, ' ' })
-    end
-  end
-
   local ft = get_opt("filetype", {})
   local lines = tools.group_number(vim.api.nvim_buf_line_count(0), ',')
 
