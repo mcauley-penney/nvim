@@ -65,7 +65,11 @@ return {
         },
         path = {
           name = "path",
-          opts = { get_cwd = vim.uv.cwd },
+          opts = {
+            get_cwd = function(_)
+              return vim.fn.getcwd()
+            end,
+          },
         },
         snippets = {
           name = "snippets",
@@ -118,13 +122,15 @@ return {
         draw = {
           treesitter = { "lsp" },
           align_to = "cursor",
-          padding = 2,
+          padding = 1,
           gap = 3,
           columns = { { 'kind_icon', gap = 2, 'label' }, { 'label_description' } },
           components = {
             kind_icon = {
               ellipsis = false,
-              text = function(ctx) return ctx.kind_icon .. ctx.icon_gap end,
+              text = function(ctx)
+                return ' ' .. ctx.kind_icon .. ' '
+              end,
               highlight = function(ctx) return 'BlinkCmpKind' .. ctx.kind end,
             },
             label = {
