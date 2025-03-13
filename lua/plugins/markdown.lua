@@ -50,6 +50,9 @@ return {
       bullet = {
         icons = { '●', '○', '◆', '◊' },
       },
+      checkbox = {
+        enabled = false,
+      },
       pipe_table = {
         --  preset = "round",
         style = "normal",
