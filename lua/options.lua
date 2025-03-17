@@ -53,10 +53,9 @@ o.ignorecase = true
 o.laststatus = 3
 o.list = true
 opt.listchars = {
-  nbsp = '▬',
+  nbsp = '␣',
   tab = '  ',
   trail = '·',
-  --  trail = '∙',
 }
 o.linebreak = true
 o.modeline = false
