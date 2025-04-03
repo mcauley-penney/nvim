@@ -1,8 +1,6 @@
 return {
   {
     "mcauley-penney/visual-whitespace.nvim",
-    branch = "incremental-hl",
-    keys = { 'v', 'V', '<C-v>' },
     opts = {
       nl_char = '¬',
       excluded = {
