@@ -44,6 +44,15 @@ return {
     "moyiz/blink-emoji.nvim",
   },
   opts = {
+    cmdline = {
+      keymap = {
+        preset = "inherit"
+      },
+      completion = {
+        ghost_text = { enabled = true },
+        menu = { auto_show = true },
+      }
+    },
     sources = {
       default = { "lazydev", "lsp", "snippets", "path", "buffer", "emoji" },
       providers = {
