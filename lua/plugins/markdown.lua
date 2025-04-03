@@ -26,14 +26,19 @@ return {
       render_modes = true,
       code = {
         sign = false,
+        border = "thin",
+        below = "🮂",
         width = "block",
         position = 'left',
-        highlight = "@markup.raw.block",
-        language_pad = 0,
+        language_icon = false,
+        language_pad = 1,
         left_pad = 1,
-        right_pad = 3,
+        right_pad = 2,
         inline_pad = 1,
+        highlight = "@markup.raw.block",
         highlight_inline = "@markup.raw.markdown_inline",
+        highlight_border = "@markup.raw.block",
+        highlight_language = "NonText"
       },
       heading = {
         enabled = false,
