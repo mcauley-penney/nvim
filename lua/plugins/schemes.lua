@@ -8,7 +8,7 @@ return {
   --  },
 
   {
-    dir = "/home/m/files/projects/colorschemes/phobos-anomaly.nvim/",
+    "mcauley-penney/phobos-anomaly.nvim",
     priority = 1000,
     init = function()
       vim.cmd.colorscheme("phobos-anomaly")
