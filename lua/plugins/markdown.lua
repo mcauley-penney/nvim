@@ -53,6 +53,7 @@ return {
         repeat_linebreak = true,
       },
       bullet = {
+        enabled = false,
         icons = { '●', '○', '◆', '◊' },
       },
       checkbox = {
