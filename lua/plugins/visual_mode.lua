@@ -2,7 +2,9 @@ return {
   {
     "mcauley-penney/visual-whitespace.nvim",
     opts = {
-      nl_char = '¬',
+      --  nl_char = '¬',
+      nl_char = '␊',
+      cr_char = '␍',
       excluded = {
         filetypes = { "aerial" },
         buftypes = { "help" }
