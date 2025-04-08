@@ -1,13 +1,12 @@
 return {
   {
     "mcauley-penney/visual-whitespace.nvim",
+    event = "ModeChanged *:[vV\22]",
     opts = {
-      nl_char = '¬',
-      excluded = {
-        filetypes = { "aerial" },
-        buftypes = { "help" }
-      }
-    }
+      fileformat_chars = {
+        unix = '¬',
+      },
+    },
   },
 
   {
