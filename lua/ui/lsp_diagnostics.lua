@@ -41,7 +41,6 @@ vim.diagnostic.config({
   },
   float = {
     header = ' ',
-    border = table.concat(tools.ui.cur_border, ''),
     source = 'if_many',
     title = tools.ui.icons.square .. ' Diagnostics ',
     prefix = function(diag)
