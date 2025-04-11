@@ -64,7 +64,6 @@ return {
       },
       winopts    = {
         backdrop   = 100,
-        border     = tools.ui.borders.thin,
         cursorline = true,
         height     = .25,
         width      = 1,

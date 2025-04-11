@@ -1,16 +1,7 @@
 -- https://www.compart.com/en/unicode to search Unicode
 
-local borders = {
-  none = { '', '', '', '', '', '', '', '' },
-  invs = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-  thin = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
-  edge = { '🭽', '▔', '🭾', '▕', '🭿', '▁', '🭼', '▏' }, -- Works in Kitty, Wezterm
-}
-
 _G.tools = {
   ui = {
-    cur_border = borders.invs,
-    borders = borders,
     icons = {
       branch = '',
       bullet = '•',
