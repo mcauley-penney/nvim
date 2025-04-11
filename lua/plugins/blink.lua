@@ -38,7 +38,7 @@ end
 return {
   "saghen/blink.cmp",
   event = { 'CmdlineEnter', 'InsertEnter' },
-  version = 'v0.*',
+  version = 'v1.*',
   dependencies = {
     "echasnovski/mini.snippets",
     "moyiz/blink-emoji.nvim",
@@ -53,8 +53,23 @@ return {
         menu = { auto_show = true },
       }
     },
+    fuzzy = {
+      sorts = {
+        'exact',
+        'score',
+        'sort_text',
+      },
+    },
     sources = {
-      default = { "lazydev", "lsp", "snippets", "path", "buffer", "emoji" },
+      default = function()
+        local success, node = pcall(vim.treesitter.get_node)
+        if success and node and
+            vim.tbl_contains({ 'comment', 'line_comment', 'block_comment' }, node:type()) then
+          return { 'buffer' }
+        end
+
+        return { "lazydev", "lsp", "snippets", "path", "buffer", "emoji" }
+      end,
       providers = {
         buffer = {
           name = "buffer",
@@ -82,11 +97,16 @@ return {
         },
         snippets = {
           name = "snippets",
+          should_show_items = function(ctx)
+            return ctx.trigger.initial_kind ~= 'trigger_character'
+          end
         },
       },
     },
     snippets = { preset = 'mini_snippets' },
     keymap = {
+      ['<Up>'] = { 'select_prev', 'fallback' },
+      ['<Down>'] = { 'select_next', 'fallback' },
       ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
       ['<C-e>'] = { 'hide', 'fallback' },
 
@@ -113,27 +133,24 @@ return {
       list = {
         selection = { preselect = true, auto_insert = false },
         cycle = { from_top = false },
-        max_items = 50,
       },
       documentation = {
         window = {
           min_width = 40,
           max_width = 70,
-          border = tools.ui.borders.invs,
         },
         auto_show = true,
         auto_show_delay_ms = 100,
       },
       menu = {
-        min_width = 42,
+        min_width = 34,
         max_height = 10,
-        border = tools.ui.borders.none,
         draw = {
           treesitter = { "lsp" },
           align_to = "cursor",
           padding = 1,
           gap = 3,
-          columns = { { 'kind_icon', gap = 2, 'label' }, { 'label_description' } },
+          columns = { { 'kind_icon', gap = 0, 'label' }, { 'label_description' } },
           components = {
             kind_icon = {
               ellipsis = false,
