@@ -1,6 +1,7 @@
 return {
   {
     "mcauley-penney/visual-whitespace.nvim",
+    event = "ModeChanged *:[vV\22]",
     opts = {
       --  nl_char = '¬',
       nl_char = '␊',
