@@ -149,7 +149,7 @@ tools.diagnostics_available = function()
   local diagnostics = vim.lsp.protocol.Methods.textDocument_publishDiagnostics
 
   for _, cfg in pairs(clients) do
-    if cfg.supports_method(diagnostics) then return true end
+    if cfg:supports_method(diagnostics) then return true end
   end
 
   return false
