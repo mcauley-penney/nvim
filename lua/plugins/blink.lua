@@ -38,7 +38,7 @@ end
 return {
   "saghen/blink.cmp",
   event = { 'CmdlineEnter', 'InsertEnter' },
-  version = 'v0.*',
+  version = 'v1.*',
   dependencies = {
     "echasnovski/mini.snippets",
     "moyiz/blink-emoji.nvim",
@@ -131,7 +131,6 @@ return {
       list = {
         selection = { preselect = true, auto_insert = false },
         cycle = { from_top = false },
-        max_items = 50,
       },
       documentation = {
         window = {
