@@ -3,9 +3,8 @@ return {
     "mcauley-penney/visual-whitespace.nvim",
     event = "ModeChanged *:[vV\22]",
     opts = {
-      --  nl_char = '¬',
-      nl_char = '␊',
-      cr_char = '␍',
+      unix_char = '¬',
+      --  unix_char = '␊',
       excluded = {
         filetypes = { "aerial" },
         buftypes = { "help" }
