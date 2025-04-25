@@ -111,24 +111,6 @@ return {
   },
 
   {
-    "onsails/lspkind.nvim",
-    dependencies = "neovim/nvim-lspconfig",
-    config = function()
-      local lspkind = require('lspkind')
-
-      for _, tbl in pairs(lspkind.presets) do
-        for name, icon in pairs(tbl) do
-          tbl[name] = table.concat({ ' ', icon, ' ' })
-        end
-      end
-
-      lspkind.init({
-        preset = "codicons",
-      })
-    end,
-  },
-
-  {
     "j-hui/fidget.nvim",
     event = "LspAttach",
     opts = {

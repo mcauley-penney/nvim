@@ -69,7 +69,6 @@ return {
           },
         },
 
-
         select = {
           enable = true,
           keymaps = {
@@ -151,42 +150,5 @@ return {
         join  = { hooks_post = { del_pair_commas } },
       }
     end,
-  },
-
-  {
-    "Bekaboo/dropbar.nvim",
-    opts = {
-      bar = {
-        update_debounce = 100,
-        sources = function(buf, _)
-          local sources = require('dropbar.sources')
-          local utils = require('dropbar.utils')
-
-          if vim.bo[buf].ft == 'markdown' then return { sources.markdown } end
-          if vim.bo[buf].buftype == 'terminal' then return { sources.terminal } end
-          return {
-            utils.source.fallback({
-              sources.lsp,
-              sources.treesitter,
-            }),
-          }
-        end
-      },
-      icons = {
-        ui = { bar = { separator = ' ' .. tools.ui.icons.r_chev .. ' ' } },
-      }
-    },
-    config = function(opts)
-      local dropbar_icons = require('dropbar.configs').opts.icons.kinds.symbols
-      local lspkind_icons = require("lspkind").symbol_map
-
-      local joined_icons = vim.tbl_extend("force", dropbar_icons, lspkind_icons)
-      joined_icons = vim.tbl_map(function(value) return value .. ' ' end, joined_icons)
-
-      opts.opts.icons["kinds"] = {
-        symbols = joined_icons
-      }
-      require("dropbar").setup(opts.opts)
-    end
   },
 }
