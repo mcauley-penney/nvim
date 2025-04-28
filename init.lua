@@ -25,7 +25,6 @@
 
 -- bootstrap package manager
 local lazy_path = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-
 if not vim.loop.fs_stat(lazy_path) then
   print("New Setup! Initializing …")
 
@@ -63,6 +62,8 @@ for _, provider in ipairs({ "node", "perl", "ruby" }) do
   vim.g["loaded_" .. provider .. "_provider"] = 0
 end
 
+
+-- include our settings
 require("globals")
 require("options")
 require("maps")
@@ -71,13 +72,23 @@ require("cmd")
 require("filetype")
 
 
+-- init plugins
 require('lazy').setup("plugins", {
-  change_detection = { notify = false },
-  checker = {
-    enabled = true,
-    concurrency = 20,
-    notify = false,
-    frequency = 3600, -- check for updates every hour
+  install = { missing = false },
+  change_detection = { enabled = true, notify = false },
+  rocks = { enabled = false },
+  performance = {
+    rtp = {
+      disabled_plugins = {
+        'gzip',
+        'netrwPlugin',
+        'rplugin',
+        'tarPlugin',
+        'tohtml',
+        'tutor',
+        'zipPlugin',
+      },
+    },
   },
   defaults = { lazy = false },
   ui = {
@@ -104,8 +115,8 @@ vim.api.nvim_set_hl(0, "LazySpecial", { link = "Comment" })
 vim.keymap.set('n', '<leader>pm', '<cmd>Lazy<cr>', { desc = "Open [p]ackage [m]anager" })
 
 
+-- setup custom LSP cfgs
 local lsp_configs = {}
-
 for _, f in pairs(vim.api.nvim_get_runtime_file('lsp/*.lua', true)) do
   local server_name = vim.fn.fnamemodify(f, ':t:r')
   table.insert(lsp_configs, server_name)
@@ -114,4 +125,5 @@ end
 vim.lsp.enable(lsp_configs)
 
 
+-- finish settings
 require("ui")
