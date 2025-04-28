@@ -22,10 +22,9 @@ local stl_parts = {
 local stl_order = {
   "pad",
   "path",
+  "venv",
   "mod",
   "ro",
-  "sep",
-  "venv",
   "sep",
   "diag",
   "fileinfo",
@@ -208,22 +207,35 @@ end
 
 
 --- Get the name of the current venv in Python
---- @return string|nil name of venv or nil
---- From JDHao; see https://www.reddit.com/r/neovim/comments/16ya0fr/show_the_current_python_virtual_env_on_statusline/
+--- @return string name of venv or "No venv"
 local get_py_venv = function()
-  local venv_path = os.getenv('VIRTUAL_ENV')
-  if venv_path then
-    local venv_name = vim.fn.fnamemodify(venv_path, ':t')
-    return string.format("'.venv': %s  ", venv_name)
+  local candidates = {
+    {
+      var   = 'VIRTUAL_ENV',
+      label = "'.venv':",
+      fmt   = function(path)
+        return tools.hl_str("Comment", vim.fn.fnamemodify(path, ':t'))
+      end,
+    },
+    {
+      var   = 'CONDA_DEFAULT_ENV',
+      label = 'conda:',
+      fmt   = function(name)
+        return tools.hl_str("Comment", name)
+      end,
+    },
+  }
+
+  for _, c in ipairs(candidates) do
+    local raw = vim.env[c.var]
+    if raw and raw ~= '' then
+      return string.format('%s %s  ', c.label, c.fmt(raw))
+    end
   end
 
-  local conda_env = os.getenv('CONDA_DEFAULT_ENV')
-  if conda_env then
-    return string.format("conda: %s  ", conda_env)
-  end
-
-  return nil
+  return tools.hl_str("Comment", "[no venv]")
 end
+
 
 local function get_scrollbar()
   local sbar_chars = {
