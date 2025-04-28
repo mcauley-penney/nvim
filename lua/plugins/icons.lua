@@ -23,6 +23,7 @@ return {
       extension = make_icon_tbl("extension"),
       -- https://github.com/echasnovski/mini.nvim/issues/1384
       file      = {
+        ['.zshrc'] = { glyph = ' 󰒓 ' },
         ['init.lua'] = { glyph = ' 󰢱  ', hl = 'MiniIconsAzure' },
         ['README.md'] = { glyph = ' 󰍔  ', hl = 'MiniIconsCyan' },
       },
