@@ -66,7 +66,6 @@ o.number = true
 o.numberwidth = 3
 o.pumheight = 15
 o.redrawtime = 150
-o.relativenumber = true
 o.ruler = false
 o.scrolloff = 30
 o.sessionoptions = "buffers,skiprtp"
