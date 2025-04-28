@@ -1,28 +1,11 @@
-local function lens(render, pos_list, nearest, wkg_i, relIdx)
-  local hl = "NonText"
-  local sfw = vim.v.searchforward == 1
-  local indicator, text, chunks
-  local abs_rel_idx = math.abs(relIdx)
+local function lens(render, pos_list, nearest, wkg_i, _)
+  local hl = "Folded"
+  local chunks
 
-  if abs_rel_idx > 1 then
-    indicator = (' %d%s'):format(abs_rel_idx, sfw ~= (relIdx > 1) and '↑' or '↓')
-  else
-    indicator = ''
-  end
+  local cur_ratio = (' %d/%d '):format(wkg_i, #pos_list)
+  chunks = { { '  ', 'Ignore' }, { cur_ratio, hl } }
 
   local lnum, col = pos_list[wkg_i][1], pos_list[wkg_i][2]
-  local total = #pos_list
-  local cur_ratio = (' [%d/%d] '):format(wkg_i, total)
-
-  if nearest then
-    text = cur_ratio
-    chunks = { { ' ', 'Ignore' }, { text, hl } }
-  else
-    text = ('%s%s'):format(indicator, cur_ratio)
-  end
-
-  chunks = { { ' ', 'Ignore' }, { text, hl } }
-
   render.setVirt(0, lnum - 1, col - 1, chunks, nearest)
 end
 
