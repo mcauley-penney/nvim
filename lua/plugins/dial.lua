@@ -1,18 +1,19 @@
 return {
   "monaqa/dial.nvim",
+  keys = { "<C-a>", "g<C-a>", "<C-x>", "g<C-x>" },
   config = function()
     local augend = require("dial.augend")
-    local toggle = require("dial.augend").constant.new
-    local dial = require("dial.map")
-    local expr = { expr = true, remap = false }
     local map = vim.keymap.set
+    local manip = require("dial.map").manipulate
 
-    map("n", "<C-a>", dial.inc_normal, expr)
-    map("n", "<C-x>", dial.dec_normal, expr)
-    map("v", "<C-a>", dial.inc_visual, expr)
-    map("v", "<C-x>", dial.dec_visual, expr)
-    map("v", "g<C-a>", dial.inc_gvisual, expr)
-    map("v", "g<C-x>", dial.dec_gvisual, expr)
+    map("n", "<C-a>", function() manip("increment", "normal") end)
+    map("n", "<C-x>", function() manip("decrement", "normal") end)
+    map("n", "g<C-a>", function() manip("increment", "gnormal") end)
+    map("n", "g<C-x>", function() manip("decrement", "gnormal") end)
+    map("v", "<C-a>", function() manip("increment", "visual") end)
+    map("v", "<C-x>", function() manip("decrement", "visual") end)
+    map("v", "g<C-a>", function() manip("increment", "gvisual") end)
+    map("v", "g<C-x>", function() manip("decrement", "gvisual") end)
 
     require("dial.config").augends:register_group({
       default = {
@@ -31,8 +32,8 @@ return {
           only_valid = true,
         },
 
-        toggle({ elements = { "and", "or" }, word = true, }),
-        toggle({ elements = { "True", "False" }, word = true, }),
+        require("dial.augend").constant.new({ elements = { "and", "or" }, word = true, }),
+        require("dial.augend").constant.new({ elements = { "True", "False" }, word = true, }),
       },
     })
   end
