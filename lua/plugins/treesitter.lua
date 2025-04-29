@@ -44,56 +44,56 @@ return {
           node_decremental = "V",
         },
       },
-      textobjects = {
-        lookahead = true,
-        move = {
-          enable = true,
-          set_jumps = true,
-          goto_next_start = {
-            ["]c"] = "@class.outer",
-            ["]f"] = "@function.outer",
-            ["]a"] = "@parameter.inner",
-          },
-          goto_next_end = {
-            ["]["] = "@class.outer",
-            ["]F"] = "@function.outer",
-          },
-          goto_previous_start = {
-            ["[c"] = "@class.outer",
-            ["[f"] = "@function.outer",
-            ["[a"] = "@parameter.inner",
-          },
-          goto_previous_end = {
-            ["]F"] = "@function.outer",
-            ["[C"] = "@class.outer",
-          },
-        },
+      --  textobjects = {
+      --    lookahead = true,
+      --    move = {
+      --      enable = true,
+      --      set_jumps = true,
+      --      goto_next_start = {
+      --        ["]c"] = "@class.outer",
+      --        ["]f"] = "@function.outer",
+      --        ["]a"] = "@parameter.inner",
+      --      },
+      --      goto_next_end = {
+      --        ["]["] = "@class.outer",
+      --        ["]F"] = "@function.outer",
+      --      },
+      --      goto_previous_start = {
+      --        ["[c"] = "@class.outer",
+      --        ["[f"] = "@function.outer",
+      --        ["[a"] = "@parameter.inner",
+      --      },
+      --      goto_previous_end = {
+      --        ["]F"] = "@function.outer",
+      --        ["[C"] = "@class.outer",
+      --      },
+      --    },
 
-        select = {
-          enable = true,
-          keymaps = {
-            ["iC"] = "@call.inner",
-            ["aC"] = "@call.outer",
-            ["ic"] = "@conditional.inner",
-            ["ac"] = "@conditional.outer",
-            ["if"] = "@function.inner",
-            ["af"] = "@function.outer",
-            ["il"] = "@loop.inner",
-            ["al"] = "@loop.outer",
-          },
-        },
-        swap = { enable = false, },
-      },
+      --    select = {
+      --      enable = true,
+      --      keymaps = {
+      --        ["iC"] = "@call.inner",
+      --        ["aC"] = "@call.outer",
+      --        ["ic"] = "@conditional.inner",
+      --        ["ac"] = "@conditional.outer",
+      --        ["if"] = "@function.inner",
+      --        ["af"] = "@function.outer",
+      --        ["il"] = "@loop.inner",
+      --        ["al"] = "@loop.outer",
+      --      },
+      --    },
+      --    swap = { enable = false, },
+      --  },
     },
     config = function(_, opts)
       require('nvim-treesitter.configs').setup(opts)
     end
   },
 
-  {
-    "nvim-treesitter/nvim-treesitter-textobjects",
-    dependencies = "nvim-treesitter/nvim-treesitter",
-  },
+  --  {
+  --    "nvim-treesitter/nvim-treesitter-textobjects",
+  --    dependencies = "nvim-treesitter/nvim-treesitter",
+  --  },
 
   {
     "danymat/neogen",
