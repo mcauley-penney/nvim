@@ -70,7 +70,7 @@ local M = {
     end
 
     map('n', "<leader>vd", function()
-      vim.diagnostic.open_float({ border = tools.ui.cur_border, })
+      vim.diagnostic.open_float()
     end, "[v]iew [d]iagnostic float")
 
     --  if client:supports_method(methods.textDocument_formatting) then

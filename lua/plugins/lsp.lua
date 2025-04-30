@@ -8,7 +8,6 @@ return {
     opts = {
       max_concurrent_installers = 20,
       ui = {
-        border = tools.ui.cur_border,
         height = 0.8,
         icons = {
           package_installed = tools.ui.icons.bullet,
@@ -42,7 +41,6 @@ return {
       },
       notification = {
         window = {
-          border = tools.ui.cur_border,
           border_hl = "NonText",
           normal_hl = "NonText",
           winblend = 0,

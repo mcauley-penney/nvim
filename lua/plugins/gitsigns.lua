@@ -44,7 +44,6 @@ return {
     require("gitsigns").setup({
       attach_to_untracked = false,
       preview_config = {
-        border = tools.ui.cur_border,
         style = 'minimal',
         relative = 'cursor',
         row = 0,
