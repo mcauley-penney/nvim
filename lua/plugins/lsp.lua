@@ -12,7 +12,7 @@ return {
         icons = {
           package_installed = tools.ui.icons.bullet,
           package_pending = tools.ui.icons.ellipses,
-          package_uninstalled = tools.ui.icons.o_bullet,
+          package_uninstalled = tools.ui.icons.open_bullet,
         },
       }
     },

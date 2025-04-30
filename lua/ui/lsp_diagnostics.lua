@@ -2,10 +2,10 @@ local S = vim.diagnostic.severity
 local icons = tools.ui.icons
 
 local lsp_signs = {
-  [S.ERROR] = { name = "Error", sym = icons["ballot_x"] },
-  [S.WARN] = { name = "Warn", sym = icons["up_tri"] },
-  [S.INFO] = { name = "Info", sym = icons["info_i"] },
-  [S.HINT] = { name = "Hint", sym = icons["info_i"] },
+  [S.ERROR] = { name = "Error", sym = icons["error"] },
+  [S.WARN] = { name = "Warn", sym = icons["warning"] },
+  [S.INFO] = { name = "Info", sym = icons["info"] },
+  [S.HINT] = { name = "Hint", sym = icons["info"] },
 }
 
 vim.diagnostic.config({
@@ -14,7 +14,7 @@ vim.diagnostic.config({
   virtual_text = {
     prefix = "",
     format = function(diagnostic)
-      local prefix = tools.ui.icons["square"]
+      local prefix = tools.ui.icons["message"]
       local clean_src_names = {
         ['Lua Diagnostics.'] = 'lua',
         ['Lua Syntax Check.'] = 'lua',
@@ -42,7 +42,7 @@ vim.diagnostic.config({
   float = {
     header = ' ',
     source = 'if_many',
-    title = tools.ui.icons.square .. ' Diagnostics ',
+    title = tools.ui.icons.message .. ' Diagnostics ',
     prefix = function(diag)
       local lsp_sym = lsp_signs[diag.severity].sym
       local prefix = string.format(" %s  ", lsp_sym)
@@ -54,10 +54,10 @@ vim.diagnostic.config({
   },
   signs = {
     text = {
-      [S.ERROR] = tools.ui.icons.ballot_x,
-      [S.HINT] = tools.ui.icons.info_i,
-      [S.INFO] = tools.ui.icons.info_i,
-      [S.WARN] = tools.ui.icons.up_tri,
+      [S.ERROR] = tools.ui.icons.error,
+      [S.HINT] = tools.ui.icons.info,
+      [S.INFO] = tools.ui.icons.info,
+      [S.WARN] = tools.ui.icons.warning,
     }
   }
 })

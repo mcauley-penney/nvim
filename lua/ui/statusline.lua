@@ -37,13 +37,13 @@ local icons = tools.ui.icons
 
 local ui_icons = {
   ["branch"] = { "DiagnosticOk", icons["branch"] },
-  ["file"] = { "NonText", icons["file"] },
+  ["file"] = { "NonText", icons["node"] },
   ["fileinfo"] = { "DiagnosticInfo", icons["hamburger"] },
   ["nomodifiable"] = { "DiagnosticWarn", icons["bullet"] },
   ["modified"] = { "DiagnosticError", icons["bullet"] },
   ["readonly"] = { "DiagnosticWarn", icons["lock"] },
-  ["error"] = { "DiagnosticError", icons["ballot_x"] },
-  ["warn"] = { "DiagnosticWarn", icons["up_tri"] },
+  ["error"] = { "DiagnosticError", icons["error"] },
+  ["warn"] = { "DiagnosticWarn", icons["warning"] },
 }
 
 --------------------------------------------------
