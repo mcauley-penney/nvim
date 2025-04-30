@@ -20,6 +20,7 @@ return {
     ignore = {
       buftypes = {}
     },
+    icons = tools.ui.kind_icons,
     show_guides = true,
     open_automatic = function(bufnr)
       local aerial = require("aerial")

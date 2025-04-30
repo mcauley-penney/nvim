@@ -155,7 +155,7 @@ return {
             kind_icon = {
               ellipsis = false,
               text = function(ctx)
-                return ' ' .. ctx.kind_icon .. ' '
+                return ctx.kind_icon .. ' '
               end,
               highlight = function(ctx) return 'BlinkCmpKind' .. ctx.kind end,
             },
@@ -191,33 +191,7 @@ return {
     },
     appearance = {
       nerd_font_variant = "mono",
-      kind_icons = {
-        Text = "󰦨 ",
-        Method = '󰆦 ',
-        Function = '󰆦 ',
-        Constructor = '󰆦 ',
-        Field = ' ',
-        Variable = ' ',
-        Class = ' ',
-        Interface = ' ',
-        Module = ' ',
-        Property = ' ',
-        Unit = ' ',
-        Value = ' ',
-        Enum = ' ',
-        Keyword = ' ',
-        Snippet = ' ',
-        Color = ' ',
-        File = ' ',
-        Reference = ' ',
-        Folder = ' ',
-        EnumMember = ' ',
-        Constant = ' ',
-        Struct = ' ',
-        Event = '',
-        Operator = ' ',
-        TypeParameter = ' ',
-      },
+      kind_icons = tools.ui.kind_icons,
     }
   },
 }
