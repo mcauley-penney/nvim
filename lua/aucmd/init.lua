@@ -1,6 +1,7 @@
 local augrp = vim.api.nvim_create_augroup
 local aucmd = vim.api.nvim_create_autocmd
 local get_opt = vim.api.nvim_get_option_value
+local aucmd_fn = require("aucmd.functions")
 local grp
 
 
@@ -40,8 +41,8 @@ aucmd({ "BufEnter", "BufWinEnter" }, {
     end
 
     local ft = get_opt("filetype", {})
-    require("aucmd.functions").set_indent(ft)
-    require("aucmd.functions").set_textwidth(ft)
+    aucmd_fn.set_indent(ft)
+    aucmd_fn.set_textwidth(ft)
 
     -- set foldmethod
     -- we also set via LSP. This is a fallback for when there is no language server
@@ -75,6 +76,17 @@ aucmd("BufWinEnter", {
   group = grp,
   command = [[call matchadd("String", '\v[a-zA-Z0-9._%+-]+\@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')]],
   desc = "Highlight email addresses"
+})
+
+----------------------------------------
+-- LSP
+----------------------------------------
+aucmd('LspAttach', {
+  desc = 'Configure LSP keymaps',
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    aucmd_fn.on_attach(client, args.buf)
+  end,
 })
 
 ----------------------------------------
