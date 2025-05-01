@@ -33,7 +33,5 @@ return {
     require('aerial').setup(opts)
 
     vim.keymap.set("n", "<F18>", "<cmd>AerialToggle<cr>", { silent = true })
-
-    vim.api.nvim_set_hl(0, "AerialLine", { link = "PmenuSel" })
   end
 }
