@@ -5,7 +5,8 @@ return {
       "css",
       js = { names = false },
       lua = { names = false },
+      markdown = { names = false },
       text = { names = false },
-    }
+    },
   }
 }
