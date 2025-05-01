@@ -70,7 +70,7 @@ local M = {
     end
 
     map('n', "<leader>vd", function()
-      vim.diagnostic.open_float()
+      vim.diagnostic.open_float({ border = "solid" })
     end, "[v]iew [d]iagnostic float")
 
     --  if client:supports_method(methods.textDocument_formatting) then
@@ -95,7 +95,9 @@ local M = {
     end
 
     if client:supports_method(methods.textDocument_hover) then
-      map('n', 'K', lsp.hover, "LSP hover")
+      map('n', 'K', function()
+        lsp.hover({ border = "solid" })
+      end, "LSP hover")
     end
 
     if client:supports_method(methods.textDocument_signatureHelp) then

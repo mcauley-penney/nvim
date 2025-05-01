@@ -136,6 +136,7 @@ return {
       },
       documentation = {
         window = {
+          border = "solid",
           min_width = 40,
           max_width = 70,
         },
