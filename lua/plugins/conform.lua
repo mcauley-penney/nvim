@@ -4,6 +4,7 @@ return {
   opts = {
     formatters_by_ft = {
       bib = { 'bibtex-tidy' },
+      lua = { 'stylua' },
       markdown = { 'prettier' }
     },
     default_format_opts = {

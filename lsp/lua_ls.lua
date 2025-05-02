@@ -14,6 +14,7 @@ return {
         version = "LuaJIT",
       },
       signatureHelp = { enabled = true },
+      format = { enable = false },
     },
   },
 }
