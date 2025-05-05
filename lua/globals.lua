@@ -13,7 +13,6 @@ _G.tools = {
       hamburger = '≡',
       lock = '',
       r_chev = '>',
-      message = '🗊',
       error = 'ⓧ ',
       warning = '⚠ ',
       info = 'ⓘ ',

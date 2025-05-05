@@ -13,43 +13,43 @@ vim.diagnostic.config({
   severity_sort = true,
   virtual_text = {
     prefix = "",
-    format = function(diagnostic)
-      local prefix = tools.ui.icons["message"]
+    format = function(diag)
       local clean_src_names = {
-        ['Lua Diagnostics.'] = 'lua',
-        ['Lua Syntax Check.'] = 'lua',
+        ["Lua Diagnostics."] = "lua",
+        ["Lua Syntax Check."] = "lua",
       }
 
-      local msg = prefix
+      local msg
+      if diag.code then
+        msg = string.format("%s ['%s'", diag.message, diag.code)
 
-      msg = string.format("%s %s", msg, diagnostic.message)
-
-      if diagnostic.code then
-        msg = string.format("%s ['%s'", msg, diagnostic.code)
-
-        if diagnostic.source then
-          msg = string.format('%s from %s]', msg, clean_src_names[diagnostic.source] or diagnostic.source)
+        if diag.source then
+          msg = string.format(
+            "%s from %s]",
+            msg,
+            clean_src_names[diag.source] or diag.source
+          )
         else
-          msg = msg .. ']'
+          msg = msg .. "]"
         end
       end
 
-      msg = msg .. ' '
+      msg = msg .. " "
 
       return msg
     end,
   },
   float = {
-    header = ' ',
-    source = 'if_many',
-    title = tools.ui.icons.message .. ' Diagnostics ',
+    header = " ",
+    source = "if_many",
+    title = " Diagnostics ",
     prefix = function(diag)
       local lsp_sym = lsp_signs[diag.severity].sym
       local prefix = string.format(" %s  ", lsp_sym)
 
       local severity = vim.diagnostic.severity[diag.severity]
       local diag_hl_name = severity:sub(1, 1) .. severity:sub(2):lower()
-      return prefix, 'Diagnostic' .. diag_hl_name:gsub('^%l', string.upper)
+      return prefix, "Diagnostic" .. diag_hl_name:gsub("^%l", string.upper)
     end,
   },
   signs = {
@@ -58,8 +58,8 @@ vim.diagnostic.config({
       [S.HINT] = tools.ui.icons.info,
       [S.INFO] = tools.ui.icons.info,
       [S.WARN] = tools.ui.icons.warning,
-    }
-  }
+    },
+  },
 })
 
 -- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization
