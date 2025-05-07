@@ -1,16 +1,23 @@
 return {
   {
-    "rrethy/vim-illuminate",
+    "echasnovski/mini.cursorword",
+    version = false,
     config = function()
-      require('illuminate').configure({
-        delay = 150,
-        filetypes_denylist = {
-          'aerial',
-          'neo-tree',
-        },
-        modes_denylist = { 'v', 'V' },
-        under_cursor = false,
-      })
+      require("mini.cursorword").setup({ delay = 500 })
+
+      vim.api.nvim_set_hl(0, "MiniCursorwordCurrent", {})
+      vim.api.nvim_set_hl(0, "MiniCursorword", { link = "Underlined" })
+    end,
+  },
+
+  {
+    "mcauley-penney/match-visual.nvim",
+    opts = {
+      min_length = 3,
+    },
+    config = function(_, opts)
+      require("match-visual").setup(opts)
+      vim.api.nvim_set_hl(0, "VisualMatch", { link = "Search" })
     end,
   },
 
@@ -19,8 +26,5 @@ return {
     opts = {
       highlight_in_insert_mode = false,
     },
-    init = function()
-      vim.api.nvim_set_hl(0, "MatchArea", { link = "Visual" })
-    end
   },
 }
