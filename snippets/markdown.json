@@ -8,5 +8,10 @@
     "prefix": "caption",
     "body": "<sub>${1:caption}</sub>",
     "desc": "Caption template"
+  },
+  "Checkbox": {
+    "prefix": "checkbox",
+    "body": "- [ ] ",
+    "desc": "Checkbox template"
   }
 }
