@@ -4,6 +4,7 @@ local short_indent = {
   ["javascriptreact"] = true,
   ["json"] = true,
   ["lua"] = true,
+  ["markdown"] = true,
   ["org"] = true,
   ["tex"] = true,
   ["text"] = true,
