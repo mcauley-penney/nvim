@@ -38,7 +38,7 @@ local M = {
     local inc_len = string.find(cstr, "%s*%%s") - 1
 
     vim.schedule(function()
-      vim.api.nvim_buf_set_text(0, row, col, row, col, { left_cstr .. "  " .. right_cstr })
+      vim.api.nvim_buf_set_text(0, row, col, row, col, { left_cstr .. " " .. right_cstr })
       vim.api.nvim_win_set_cursor(0, { row + 1, col + inc_len + 1 })
     end)
   end,
