@@ -94,15 +94,6 @@ aucmd('LspAttach', {
 ----------------------------------------
 grp = augrp("Editing", { clear = true })
 
-aucmd("CmdlineLeave", {
-  group = grp,
-  callback = function()
-    vim.fn.timer_start(3000, function()
-      print(" ")
-    end)
-  end,
-})
-
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorMoved", "CursorHoldI" }, {
   group = grp,
   callback = function()

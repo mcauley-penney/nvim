@@ -60,9 +60,15 @@ vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_ruby_provider = 0
 
-for _, provider in ipairs({ "node", "perl", "ruby" }) do
-  vim.g["loaded_" .. provider .. "_provider"] = 0
-end
+require('vim._extui').enable({
+  enable = true,
+  msg = {
+    pos = 'cmd',
+    box = {
+      timeout = 4000,
+    },
+  },
+})
 
 
 -- include our settings
