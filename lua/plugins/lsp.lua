@@ -4,7 +4,7 @@ return {
   },
 
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = {
       max_concurrent_installers = 20,
       ui = {
