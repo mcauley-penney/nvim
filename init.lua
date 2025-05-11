@@ -76,7 +76,6 @@ require("globals")
 require("options")
 require("maps")
 require("aucmd")
-require("cmd")
 require("filetype")
 
 
