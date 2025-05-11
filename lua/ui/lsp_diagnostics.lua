@@ -20,21 +20,17 @@ vim.diagnostic.config({
       }
 
       local msg
-      if diag.code then
-        msg = string.format("%s ['%s'", diag.message, diag.code)
+      if not diag.code then return " " end
 
-        if diag.source then
-          msg = string.format(
-            "%s from %s]",
-            msg,
-            clean_src_names[diag.source] or diag.source
-          )
-        else
-          msg = msg .. "]"
-        end
+      msg = diag.message
+
+      if diag.source then
+        msg = string.format(
+          "%s [%s]",
+          msg,
+          clean_src_names[diag.source] or diag.source
+        )
       end
-
-      msg = msg .. " "
 
       return msg
     end,
@@ -54,10 +50,10 @@ vim.diagnostic.config({
   },
   signs = {
     text = {
-      [S.ERROR] = tools.ui.icons.error,
-      [S.HINT] = tools.ui.icons.info,
-      [S.INFO] = tools.ui.icons.info,
-      [S.WARN] = tools.ui.icons.warning,
+      [S.ERROR] = icons.error,
+      [S.HINT] = icons.info,
+      [S.INFO] = icons.info,
+      [S.WARN] = icons.warning,
     },
   },
 })
