@@ -14,7 +14,7 @@ return {
           package_pending = tools.ui.icons.ellipses,
           package_uninstalled = tools.ui.icons.open_bullet,
         },
-      }
+      },
     },
   },
 
@@ -36,7 +36,7 @@ return {
           done_style = "NonText",
           group_style = "NonText",
           icon_style = "NonText",
-          progress_style = "NonText"
+          progress_style = "NonText",
         },
       },
       notification = {
@@ -44,8 +44,29 @@ return {
           border_hl = "NonText",
           normal_hl = "NonText",
           winblend = 0,
-        }
-      }
-    }
+        },
+      },
+    },
+  },
+
+  {
+    "Wansmer/symbol-usage.nvim",
+    event = "LspAttach",
+    opts = {
+      text_format = function(symbol)
+        local res = {}
+
+        if symbol.references then
+          local usage = symbol.references == 1 and "reference" or "references"
+          table.insert(res, { "󰌹  ", "NonText" })
+          table.insert(
+            res,
+            { ("%s %s"):format(symbol.references, usage), "NonText" }
+          )
+        end
+
+        return res
+      end,
+    },
   },
 }
