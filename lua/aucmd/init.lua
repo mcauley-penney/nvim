@@ -4,7 +4,6 @@ local get_opt = vim.api.nvim_get_option_value
 local aucmd_fn = require("aucmd.functions")
 local grp
 
-
 ----------------------------------------
 -- Upon entering
 ----------------------------------------
@@ -23,7 +22,7 @@ aucmd("BufEnter", {
       tools.get_git_remote_name(root)
     end
   end,
-  desc = "Set root dir and initialize version control branch"
+  desc = "Set root dir and initialize version control branch",
 })
 
 aucmd({ "BufEnter", "BufWinEnter" }, {
@@ -32,7 +31,7 @@ aucmd({ "BufEnter", "BufWinEnter" }, {
     vim.api.nvim_set_option_value("formatoptions", "2cjnpqrt", {})
 
     vim.opt.formatlistpat:append([[\|^\s*\w\+[\]:.)}\t ]\s\+]]) -- Lettered lists
-    vim.opt.formatlistpat:append([[\|^>\s]])                    -- Markdown blockquotes
+    vim.opt.formatlistpat:append([[\|^>\s]]) -- Markdown blockquotes
 
     -- Dynamically append commentstring-based pattern
     local commentstring = vim.bo.commentstring:match("^(.*)%%s$")
@@ -55,34 +54,35 @@ aucmd({ "BufEnter", "BufWinEnter" }, {
       vim.o.foldmethod = "indent"
     end
   end,
-  desc = "Set options for formatting"
+  desc = "Set options for formatting",
 })
 
 aucmd("BufNewFile", {
   group = grp,
   command = "silent! 0r "
-      .. vim.fn.stdpath("config") .. "/templates/skeleton.%:e",
-  desc = "If one exists, use a template when opening a new file"
+    .. vim.fn.stdpath("config")
+    .. "/templates/skeleton.%:e",
+  desc = "If one exists, use a template when opening a new file",
 })
 
 aucmd("BufWinEnter", {
   group = grp,
   command = "silent! loadview",
-  desc = "Restore view settings"
+  desc = "Restore view settings",
 })
 
 -- See https://vi.stackexchange.com/a/12710
 aucmd("BufWinEnter", {
   group = grp,
   command = [[call matchadd("String", '\v[a-zA-Z0-9._%+-]+\@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')]],
-  desc = "Highlight email addresses"
+  desc = "Highlight email addresses",
 })
 
 ----------------------------------------
 -- LSP
 ----------------------------------------
-aucmd('LspAttach', {
-  desc = 'Configure LSP keymaps',
+aucmd("LspAttach", {
+  desc = "Configure LSP keymaps",
   callback = function(args)
     local client = vim.lsp.get_client_by_id(args.data.client_id)
     aucmd_fn.on_attach(client, args.buf)
@@ -97,10 +97,10 @@ grp = augrp("Editing", { clear = true })
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorMoved", "CursorHoldI" }, {
   group = grp,
   callback = function()
-    local win_h = vim.api.nvim_win_get_height(0)                 -- height of window
-    local off = math.min(vim.o.scrolloff, math.floor(win_h / 2)) -- scroll offset
-    local dist = vim.fn.line "$" - vim.fn.line "."               -- distance from current line to last line
-    local rem = vim.fn.line "w$" - vim.fn.line "w0" + 1          -- num visible lines in current window
+    local win_h = vim.api.nvim_win_get_height(0)
+    local off = math.min(vim.o.scrolloff, math.floor(win_h / 2))
+    local dist = vim.fn.line("$") - vim.fn.line(".")
+    local rem = vim.fn.line("w$") - vim.fn.line("w0") + 1
 
     if dist < off and win_h - rem + dist < off then
       local view = vim.fn.winsaveview()
@@ -108,21 +108,13 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorMoved", "CursorHoldI" }, {
       vim.fn.winrestview(view)
     end
   end,
-  desc = "When at eob, bring the current line towards center screen"
+  desc = "When at eob, bring the current line towards center screen",
 })
 
-vim.api.nvim_create_autocmd('VimResized', {
+vim.api.nvim_create_autocmd("VimResized", {
   group = grp,
-  command = [[tabdo wincmd =]]
+  command = [[tabdo wincmd =]],
 })
-
---  vim.api.nvim_create_autocmd('TextYankPost', {
---    group = grp,
---    callback = function()
---      vim.highlight.on_yank({ higroup = "Visual", timeout = 190 })
---    end,
---    pattern = '*',
---  })
 
 ----------------------------------------
 -- Upon leaving a buffer
@@ -132,5 +124,5 @@ grp = augrp("Leaving", { clear = true })
 aucmd("BufWinLeave", {
   group = grp,
   command = "silent! mkview",
-  desc = "Create view settings"
+  desc = "Create view settings",
 })
