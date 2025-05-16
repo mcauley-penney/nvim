@@ -18,6 +18,7 @@ return {
 
         return vim.bo[buf].ft == "markdown"
           or vim.bo[buf].ft == "text"
+          or vim.bo[buf].bt == ""
           or pcall(vim.treesitter.get_parser, buf)
           or not vim.tbl_isempty(vim.lsp.get_clients({
             bufnr = buf,
