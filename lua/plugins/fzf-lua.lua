@@ -6,52 +6,52 @@ return {
     local map = vim.keymap.set
 
     fzf.setup({
-      actions    = {
+      actions = {
         files = {
           ["enter"] = actions.file_edit,
-        }
+        },
       },
-      keymap     = {
+      keymap = {
         fzf = {
           ["ctrl-q"] = "select-all+accept",
         },
       },
-      buffers    = {
+      buffers = {
         cwd_prompt = false,
         ignore_current_buffer = true,
         prompt = "Buffers: ",
       },
-      files      = {
+      files = {
         cwd_prompt = false,
         prompt = "Files: ",
-        formatter = "path.filename_first"
+        formatter = "path.filename_first",
       },
-      grep       = {
+      grep = {
         cmd = "rg -o -n -r '' --column --no-heading --smart-case",
         prompt = "Text: ",
       },
-      lsp        = {
-        prompt_postfix = ': ',
+      lsp = {
+        prompt_postfix = ": ",
       },
-      defaults   = {
+      defaults = {
         git_icons = false,
       },
       fzf_colors = {
-        ["bg"]        = { "bg", "NormalFloat" },
-        ["bg+"]       = { "bg", "CursorLine" },
-        ["fg"]        = { "fg", "Comment" },
-        ["fg+"]       = { "fg", "Normal" },
-        ["hl"]        = { "fg", "CmpItemAbbrMatch" },
-        ["hl+"]       = { "fg", "CmpItemAbbrMatch" },
-        ["gutter"]    = { "bg", "NormalFloat" },
-        ["header"]    = { "fg", "NonText" },
-        ["info"]      = { "fg", "NonText" },
-        ["pointer"]   = { "bg", "Cursor" },
+        ["bg"] = { "bg", "NormalFloat" },
+        ["bg+"] = { "bg", "CursorLine" },
+        ["fg"] = { "fg", "Comment" },
+        ["fg+"] = { "fg", "Normal" },
+        ["hl"] = { "fg", "CmpItemAbbrMatch" },
+        ["hl+"] = { "fg", "CmpItemAbbrMatch" },
+        ["gutter"] = { "bg", "NormalFloat" },
+        ["header"] = { "fg", "NonText" },
+        ["info"] = { "fg", "NonText" },
+        ["pointer"] = { "bg", "Cursor" },
         ["separator"] = { "bg", "NormalFloat" },
-        ["spinner"]   = { "fg", "NonText" },
+        ["spinner"] = { "fg", "NonText" },
       },
-      fzf_opts   = { ['--keep-right'] = '' },
-      hls        = {
+      fzf_opts = { ["--keep-right"] = "" },
+      hls = {
         border = "FloatBorder",
         header_bind = "NonText",
         header_text = "NonText",
@@ -60,16 +60,16 @@ return {
         preview_border = "FloatBorder",
         preview_normal = "NormalFloat",
         search = "CmpItemAbbrMatch",
-        title = "FloatTitle"
+        title = "FloatTitle",
       },
-      winopts    = {
-        backdrop   = 100,
+      winopts = {
+        backdrop = 100,
         cursorline = true,
-        height     = .25,
-        width      = 1,
-        row        = 1,
+        height = 0.25,
+        width = 1,
+        row = 1,
 
-        preview    = {
+        preview = {
           layout = "horizontal",
           scrollbar = "border",
           vertical = "up:65%",
@@ -77,21 +77,53 @@ return {
       },
     })
 
-    map("n", "<leader>q", fzf.quickfix, {})
+    map("n", "<F6>", fzf.files, { desc = "Find files" })
+    map("n", "\\", fzf.tabs, { desc = "Select Tab" })
+    map("n", "|", fzf.buffers, { desc = "Select Buffer" })
 
-    map("n", "<C-t>", fzf.files, { desc = 'Find files' })
-    map("n", "\\", fzf.buffers, { desc = 'Select Buffer' })
-
-    map("n", "<C-f>", '<cmd>FzfLua live_grep_glob<cr>', { desc = "Grep" })
+    map("n", "<C-f>", "<cmd>FzfLua live_grep_glob<cr>", { desc = "Grep" })
 
     --  LSP
-    map("n", "<leader>df", fzf.lsp_definitions, { silent = true, desc = "LSP [d]e[f]initions" })
-    map("n", "<leader>dd", fzf.lsp_document_diagnostics, { silent = true, desc = "LSP [d]oc [d]iagnostics" })
-    map("n", "<leader>R", fzf.lsp_references, { silent = true, desc = "LSP [R]eferences" })
-    map("n", "<leader>ci", fzf.lsp_incoming_calls, { silent = true, desc = "LSP [i]ncoming [c]alls" })
-    map("n", "<leader>co", fzf.lsp_outgoing_calls, { silent = true, desc = "LSP [o]utgoing [c]alls" })
+    map(
+      "n",
+      "<leader>df",
+      fzf.lsp_definitions,
+      { silent = true, desc = "LSP [d]e[f]initions" }
+    )
+    map(
+      "n",
+      "<leader>dd",
+      fzf.lsp_document_diagnostics,
+      { silent = true, desc = "LSP [d]oc [d]iagnostics" }
+    )
+    map(
+      "n",
+      "<leader>R",
+      fzf.lsp_references,
+      { silent = true, desc = "LSP [R]eferences" }
+    )
+    map(
+      "n",
+      "<leader>ci",
+      fzf.lsp_incoming_calls,
+      { silent = true, desc = "LSP [i]ncoming [c]alls" }
+    )
+    map(
+      "n",
+      "<leader>co",
+      fzf.lsp_outgoing_calls,
+      { silent = true, desc = "LSP [o]utgoing [c]alls" }
+    )
 
-    vim.api.nvim_create_user_command("Highlights", function() require('fzf-lua').highlights() end, {})
-    vim.api.nvim_create_user_command("Keymaps", function() fzf.keymaps() end, {})
-  end
+    vim.api.nvim_create_user_command(
+      "Highlights",
+      function() require("fzf-lua").highlights() end,
+      {}
+    )
+    vim.api.nvim_create_user_command(
+      "Keymaps",
+      function() fzf.keymaps() end,
+      {}
+    )
+  end,
 }
