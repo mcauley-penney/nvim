@@ -112,8 +112,8 @@ map(
 )
 
 -- tabs and buffers
-map("n", "<leader>bq", ":bd<CR>", {})
-map("n", "<leader>tq", ":tabclose<CR>", { silent = true })
+map("n", "<C-t>", "<CMD>tabnew<CR>", { desc = "Open a new tab" })
+map("n", "<leader>q", "<cmd>tabclose<CR>", { silent = true })
 
 -- search in visual selection
 map("v", "/", "<Esc>/\\%V")
@@ -125,9 +125,4 @@ map(
   { desc = "open %s//gI with cword" }
 )
 
-vim.keymap.set(
-  "v",
-  "*",
-  "y/<C-R>0<CR>",
-  { desc = "Search for visual selection" }
-)
+map("v", "*", "y/<C-R>0<CR>", { desc = "Search for visual selection" })
