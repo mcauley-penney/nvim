@@ -22,24 +22,22 @@
 
 ]]
 
-
 -- bootstrap package manager
 local lazy_path = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazy_path) then
   print("New Setup! Initializing …")
 
   vim.fn.system({
-    'git',
-    'clone',
-    '--filter=blob:none',
-    '--single-branch',
-    'https://github.com/folke/lazy.nvim.git',
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "--single-branch",
+    "https://github.com/folke/lazy.nvim.git",
     lazy_path,
   })
 end
 
 vim.opt.runtimepath:prepend(lazy_path)
-
 
 -- set providers
 -- https://github.com/neovim/neovim/blob/master/runtime/doc/provider.txt
@@ -60,16 +58,31 @@ vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_ruby_provider = 0
 
-require('vim._extui').enable({
+-- extui
+require("vim._extui").enable({
   enable = true,
   msg = {
-    pos = 'cmd',
+    pos = "cmd",
     box = {
       timeout = 4000,
     },
   },
 })
 
+-- TODO: remove when this becomes configurable
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "msgbox", "msgmore", "msgprompt", "cmdline" },
+  callback = function()
+    vim.api.nvim_set_option_value(
+      "winhl",
+      "Normal:MyMsgBox,FloatBorder:MyMsgBorder",
+      {}
+    )
+  end,
+})
+
+-- turn off deprecation messages
+vim.deprecate = function() end
 
 -- include our settings
 require("globals")
@@ -78,22 +91,21 @@ require("maps")
 require("aucmd")
 require("filetype")
 
-
 -- init plugins
-require('lazy').setup("plugins", {
+require("lazy").setup("plugins", {
   install = { missing = false },
   change_detection = { enabled = true, notify = false },
   rocks = { enabled = false },
   performance = {
     rtp = {
       disabled_plugins = {
-        'gzip',
-        'netrwPlugin',
-        'rplugin',
-        'tarPlugin',
-        'tohtml',
-        'tutor',
-        'zipPlugin',
+        "gzip",
+        "netrwPlugin",
+        "rplugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
       },
     },
   },
@@ -104,18 +116,21 @@ require('lazy').setup("plugins", {
   },
 })
 
-vim.keymap.set('n', '<leader>pm', '<cmd>Lazy<cr>', { desc = "Open [p]ackage [m]anager" })
-
+vim.keymap.set(
+  "n",
+  "<leader>pm",
+  "<cmd>Lazy<cr>",
+  { desc = "Open [p]ackage [m]anager" }
+)
 
 -- setup custom LSP cfgs
 local lsp_configs = {}
-for _, f in pairs(vim.api.nvim_get_runtime_file('lsp/*.lua', true)) do
-  local server_name = vim.fn.fnamemodify(f, ':t:r')
+for _, f in pairs(vim.api.nvim_get_runtime_file("lsp/*.lua", true)) do
+  local server_name = vim.fn.fnamemodify(f, ":t:r")
   table.insert(lsp_configs, server_name)
 end
 
 vim.lsp.enable(lsp_configs)
-
 
 -- finish settings
 require("ui")
