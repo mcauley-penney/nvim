@@ -1,5 +1,5 @@
 return {
-  'echasnovski/mini.icons',
+  "echasnovski/mini.icons",
   version = false,
   config = function()
     local mini = require("mini.icons")
@@ -17,18 +17,26 @@ return {
       return res
     end
 
+    local file_icon = { glyph = "   " }
+
+    local defaults = make_icon_tbl("default")
+    defaults["extension"] = file_icon
+    defaults["file"] = file_icon
+    defaults["filetype"] = file_icon
+
     mini.setup({
-      default   = make_icon_tbl("default"),
+      default = defaults,
       directory = make_icon_tbl("directory"),
       extension = make_icon_tbl("extension"),
       -- https://github.com/echasnovski/mini.nvim/issues/1384
-      file      = {
-        ['.zshrc'] = { glyph = ' 󰒓 ' },
-        ['init.lua'] = { glyph = ' 󰢱  ', hl = 'MiniIconsAzure' },
-        ['README.md'] = { glyph = ' 󰍔  ', hl = 'MiniIconsCyan' },
+      file = {
+        [".zshrc"] = { glyph = " 󰒓 " },
+        ["init.lua"] = { glyph = " 󰢱  ", hl = "MiniIconsAzure" },
+        ["README.md"] = { glyph = " 󰍔  ", hl = "MiniIconsCyan" },
+        ["lazy"] = file_icon,
       },
-      filetype  = make_icon_tbl("filetype"),
-      lsp       = make_icon_tbl("lsp")
+      filetype = make_icon_tbl("filetype"),
+      lsp = make_icon_tbl("lsp"),
     })
-  end
+  end,
 }
