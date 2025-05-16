@@ -125,9 +125,6 @@ map(
   { desc = "open %s//gI with cword" }
 )
 
-vim.keymap.set(
-  "v",
-  "*",
-  "y/<C-R>0<CR>",
-  { desc = "Search for visual selection" }
-)
+map("v", "*", "y/<C-R>0<CR>", { desc = "Search for visual selection" })
+
+map("n", "<C-t>", "<CMD>tabnew<CR>", { desc = 'Find files' })
