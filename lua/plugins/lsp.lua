@@ -32,7 +32,17 @@ return {
         suppress_on_insert = true,
         display = {
           done_ttl = 2,
-          progress_icon = { pattern = "grow_horizontal", period = 0.75 },
+          done_icon = tools.ui.icons.ok,
+          progress_icon = {
+            pattern = {
+              " 󰫃 ",
+              " 󰫄 ",
+              " 󰫅 ",
+              " 󰫆 ",
+              " 󰫇 ",
+              " 󰫈 ",
+            },
+          },
           done_style = "NonText",
           group_style = "NonText",
           icon_style = "NonText",
@@ -41,9 +51,11 @@ return {
       },
       notification = {
         window = {
-          border_hl = "NonText",
-          normal_hl = "NonText",
+          border_hl = "LspCodeLens",
+          normal_hl = "LspCodeLens",
           winblend = 0,
+          border = "solid",
+          relative = "win",
         },
       },
     },
@@ -58,10 +70,9 @@ return {
 
         if symbol.references then
           local usage = symbol.references == 1 and "reference" or "references"
-          table.insert(res, { "󰌹  ", "NonText" })
           table.insert(
             res,
-            { ("%s %s"):format(symbol.references, usage), "NonText" }
+            { ("󰌹  %s %s"):format(symbol.references, usage), "LspCodeLens" }
           )
         end
 
