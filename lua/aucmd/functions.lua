@@ -93,7 +93,7 @@ local M = {
     end
 
     if client:supports_method(methods.textDocument_rename) then
-      map("n", "<leader>r", lsp.rename, "[r]ename")
+      map("n", "<leader>r", require("aucmd.rename").rename, "[r]ename")
     end
 
     if client:supports_method(methods.textDocument_declaration) then
