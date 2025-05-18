@@ -32,7 +32,8 @@ return {
         suppress_on_insert = true,
         display = {
           done_ttl = 2,
-          progress_icon = { pattern = "grow_horizontal", period = 0.75 },
+          done_icon = tools.ui.icons.ok,
+          progress_icon = { pattern = "line" },
           done_style = "NonText",
           group_style = "NonText",
           icon_style = "NonText",
@@ -42,8 +43,10 @@ return {
       notification = {
         window = {
           border_hl = "NonText",
-          normal_hl = "NonText",
-          winblend = 0,
+          normal_hl = "markdownBlockQuote",
+          winblend = 25,
+          border = "solid",
+          relative = "win"
         },
       },
     },
