@@ -13,28 +13,28 @@ opt.diffopt = {
   "filler",
   "indent-heuristic",
   "linematch:60",
-  "vertical"
+  "vertical",
 }
 o.emoji = true
 o.expandtab = true
 o.fileignorecase = true
 opt.fillchars = {
-  eob = ' ',
-  diff = '╱',
-  fold = ' ',
+  eob = " ",
+  diff = "╱",
+  fold = " ",
   foldclose = tools.ui.icons.r_chev,
   foldopen = tools.ui.icons.d_chev,
-  foldsep = ' ',
-  msgsep = '━',
-  horiz = '━',
-  horizup = '┻',
-  horizdown = '┳',
-  vert = '┃',
-  vertleft = '┫',
-  vertright = '┣',
-  verthoriz = '╋'
+  foldsep = " ",
+  msgsep = "━",
+  horiz = "━",
+  horizup = "┻",
+  horizdown = "┳",
+  vert = "┃",
+  vertleft = "┫",
+  vertright = "┣",
+  verthoriz = "╋",
 }
-o.foldcolumn = '1'
+o.foldcolumn = "1"
 o.foldenable = false
 o.foldlevel = 99
 o.foldtext = vim.lsp.foldtext()
@@ -44,7 +44,7 @@ opt.guicursor = {
   "v:hor50",
   "c-ci-cr-i-ve:ver10",
   "o-r:hor10",
-  "a:Cursor/Cursor-blinkwait1-blinkon1-blinkoff1"
+  "a:Cursor/Cursor-blinkwait1-blinkon1-blinkoff1",
 }
 o.equalalways = true
 o.hlsearch = true
@@ -53,9 +53,9 @@ o.ignorecase = true
 o.laststatus = 3
 o.list = true
 opt.listchars = {
-  nbsp = '␣',
-  tab = '  ',
-  trail = '·',
+  nbsp = "␣",
+  tab = "  ",
+  trail = "·",
 }
 o.linebreak = true
 o.modeline = false
