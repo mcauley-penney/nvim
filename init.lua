@@ -75,7 +75,7 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     vim.api.nvim_set_option_value(
       "winhl",
-      "Normal:MyMsgBox,FloatBorder:MyMsgBorder",
+      "Normal:Normal,FloatBorder:FloatBorder",
       {}
     )
   end,
