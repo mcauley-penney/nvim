@@ -8,12 +8,12 @@ return {
         ft = "aerial",
         pinned = true,
         open = "AerialToggle",
-        size = { width = 30 },
+        size = { width = 0.17 },
       },
     },
     icons = {
-      closed = tools.ui.icons.r_chev,
-      open = tools.ui.icons.d_chev,
+      closed = " " .. tools.ui.icons.r_chev,
+      open = " " .. tools.ui.icons.d_chev,
     },
   },
 }
