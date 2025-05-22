@@ -2,9 +2,7 @@ return {
   {
     "iamcco/markdown-preview.nvim",
     ft = "markdown",
-    build = function()
-      vim.fn["mkdp#util#install"]()
-    end,
+    build = function() vim.fn["mkdp#util#install"]() end,
     init = function()
       local g = vim.g
       g.mkdp_auto_start = 0
@@ -19,17 +17,18 @@ return {
   },
 
   {
-    'MeanderingProgrammer/render-markdown.nvim',
+    "MeanderingProgrammer/render-markdown.nvim",
     ft = "markdown",
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
     opts = {
+      debounce = 200,
       render_modes = true,
       code = {
         sign = false,
         border = "thin",
         below = "🮂",
         width = "block",
-        position = 'left',
+        position = "left",
         language_icon = false,
         language_pad = 1,
         left_pad = 1,
@@ -38,14 +37,14 @@ return {
         highlight = "@markup.raw.block",
         highlight_inline = "@markup.raw.markdown_inline",
         highlight_border = "@markup.raw.block",
-        highlight_language = "NonText"
+        highlight_language = "NonText",
       },
       heading = {
         enabled = false,
-        width = 'block',
+        width = "block",
         position = "inline",
         backgrounds = {
-          '@markup.heading.1.markdown',
+          "@markup.heading.1.markdown",
         },
       },
       quote = {
@@ -54,7 +53,7 @@ return {
       },
       bullet = {
         enabled = true,
-        icons = { '●', '○', '◆', '◊' },
+        icons = { "●", "○", "◆", "◊" },
       },
       checkbox = {
         enabled = false,
@@ -67,19 +66,21 @@ return {
       html = { comment = { conceal = false } },
       link = {
         --  enabled = false,
-        image = '󰥶  ',
-        email = '󰀓  ',
-        hyperlink = '  ',
+        image = "  ",
+        email = "󰇮  ",
+        hyperlink = "  ",
         custom = {
-          web = { pattern = '^http', icon = '  ' },
-          sweb = { pattern = '^https', icon = '  ' },
-          youtube = { pattern = 'youtube%.com', icon = '󰗃  ' },
-          github = { pattern = 'github%.com', icon = '󰊤  ' },
-          stackoverflow = { pattern = 'stackoverflow%.com', icon = '󰓌  ' },
-          discord = { pattern = 'discord%.com', icon = '󰙯  ' },
-          reddit = { pattern = 'reddit%.com', icon = '󰑍  ' },
+          web = { pattern = "^http", icon = "  " },
+          sweb = { pattern = "^https", icon = "  " },
+          youtube = { pattern = "youtube%.com", icon = "  " },
+          github = { pattern = "github%.com", icon = "  " },
+          stackoverflow = { pattern = "stackoverflow%.com", icon = "󰓌  " },
+          discord = { pattern = "discord%.com", icon = "  " },
+          reddit = { pattern = "reddit%.com", icon = "  " },
+          acm = { pattern = "dl.acm%.org", icon = "  " },
+          arxiv = { pattern = "arxiv%.org", icon = "  " },
         },
       },
     },
-  }
+  },
 }
