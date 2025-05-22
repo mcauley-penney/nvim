@@ -43,8 +43,8 @@ return {
       notification = {
         window = {
           border_hl = "NonText",
-          normal_hl = "markdownBlockQuote",
-          winblend = 25,
+          normal_hl = "LspCodeLens",
+          winblend = 2,
           border = "solid",
           relative = "win"
         },
@@ -61,7 +61,7 @@ return {
 
         if symbol.references then
           local usage = symbol.references == 1 and "reference" or "references"
-          table.insert(res, { "󰌹  ", "NonText" })
+          table.insert(res, { "󰌹  ", "LspCodeLens" })
           table.insert(
             res,
             { ("%s %s"):format(symbol.references, usage), "NonText" }
