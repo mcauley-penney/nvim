@@ -84,8 +84,8 @@ local function path_widget(root, fname)
 
   local win_w = api.nvim_win_get_width(0)
   local need = #repo_info + #dir_path + #path
-  if win_w < need + 15 then dir_path = "" end
-  if win_w < need - #dir_path + 10 then repo_info = "" end
+  if win_w < need + 5 then dir_path = "" end
+  if win_w < need - #dir_path then repo_info = "" end
 
   return repo_info .. ICON.file .. " " .. dir_path .. path .. " "
 end
