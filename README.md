@@ -1,1 +1,1 @@
-![fancy_showbreak](https://github.com/user-attachments/assets/d5e20b6b-b392-4ce7-85df-a714a39f4c02)
+![current-setup](https://github.com/user-attachments/assets/dc62fd2a-7d31-419b-b4a8-8ccb32710217)
