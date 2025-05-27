@@ -113,7 +113,8 @@ map(
 
 -- tabs and buffers
 map("n", "<C-t>", "<CMD>tabnew<CR>", { desc = "Open a new tab" })
-map("n", "<leader>q", "<cmd>tabclose<CR>", { silent = true })
+map("n", "<leader>bq", "<cmd>bd<CR>", { silent = true })
+map("n", "<leader>tq", "<cmd>tabclose<CR>", { silent = true })
 
 -- search in visual selection
 map("v", "/", "<Esc>/\\%V")
