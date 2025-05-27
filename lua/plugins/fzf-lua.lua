@@ -77,6 +77,8 @@ return {
       },
     })
 
+    fzf.register_ui_select()
+
     map("n", "<F6>", fzf.files, { desc = "Find files" })
     map("n", "\\", fzf.tabs, { desc = "Select Tab" })
     map("n", "|", fzf.buffers, { desc = "Select Buffer" })
