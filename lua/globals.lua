@@ -13,12 +13,12 @@ _G.tools = {
       document = "≡",
       lock = "",
       r_chev = ">",
-      error = "ⓧ ",
-      warning = "⚠ ",
-      info = "ⓘ ",
+      warning = " ",
+      error = " ",
+      info = " ",
     },
     kind_icons = {
-      Text = "   ",
+      Text = "  ",
       Method = " 󰆦 ",
       Function = " 󰆦 ",
       Constructor = " 󰆦 ",
@@ -108,7 +108,7 @@ function tools.get_git_branch(root)
   local out = git_cmd(root, "rev-parse", "--abbrev-ref", "HEAD")
   if out == "HEAD" then
     local commit = git_cmd(root, "rev-parse", "--short", "HEAD")
-    commit = tools.hl_str("Comment", '(' .. commit .. ')')
+    commit = tools.hl_str("Comment", "(" .. commit .. ")")
     out = string.format("%s %s", out, commit)
   end
 
