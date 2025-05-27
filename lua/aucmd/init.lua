@@ -46,13 +46,13 @@ aucmd({ "BufEnter", "BufWinEnter" }, {
     -- set foldmethod
     -- we also set via LSP. This is a fallback for when there is no language server
     -- https://www.reddit.com/r/neovim/comments/w4ckuf/config_if_treesitter_is_active/
-    local ok, parser = pcall(vim.treesitter.get_parser)
-    if ok and parser then
-      vim.o.foldmethod = "expr"
-      vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-    else
-      vim.o.foldmethod = "indent"
-    end
+    -- local ok, parser = pcall(vim.treesitter.get_parser)
+    -- if ok and parser then
+    --   vim.o.foldmethod = "expr"
+    --   vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    -- else
+    --   vim.o.foldmethod = "indent"
+    -- end
   end,
   desc = "Set options for formatting",
 })
