@@ -29,22 +29,14 @@ local function get_lsp_completion_context(completion)
 end
 
 return {
-  "saghen/blink.cmp",
+  "mcauley-penney/blink.cmp",
   event = { "CmdlineEnter", "InsertEnter" },
-  version = "v1.*",
+  branch = "build-workflow",
   dependencies = {
     "echasnovski/mini.snippets",
     "moyiz/blink-emoji.nvim",
   },
   opts = {
-    cmdline = {
-      keymap = {
-        preset = "inherit",
-      },
-      completion = {
-        menu = { auto_show = true },
-      },
-    },
     sources = {
       default = function()
         local success, node = pcall(vim.treesitter.get_node)
@@ -93,6 +85,14 @@ return {
         },
       },
     },
+    cmdline = {
+      keymap = {
+        preset = "inherit",
+      },
+      completion = {
+        menu = { auto_show = true },
+      },
+    },
     snippets = { preset = "mini_snippets" },
     keymap = {
       ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
@@ -115,6 +115,7 @@ return {
     },
     completion = {
       trigger = {
+        show_on_backspace = true,
         show_on_trigger_character = true,
       },
       keyword = {
