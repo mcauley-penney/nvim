@@ -1,7 +1,6 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    branch = "main",
     build = ":TSUpdate",
     opts = {
       sync_install = false,
@@ -81,7 +80,7 @@ return {
       }
 
       local already_installed =
-        require("nvim-treesitter.config").installed_parsers()
+        require("nvim-treesitter.info").installed_parsers()
 
       local parsers_to_install = vim
         .iter(ensure_installed)
@@ -92,9 +91,11 @@ return {
         )
         :totable()
 
-      require("nvim-treesitter").install(parsers_to_install)
+      for _, parser in pairs(parsers_to_install) do
+        require("nvim-treesitter.install").install(parser)
+      end
 
-      require("nvim-treesitter").setup(opts)
+      require("nvim-treesitter.configs").setup(opts)
     end,
   },
 
