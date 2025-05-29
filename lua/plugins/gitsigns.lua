@@ -8,6 +8,12 @@ return {
       col = 1,
     },
     signcolumn = true,
+    signs = {
+      change = { text = "┋" },
+    },
+    signs_staged = {
+      change = { text = "┋" },
+    },
     update_debounce = 500,
     on_attach = function(bufnr)
       local gs = package.loaded.gitsigns
