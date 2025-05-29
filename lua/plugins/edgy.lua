@@ -12,8 +12,8 @@ return {
       },
     },
     icons = {
-      closed = " " .. tools.ui.icons.r_chev,
-      open = " " .. tools.ui.icons.d_chev,
+      closed = " ▸",
+      open = " 𝅍",
     },
   },
 }

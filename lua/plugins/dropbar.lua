@@ -1,6 +1,12 @@
 return {
   "Bekaboo/dropbar.nvim",
   opts = {
+    icons = {
+      ui = { bar = { separator = " " .. tools.ui.icons.r_chev } },
+      kinds = {
+        symbols = tools.ui.kind_icons,
+      },
+    },
     bar = {
       enable = function(buf, win, _)
         if
@@ -41,9 +47,6 @@ return {
           }),
         }
       end,
-    },
-    icons = {
-      ui = { bar = { separator = " " .. tools.ui.icons.r_chev .. " " } },
     },
   },
 }
