@@ -149,7 +149,7 @@ return {
           components = {
             kind_icon = {
               ellipsis = false,
-              text = function(ctx) return ctx.kind_icon .. " " end,
+              text = function(ctx) return ctx.kind_icon end,
               highlight = function(ctx) return "BlinkCmpKind" .. ctx.kind end,
             },
             label = {
