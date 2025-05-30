@@ -6,9 +6,9 @@ return {
       "switch_buffer",
     },
     guides = {
-      mid_item = " ├",
-      last_item = " └",
-      nested_top = " │",
+      mid_item = "  ",
+      last_item = "  ",
+      nested_top = "  ",
     },
     layout = {
       placement = "edge",
@@ -21,11 +21,9 @@ return {
     },
     icons = tools.ui.kind_icons,
     show_guides = true,
-    open_automatic = function(bufnr)
+    open_automatic = function()
       local aerial = require("aerial")
-      return vim.api.nvim_win_get_width(0) > 80
-        and aerial.num_symbols(bufnr) > 0
-        and not aerial.was_closed()
+      return vim.api.nvim_win_get_width(0) > 80 and not aerial.was_closed()
     end,
   },
   config = function(_, opts)
