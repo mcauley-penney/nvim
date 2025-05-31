@@ -19,6 +19,16 @@ return {
   },
 
   {
+    "williamboman/mason-lspconfig.nvim",
+    dependencies = "neovim/nvim-lspconfig",
+    opts = {
+      handlers = {
+        function(name) vim.lsp.enable(name) end,
+      },
+    },
+  },
+
+  {
     "folke/lazydev.nvim",
     dependencies = "neovim/nvim-lspconfig",
     ft = "lua",
