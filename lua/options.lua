@@ -77,6 +77,7 @@ o.showtabline = 1
 o.sidescrolloff = 5
 o.signcolumn = "yes:1"
 o.smartcase = true
+o.softtabstop = -1
 o.splitbelow = true
 o.splitkeep = "screen"
 o.splitright = true
