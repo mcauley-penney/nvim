@@ -70,6 +70,7 @@ o.ruler = false
 o.scrolloff = 30
 o.sessionoptions = "buffers,skiprtp"
 o.shiftround = true
+o.shiftwidth = 0
 o.shortmess = "acstFOSW"
 o.showcmd = false
 o.showmode = false

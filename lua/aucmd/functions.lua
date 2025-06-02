@@ -30,8 +30,6 @@ local nonstandard_tw = {
 local M = {
   set_indent = function(ft)
     local indent = short_indent[ft] and 2 or 4
-
-    vim.api.nvim_set_option_value("shiftwidth", indent, {})
     vim.api.nvim_set_option_value("tabstop", indent, {})
   end,
 
