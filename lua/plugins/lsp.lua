@@ -32,6 +32,7 @@ return {
     "folke/lazydev.nvim",
     dependencies = "neovim/nvim-lspconfig",
     ft = "lua",
+    opts = true,
   },
 
   {
