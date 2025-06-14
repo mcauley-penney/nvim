@@ -62,16 +62,12 @@ vim.g.loaded_ruby_provider = 0
 require("vim._extui").enable({
   enable = true,
   msg = {
-    pos = "cmd",
-    box = {
-      timeout = 4000,
-    },
+    target = "cmd",
   },
 })
 
--- TODO: remove when this becomes configurable
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "msgbox", "msgmore", "msgprompt", "cmdline" },
+  pattern = { "cmd", "msg", "pager", "dialog" },
   callback = function()
     vim.api.nvim_set_option_value(
       "winhl",
