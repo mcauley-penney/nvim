@@ -27,7 +27,7 @@ return {
     local file_icons = make_icon_tbl("file")
     file_icons[".zshrc"] = { glyph = " 󰒓  " }
     file_icons["init.lua"] = { glyph = " 󰢱  ", hl = "MiniIconsAzure" }
-    file_icons["README.md"] = { glyph = " 󰍔  ", hl = "MiniIconsCyan" }
+    file_icons["README.md"] = { glyph = "   ", hl = "MiniIconsCyan" }
     file_icons["lazy"] = file_icon
 
     local ft_icons = make_icon_tbl("filetype")
