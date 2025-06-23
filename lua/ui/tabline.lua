@@ -35,7 +35,7 @@ function M.render()
     end
     table.insert(
       out,
-      string.format("%s%s %s  ", hl, icon, table.concat(names, " "))
+      string.format("%s %s %s ", hl, icon, table.concat(names, " "))
     )
   end
 
