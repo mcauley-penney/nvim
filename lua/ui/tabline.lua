@@ -39,7 +39,7 @@ function M.render()
     )
   end
 
-  return tools.hl_str("TabLineFill", "     ")
+  return tools.hl_str("TabLineFill", "     ")
     .. table.concat(out)
     .. "%#TabLineFill#"
 end
