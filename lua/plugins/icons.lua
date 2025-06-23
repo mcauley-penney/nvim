@@ -31,9 +31,9 @@ return {
     file_icons["lazy"] = file_icon
 
     local ft_icons = make_icon_tbl("filetype")
-    ft_icons["c"] = { glyph = "   "}
-    ft_icons["cpp"] = { glyph = "   "}
-    ft_icons["yaml"] = { glyph = "   "}
+    ft_icons["c"] = { glyph = "   " }
+    ft_icons["cpp"] = { glyph = "   " }
+    ft_icons["yaml"] = { glyph = "   " }
 
     mini.setup({
       default = defaults,
