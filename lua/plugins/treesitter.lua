@@ -6,6 +6,7 @@ return {
       sync_install = false,
       ignore_install = {},
       highlight = { enable = true },
+      indent = { enable = true },
       fold = { enable = false },
       textobjects = {
         lookahead = true,
