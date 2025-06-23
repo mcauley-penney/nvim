@@ -29,9 +29,8 @@ local function get_lsp_completion_context(completion)
 end
 
 return {
-  "mcauley-penney/blink.cmp",
-  event = { "CmdlineEnter", "InsertEnter" },
-  branch = "build-workflow",
+  "saghen/blink.cmp",
+  version = "1.*",
   dependencies = {
     "echasnovski/mini.snippets",
     "moyiz/blink-emoji.nvim",
@@ -115,7 +114,8 @@ return {
     },
     completion = {
       trigger = {
-        show_on_backspace = true,
+        show_on_backspace_after_accept = true,
+        show_on_insert = true,
         show_on_trigger_character = true,
       },
       keyword = {
@@ -123,7 +123,6 @@ return {
       },
       list = {
         selection = { preselect = true, auto_insert = false },
-        cycle = { from_top = false },
       },
       documentation = {
         window = {
