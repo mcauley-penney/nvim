@@ -64,7 +64,7 @@ return {
         window = {
           border_hl = "LspCodeLens",
           normal_hl = "LspCodeLens",
-          winblend = 17,
+          winblend = 30,
           border = "solid",
           relative = "win",
         },
