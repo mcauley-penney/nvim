@@ -15,7 +15,7 @@ _G.tools = {
       r_chev = ">",
       warning = " ",
       error = " ",
-      info = " ",
+      info = "󰌶 ",
     },
     kind_icons = {
       Array = " 󰅪 ",
@@ -51,12 +51,12 @@ _G.tools = {
       Log = " 󰦪 ",
       Lsp = "   ",
       Macro = " 󰁌  ",
-      MarkdownH1 = " 󰉫 ",
-      MarkdownH2 = " 󰉬 ",
-      MarkdownH3 = " 󰉭 ",
-      MarkdownH4 = " 󰉮 ",
-      MarkdownH5 = " 󰉯 ",
-      MarkdownH6 = " 󰉰 ",
+      MarkdownH1 = " 󰉫  ",
+      MarkdownH2 = " 󰉬  ",
+      MarkdownH3 = " 󰉭  ",
+      MarkdownH4 = " 󰉮  ",
+      MarkdownH5 = " 󰉯  ",
+      MarkdownH6 = " 󰉰  ",
       Method = " 󰆦  ",
       Module = "   ",
       Namespace = " 󰅩  ",
@@ -82,7 +82,7 @@ _G.tools = {
       SwitchStatement = " 󰨙  ",
       Table = " 󰅩  ",
       Terminal = "   ",
-      Text = " 󰬴  ",
+      Text = " 󰪛  ",
       Type = "  ",
       TypeParameter = "   ",
       Unit = "  ",
@@ -126,8 +126,8 @@ tools.get_path_root = function(path)
 end
 
 local function git_cmd(root, ...)
-  -- tiny helper that returns stdout or nil+err
   local job = vim.system({ "git", "-C", root, ... }, { text = true }):wait()
+
   if job.code ~= 0 then return nil, job.stderr end
   return vim.trim(job.stdout)
 end
