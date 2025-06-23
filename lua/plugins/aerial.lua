@@ -11,7 +11,7 @@ return {
       nested_top = "  ",
     },
     layout = {
-      placement = "edge",
+      placement = "window",
       close_on_select = false,
       max_width = 30,
       min_width = 30,
