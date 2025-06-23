@@ -4,9 +4,7 @@ local get_opt = vim.api.nvim_get_option_value
 local aucmd_fn = require("aucmd.functions")
 local grp
 
-----------------------------------------
--- Upon entering
-----------------------------------------
+---- Upon entering
 grp = augrp("Entering", { clear = true })
 
 aucmd("BufEnter", {
@@ -25,7 +23,7 @@ aucmd("BufEnter", {
   desc = "Set root dir and initialize version control branch",
 })
 
-aucmd({ "BufEnter", "BufWinEnter" }, {
+aucmd("BufEnter", {
   group = grp,
   callback = function()
     vim.api.nvim_set_option_value("formatoptions", "2cjnpqrt", {})
@@ -42,17 +40,6 @@ aucmd({ "BufEnter", "BufWinEnter" }, {
     local ft = get_opt("filetype", {})
     aucmd_fn.set_indent(ft)
     aucmd_fn.set_textwidth(ft)
-
-    -- set foldmethod
-    -- we also set via LSP. This is a fallback for when there is no language server
-    -- https://www.reddit.com/r/neovim/comments/w4ckuf/config_if_treesitter_is_active/
-    -- local ok, parser = pcall(vim.treesitter.get_parser)
-    -- if ok and parser then
-    --   vim.o.foldmethod = "expr"
-    --   vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-    -- else
-    --   vim.o.foldmethod = "indent"
-    -- end
   end,
   desc = "Set options for formatting",
 })
@@ -78,9 +65,7 @@ aucmd("BufWinEnter", {
   desc = "Highlight email addresses",
 })
 
-----------------------------------------
--- LSP
-----------------------------------------
+---- LSP
 aucmd("LspAttach", {
   desc = "Configure LSP keymaps",
   callback = function(args)
@@ -89,9 +74,7 @@ aucmd("LspAttach", {
   end,
 })
 
-----------------------------------------
--- During editing
-----------------------------------------
+---- during editing
 grp = augrp("Editing", { clear = true })
 
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorMoved", "CursorHoldI" }, {
@@ -116,9 +99,7 @@ vim.api.nvim_create_autocmd("VimResized", {
   command = [[tabdo wincmd =]],
 })
 
-----------------------------------------
--- Upon leaving a buffer
-----------------------------------------
+---- Upon leaving a buffer
 grp = augrp("Leaving", { clear = true })
 
 aucmd("BufWinLeave", {
