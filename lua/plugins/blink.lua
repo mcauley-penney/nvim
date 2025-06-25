@@ -86,7 +86,9 @@ return {
     },
     cmdline = {
       keymap = {
-        preset = "inherit",
+        ["<Tab>"] = { "select_and_accept" },
+        ["<C-p>"] = { "select_prev", "fallback" },
+        ["<C-n>"] = { "select_next", "fallback" },
       },
       completion = {
         menu = { auto_show = true },
@@ -111,6 +113,8 @@ return {
       ["<C-n>"] = { "select_next", "fallback" },
       ["<C-b>"] = { "scroll_documentation_up", "fallback" },
       ["<C-f>"] = { "scroll_documentation_down", "fallback" },
+      ["<Up>"] = { "fallback" },
+      ["<Down>"] = { "fallback" },
     },
     completion = {
       trigger = {
