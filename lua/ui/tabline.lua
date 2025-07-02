@@ -4,16 +4,16 @@ vim.o.showtabline = 2
 vim.o.tabline = "%!v:lua.require('ui.tabline').render()"
 
 local num_icons = {
-  "󰎦 ",
-  "󰎩 ",
-  "󰎬 ",
-  "󰎮 ",
-  "󰎰 ",
-  "󰎵 ",
-  "󰎸 ",
-  "󰎻 ",
-  "󰎾 ",
-  "󰽾 ",
+  "󰎤 ",
+  "󰎧 ",
+  "󰎪 ",
+  "󰎭 ",
+  "󰎱 ",
+  "󰎳 ",
+  "󰎶 ",
+  "󰎹 ",
+  "󰎼 ",
+  "󰽽 ",
 }
 
 function M.render()
