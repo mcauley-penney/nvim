@@ -94,8 +94,17 @@ end
 local function diagnostics_widget()
   if not tools.diagnostics_available() then return "" end
   local diag_count = vim.diagnostic.count()
-  local err, warn = diag_count[1] or 0, diag_count[2] or 0
-  return string.format("%s %-3d  %s %-3d  ", ICON.error, err, ICON.warn, warn)
+  local err, warn =
+    string.format("%-3d", diag_count[1] or 0),
+    string.format("%-3d", diag_count[2] or 0)
+
+  return string.format(
+    "%s %s  %s %s  ",
+    ICON.error,
+    tools.hl_str("DiagnosticError", err),
+    ICON.warn,
+    tools.hl_str("DiagnosticWarn", warn)
+  )
 end
 
 -- file/selection info -------------------------------------
