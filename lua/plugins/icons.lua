@@ -17,23 +17,22 @@ return {
       return res
     end
 
-    local file_icon = { glyph = "   " }
+    local default_icon = { glyph = "   " }
 
     local defaults = make_icon_tbl("default")
-    defaults["extension"] = file_icon
-    defaults["file"] = file_icon
-    defaults["filetype"] = file_icon
+    defaults["extension"] = default_icon
+    defaults["file"] = default_icon
+    defaults["filetype"] = default_icon
 
     local file_icons = make_icon_tbl("file")
     file_icons[".zshrc"] = { glyph = " 󰒓  " }
     file_icons["init.lua"] = { glyph = " 󰢱  ", hl = "MiniIconsAzure" }
     file_icons["README.md"] = { glyph = "   ", hl = "MiniIconsCyan" }
-    file_icons["lazy"] = file_icon
+    file_icons["lazy"] = default_icon
 
     local ft_icons = make_icon_tbl("filetype")
-    ft_icons["c"] = { glyph = "   " }
-    ft_icons["cpp"] = { glyph = "   " }
-    ft_icons["yaml"] = { glyph = "   " }
+    ft_icons["dosini"] = default_icon
+    ft_icons["text"] = default_icon
 
     mini.setup({
       default = defaults,
