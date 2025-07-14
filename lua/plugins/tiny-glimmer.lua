@@ -1,15 +1,14 @@
 return {
   "rachartier/tiny-glimmer.nvim",
   opts = {
-    refresh_interval_ms = 6,
+    refresh_interval_ms = 1,
     overwrite = {
-      auto_map = true,
       paste = {
         enabled = true,
         default_animation = {
           name = "fade",
           settings = {
-            from_color = "DiffText",
+            from_color = "CurSearch",
           },
         },
       },
@@ -32,17 +31,19 @@ return {
         },
       },
     },
-    --  support = {
-    --    substitute = {
-    --      enabled = true,
-    --      default_animation = "fade",
-    --    },
-    --  },
     animations = {
       fade = {
+        to_color = "Normal",
+        min_duration = 300,
+        max_duration = 300,
         chars_for_max_duration = 1,
-        to_color = "Folded"
       },
-    }
+      left_to_right = {
+        to_color = "Normal",
+        min_duration = 300,
+        max_duration = 300,
+        chars_for_max_duration = 1,
+      },
+    },
   },
 }
