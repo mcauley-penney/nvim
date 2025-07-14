@@ -67,11 +67,11 @@ require("vim._extui").enable({
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "cmd", "msg", "pager", "dialog" },
+  pattern = { "cmd", "dialog", "msg", "pager" },
   callback = function()
     vim.api.nvim_set_option_value(
       "winhl",
-      "Normal:Normal,FloatBorder:FloatBorder",
+      "Normal:Normal,FloatBorder:WinSeparator",
       {}
     )
   end,
