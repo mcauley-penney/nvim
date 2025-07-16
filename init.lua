@@ -66,17 +66,6 @@ require("vim._extui").enable({
   },
 })
 
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "cmd", "dialog", "msg", "pager" },
-  callback = function()
-    vim.api.nvim_set_option_value(
-      "winhl",
-      "Normal:Normal,FloatBorder:WinSeparator",
-      {}
-    )
-  end,
-})
-
 -- turn off deprecation messages
 vim.deprecate = function() end
 
