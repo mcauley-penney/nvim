@@ -6,9 +6,10 @@ return {
       "switch_buffer",
     },
     guides = {
-      mid_item = "  ",
-      last_item = "  ",
-      nested_top = "  ",
+      nested_top = " │ ",
+      mid_item = " ├─",
+      last_item = " └─",
+      whitespace = "   ",
     },
     layout = {
       placement = "window",

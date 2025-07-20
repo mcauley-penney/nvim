@@ -1,10 +1,15 @@
+local icons = {}
+for name, icon in pairs(tools.ui.kind_icons) do
+  icons[name] = icon .. " "
+end
+
 return {
   "Bekaboo/dropbar.nvim",
   opts = {
     icons = {
       ui = { bar = { separator = " " .. tools.ui.icons.r_chev } },
       kinds = {
-        symbols = tools.ui.kind_icons,
+        symbols = icons,
       },
     },
     bar = {
