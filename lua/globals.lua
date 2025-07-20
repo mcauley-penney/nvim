@@ -99,6 +99,13 @@ _G.tools = {
   },
 }
 
+local icons_spaced = {}
+for key, value in pairs(_G.tools.ui.kind_icons) do
+  icons_spaced[key] = value .. " "
+end
+
+_G.tools.ui.kind_icons_spaced = icons_spaced
+
 -- files and directories -----------------------------
 local branch_cache = setmetatable({}, { __mode = "k" })
 local remote_cache = setmetatable({}, { __mode = "k" })

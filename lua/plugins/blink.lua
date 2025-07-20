@@ -130,7 +130,7 @@ return {
       },
       documentation = {
         window = {
-          border = "solid",
+          border = "rounded",
           min_width = 40,
           max_width = 70,
         },
@@ -146,7 +146,7 @@ return {
           padding = 1,
           gap = 3,
           columns = {
-            { "kind_icon", gap = 0, "label" },
+            { "kind_icon", gap = 1, "label" },
             { "label_description" },
           },
           components = {
@@ -198,7 +198,7 @@ return {
     },
     appearance = {
       nerd_font_variant = "mono",
-      kind_icons = tools.ui.kind_icons,
+      kind_icons = tools.ui.kind_icons_spaced,
     },
   },
 }
