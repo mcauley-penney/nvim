@@ -1,3 +1,5 @@
+local link_char = "  "
+
 return {
   {
     "iamcco/markdown-preview.nvim",
@@ -65,20 +67,20 @@ return {
       },
       html = { comment = { conceal = false } },
       link = {
-        --  enabled = false,
         image = "  ",
         email = "󰇮  ",
-        hyperlink = "  ",
+        hyperlink = link_char,
         custom = {
-          web = { pattern = "^http", icon = "  " },
-          sweb = { pattern = "^https", icon = "  " },
+          web = { pattern = "^http", icon = link_char },
+          sweb = { pattern = "^https", icon = link_char },
+          linkedin = { pattern = "linkedin%.com", icon = "  " },
           youtube = { pattern = "youtube%.com", icon = "  " },
           github = { pattern = "github%.com", icon = "  " },
           stackoverflow = { pattern = "stackoverflow%.com", icon = "󰓌  " },
           discord = { pattern = "discord%.com", icon = "  " },
           reddit = { pattern = "reddit%.com", icon = "  " },
-          acm = { pattern = "dl.acm%.org", icon = "  " },
-          arxiv = { pattern = "arxiv%.org", icon = "  " },
+          acm = { pattern = "dl.acm%.org", icon = "  " },
+          arxiv = { pattern = "arxiv%.org", icon = "  " },
         },
       },
     },
