@@ -98,5 +98,5 @@ o.virtualedit = "all"
 o.wildignore = "*.o"
 o.wildmode = "longest:full"
 o.wildoptions = "pum"
-o.winborder = "none"
+o.winborder = "solid"
 o.writebackup = false
