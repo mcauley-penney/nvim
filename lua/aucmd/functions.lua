@@ -99,7 +99,7 @@ local M = {
     end
 
     if client:supports_method(methods.textDocument_hover) then
-      map("n", "K", function() lsp.hover({ border = "solid" }) end, "LSP hover")
+      map("n", "K", function() lsp.hover({ border = "rounded" }) end, "LSP hover")
     end
 
     if client:supports_method(methods.textDocument_signatureHelp) then
