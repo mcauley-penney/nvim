@@ -33,19 +33,18 @@ local function send_comment()
   local row, col = pos_tbl[1] - 1, pos_tbl[2]
 
   local left_cstr, right_cstr = unwrap_cstr(cstr)
-  local inc_len = string.find(cstr, "%s*%%s") - 1
+
+  local comment = left_cstr .. " "
+  if right_cstr then comment = comment .. " " .. right_cstr end
+
+  vim.cmd("stopinsert")
 
   vim.schedule(function()
-    vim.api.nvim_buf_set_text(
-      0,
-      row,
-      col,
-      row,
-      col,
-      { left_cstr .. " " .. right_cstr }
-    )
-    vim.api.nvim_win_set_cursor(0, { row + 1, col + inc_len + 1 })
+    vim.api.nvim_buf_set_text(0, row, col, row, col, { comment })
+    vim.api.nvim_win_set_cursor(0, { row + 1, col + #left_cstr + 1 })
   end)
+
+  vim.api.nvim_feedkeys("a", "n", false)
 end
 
 --------------------------------------------------
