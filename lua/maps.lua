@@ -14,7 +14,6 @@ local fslash = "// "
 local ft_cstr_overrides = {
   ["c"] = fslash,
   ["cpp"] = fslash,
-  ["markdown"] = dash,
 }
 
 local function send_comment()
