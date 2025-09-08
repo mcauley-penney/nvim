@@ -13,5 +13,10 @@
     "prefix": "checkbox",
     "body": "- [ ] ",
     "desc": "Checkbox template"
+  },
+  "Dropdown": {
+    "prefix": "dropdown",
+    "body": "<details>\n<summary>$1</summary>\n\n$2\n\n</details>",
+    "desc": "Disclosure widget. See https://gist.github.com/scmx/eca72d44afee0113ceb0349dd54a84a2"
   }
 }
