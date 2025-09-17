@@ -29,7 +29,7 @@ aucmd("BufEnter", {
     vim.api.nvim_set_option_value("formatoptions", "2cjnpqrt", {})
 
     vim.opt.formatlistpat:append([[\|^\s*\w\+[\]:.)}\t ]\s\+]]) -- Lettered lists
-    vim.opt.formatlistpat:append([[\|^>\s]]) -- Markdown blockquotes
+    vim.opt.formatlistpat:append([[\|^\s*>\s]]) -- Markdown blockquotes
 
     -- Dynamically append commentstring-based pattern
     local commentstring = vim.bo.commentstring:match("^(.*)%%s$")
