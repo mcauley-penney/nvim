@@ -45,6 +45,7 @@ return {
       bullet = {
         enabled = true,
         icons = { "■", "□", "●", "○", "◆", "◊" },
+        highlight = "@markup.list.markdown",
       },
       checkbox = {
         enabled = false,
