@@ -117,11 +117,6 @@ return {
       ["<Down>"] = { "fallback" },
     },
     completion = {
-      trigger = {
-        show_on_backspace_after_accept = true,
-        show_on_insert = true,
-        show_on_trigger_character = true,
-      },
       keyword = {
         range = "full",
       },
@@ -131,8 +126,8 @@ return {
       documentation = {
         window = {
           border = "rounded",
-          min_width = 40,
-          max_width = 70,
+          min_width = 20,
+          max_width = 100,
         },
         auto_show = true,
         auto_show_delay_ms = 500,
