@@ -76,7 +76,6 @@ require("maps")
 require("aucmd")
 require("filetype")
 
--- init plugins
 require("lazy").setup("plugins", {
   install = { missing = false },
   change_detection = { enabled = true, notify = false },
@@ -123,6 +122,8 @@ require("lazy").setup("plugins", {
     },
   },
 })
+
+vim.cmd("packadd nvim.undotree")
 
 vim.keymap.set(
   "n",

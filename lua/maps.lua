@@ -109,6 +109,8 @@ map(
   { desc = "move in front of first non-blank char in line" }
 )
 
+map("n", "<leader>u", "<cmd>Undotree<cr>", { desc = "Undotree toggle" })
+
 -- tabs and buffers
 map("n", "<C-t>", "<CMD>tabnew<CR>", { desc = "Open a new tab" })
 map("n", "<leader>bq", "<cmd>bd<CR>", { silent = true })
