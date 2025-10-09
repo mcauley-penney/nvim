@@ -66,9 +66,6 @@ require("vim._extui").enable({
   },
 })
 
--- turn off deprecation messages
-vim.deprecate = function() end
-
 -- include our settings
 require("globals")
 require("options")
