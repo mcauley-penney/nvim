@@ -1,6 +1,7 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",
     build = ":TSUpdate",
     opts = {
       sync_install = false,
@@ -80,23 +81,20 @@ return {
         "yaml",
       }
 
-      local already_installed =
-        require("nvim-treesitter.info").installed_parsers()
+      local installed = require("nvim-treesitter").get_installed()
 
-      local parsers_to_install = vim
+      local to_install = vim
         .iter(ensure_installed)
         :filter(
-          function(parser)
-            return not vim.tbl_contains(already_installed, parser)
-          end
+          function(parser) return not vim.tbl_contains(installed, parser) end
         )
         :totable()
 
-      for _, parser in pairs(parsers_to_install) do
+      for _, parser in pairs(to_install) do
         require("nvim-treesitter.install").install(parser)
       end
 
-      require("nvim-treesitter.configs").setup(opts)
+      require("nvim-treesitter").setup(opts)
     end,
   },
 
