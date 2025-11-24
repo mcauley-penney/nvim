@@ -37,14 +37,10 @@ local function send_comment()
   local comment = left_cstr .. " "
   if right_cstr then comment = comment .. " " .. right_cstr end
 
-  vim.cmd("stopinsert")
-
   vim.schedule(function()
     vim.api.nvim_buf_set_text(0, row, col, row, col, { comment })
     vim.api.nvim_win_set_cursor(0, { row + 1, col + #left_cstr + 1 })
   end)
-
-  vim.api.nvim_feedkeys("a", "n", false)
 end
 
 --------------------------------------------------
