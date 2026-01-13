@@ -41,18 +41,6 @@ vim.opt.runtimepath:prepend(lazy_path)
 
 -- set providers
 -- https://github.com/neovim/neovim/blob/master/runtime/doc/provider.txt
-vim.g.clipboard = {
-  name = "xsel",
-  copy = {
-    ["+"] = "xsel --nodetach -i -b",
-    ["*"] = "xsel --nodetach -i -p",
-  },
-  paste = {
-    ["+"] = "xsel -o -b",
-    ["*"] = "xsel -o -p",
-  },
-  cache_enabled = 1,
-}
 vim.g.python3_host_prog = "/usr/bin/python3"
 vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
