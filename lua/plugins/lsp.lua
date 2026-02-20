@@ -16,16 +16,18 @@ return {
         },
       },
     },
-  },
+    config = function(_, opts)
+      require("mason").setup(opts)
 
-  {
-    "williamboman/mason-lspconfig.nvim",
-    dependencies = "neovim/nvim-lspconfig",
-    opts = {
-      handlers = {
-        function(name) vim.lsp.enable(name) end,
-      },
-    },
+      local installed_packs = require("mason-registry").get_installed_packages()
+      local lsp_config_names = vim
+        .iter(installed_packs)
+        :fold({}, function(acc, pack)
+          table.insert(acc, pack.spec.neovim and pack.spec.neovim.lspconfig)
+          return acc
+        end)
+      vim.lsp.enable(lsp_config_names)
+    end,
   },
 
   {
