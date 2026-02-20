@@ -63,11 +63,11 @@ return {
         title = "FloatTitle",
       },
       winopts = {
-        backdrop = 100,
+        backdrop = 90,
         cursorline = true,
-        height = 0.25,
-        width = 1,
-        row = 1,
+        height = 0.75,
+        width = 0.93,
+        row = 0.5,
 
         preview = {
           layout = "horizontal",
@@ -83,7 +83,7 @@ return {
     map("n", "\\", fzf.tabs, { desc = "Select Tab" })
     map("n", "|", fzf.buffers, { desc = "Select Buffer" })
 
-    map("n", "<C-f>", "<cmd>FzfLua live_grep_glob<cr>", { desc = "Grep" })
+    map("n", "<C-f>", "<cmd>FzfLua live_grep<cr>", { desc = "Grep" })
 
     --  LSP
     map(
