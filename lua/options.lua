@@ -37,7 +37,6 @@ opt.fillchars = {
 o.foldcolumn = "1"
 o.foldenable = false
 o.foldlevel = 99
-o.foldtext = vim.lsp.foldtext()
 o.gdefault = true
 opt.guicursor = {
   "n-sm:block",
