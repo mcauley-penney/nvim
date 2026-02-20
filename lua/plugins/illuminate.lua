@@ -15,10 +15,6 @@ return {
   },
 
   {
-    "mcauley-penney/match-visual.nvim",
-  },
-
-  {
     "rareitems/hl_match_area.nvim",
     opts = {
       highlight_in_insert_mode = false,
