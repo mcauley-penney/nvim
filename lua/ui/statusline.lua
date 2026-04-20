@@ -18,9 +18,8 @@ local HL = {
   visual = { "DiagnosticInfo", "‹› " },
 }
 
-local ICON = {}
 for k, v in pairs(HL) do
-  ICON[k] = tools.hl_str(v[1], v[2])
+  HL[k] = tools.hl_str(v[1], v[2])
 end
 
 local ORDER = {
