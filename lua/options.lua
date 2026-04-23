@@ -67,6 +67,7 @@ o.pumheight = 15
 o.redrawtime = 150
 o.ruler = false
 o.scrolloff = 30
+o.scrolloffpad = 1
 o.sessionoptions = "buffers,skiprtp"
 o.shiftround = true
 o.shiftwidth = 0
