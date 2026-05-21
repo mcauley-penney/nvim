@@ -127,6 +127,6 @@ map("v", "*", "y/<C-R>0<CR>", { desc = "Search for visual selection" })
 vim.keymap.set(
   "n",
   "<leader>pm",
-  "<cmd>lua vim.pack.update()<cr>",
+  "<cmd>PackFloat<cr>",
   { desc = "Open [p]ackage [m]anager" }
 )
