@@ -14,7 +14,7 @@ aucmd("BufEnter", {
     local root = tools.get_path_root(path)
 
     if root ~= nil then
-      vim.cmd(":lcd " .. root)
+      vim.cmd.lcd(vim.fn.fnameescape(root))
 
       tools.get_git_branch(root)
       tools.get_git_remote_name(root)
