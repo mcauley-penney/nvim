@@ -69,9 +69,15 @@ aucmd("BufWinEnter", {
 })
 
 -- See https://vi.stackexchange.com/a/12710
-aucmd("BufWinEnter", {
+aucmd({ "WinEnter", "BufWinEnter" }, {
   group = grp,
-  command = [[call matchadd("String", '\v[a-zA-Z0-9._%+-]+\@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')]],
+  callback = function()
+    if vim.w.email_match_id then return end
+    vim.w.email_match_id = vim.fn.matchadd(
+      "String",
+      "\v[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}"
+    )
+  end,
   desc = "Highlight email addresses",
 })
 
