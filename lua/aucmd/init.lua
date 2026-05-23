@@ -23,15 +23,25 @@ aucmd("BufEnter", {
   desc = "Set root dir and initialize version control branch",
 })
 
-aucmd("BufEnter", {
+aucmd("FileType", {
+  pattern = { "markdown", "text", "gitcommit" },
+  callback = function()
+    local list_types = table.concat({
+      [[^\s*[-*+]\s\+]], -- Markdown unordered lists
+      [[^\s*\w\+[\]:.)}\t ]\s\+]], -- word/letter lists
+      [[^\s*>\s]], -- blockquotes: > quote
+    }, [[\|]])
+
+    vim.opt_local.formatlistpat:append([[\|]] .. list_types)
+  end,
+})
+
+aucmd("FileType", {
   group = grp,
   callback = function()
-    vim.api.nvim_set_option_value("formatoptions", "2cjnpqrt", {})
+    vim.opt_local.formatoptions = "2cjnpqrt"
 
-    vim.opt.formatlistpat:append([[\|^\s*\w\+[\]:.)}\t ]\s\+]]) -- Lettered lists
-    vim.opt.formatlistpat:append([[\|^\s*>\s]]) -- Markdown blockquotes
-
-    -- Dynamically append commentstring-based pattern
+    -- Dynamically append commentstring-based pattern to formatlistpat
     local commentstring = vim.bo.commentstring:match("^(.*)%%s$")
     if commentstring then
       vim.opt.formatlistpat:append([[\|^\s*]] .. commentstring .. [[\s*]])
@@ -41,7 +51,7 @@ aucmd("BufEnter", {
     aucmd_fn.set_indent(ft)
     aucmd_fn.set_textwidth(ft)
   end,
-  desc = "Set options for formatting",
+  desc = "Set formatting options after ftplugins",
 })
 
 aucmd("BufNewFile", {

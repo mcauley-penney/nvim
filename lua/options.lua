@@ -37,6 +37,11 @@ opt.fillchars = {
 o.foldcolumn = "1"
 o.foldenable = false
 o.foldlevel = 99
+opt.formatlistpat = table.concat({
+  [[^\s*\d\+[\]:.)}\t ]\s*]],
+  [[^\s*\w\+[\]:.)}\t ]\s\+]],
+  [[^\s*>\s]],
+}, [[\|]])
 o.gdefault = true
 opt.guicursor = {
   "n-sm:block",
