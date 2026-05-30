@@ -6,7 +6,7 @@ local get_opt = api.nvim_get_option_value
 local icons = tools.ui.icons
 local mini_icons = require("mini.icons")
 
-local HL = {
+local ICON = {
   branch = { "DiagnosticOk", icons.branch },
   file = { "NonText", icons.node },
   fileinfo = { "Function", icons.document },
@@ -18,8 +18,8 @@ local HL = {
   visual = { "DiagnosticInfo", "‹› " },
 }
 
-for k, v in pairs(HL) do
-  HL[k] = tools.hl_str(v[1], v[2])
+for k, v in pairs(ICON) do
+  ICON[k] = tools.hl_str(v[1], v[2])
 end
 
 local ORDER = {
