@@ -13,6 +13,7 @@ local state = {
   bufnr = nil,
   winid = nil,
   autocmd = nil,
+  update_autocmds = nil,
   check_timer = nil,
   check_dot_count = 0,
   checking = false,
@@ -24,6 +25,7 @@ local state = {
   not_loaded = {},
   commits = {},
   expanded = {},
+  update_status = {},
   line_to_name = {},
   name_to_line = {},
 }
@@ -31,7 +33,7 @@ local state = {
 local function setup_highlights()
   local links = {
     PackFloatTitle = "Title",
-    PackFloatBorder = "FloatBorder",
+    PackFloatBorder = "Number",
     PackFloatSection = "Label",
     PackFloatPending = "NormalFloat",
     PackFloatClean = "NormalFloat",
@@ -39,6 +41,8 @@ local function setup_highlights()
     PackFloatHash = "Number",
     PackFloatKey = "Function",
     PackFloatError = "DiagnosticError",
+    PackFloatProgress = "DiagnosticInfo",
+    PackFloatDone = "DiagnosticOk",
   }
   for group, link in pairs(links) do
     api.nvim_set_hl(0, group, { link = link, default = true })
@@ -121,6 +125,7 @@ local function reset_data()
   state.not_loaded = {}
   state.commits = {}
   state.expanded = {}
+  state.update_status = {}
   state.line_to_name = {}
   state.name_to_line = {}
 end
@@ -234,11 +239,14 @@ local function build_content()
   local function add_plugin(plugin, pending)
     local name = plugin.spec.name
     local commits = state.commits[name]
-    local line = plugin_indent .. name
-    local revision = pending and ("%s → %s"):format(
-      short_rev(plugin.rev),
-      short_rev(plugin.rev_to)
-    ) or short_rev(plugin.rev)
+    local progress = state.update_status[name]
+    local line = plugin_indent .. name .. (progress and ("  " .. progress) or "")
+    local revision = pending
+        and ("%s → %s"):format(
+          short_rev(plugin.rev),
+          short_rev(plugin.rev_to)
+        )
+      or short_rev(plugin.rev)
 
     local row = add(line)
     mark_plugin(row, name)
@@ -250,6 +258,17 @@ local function build_content()
       name_start + #name,
       pending and "PackFloatPending" or "PackFloatClean"
     )
+    if progress then
+      local progress_start = #plugin_indent + #name + 2
+      add_hl(
+        row,
+        progress_start,
+        #line,
+        progress == "updated" and "PackFloatDone"
+          or progress == "failed" and "PackFloatError"
+          or "PackFloatProgress"
+      )
+    end
     if state.expanded[name] then
       add(
         (detail_indent .. "path      %s"):format(plugin.path),
@@ -268,10 +287,7 @@ local function build_content()
         "PackFloatMuted"
       )
       mark_plugin(#lines - 1, name)
-      add(
-        (detail_indent .. "revision  %s"):format(revision),
-        "PackFloatMuted"
-      )
+      add((detail_indent .. "revision  %s"):format(revision), "PackFloatMuted")
       mark_plugin(#lines - 1, name)
       if not pending then
         add("", "PackFloatMuted")
@@ -289,10 +305,7 @@ local function build_content()
         add(detail_indent .. "commits: loading...", "PackFloatMuted")
         mark_plugin(#lines - 1, name)
       elseif #commits == 0 then
-        add(
-          detail_indent .. "commits: no new commits found",
-          "PackFloatMuted"
-        )
+        add(detail_indent .. "commits: no new commits found", "PackFloatMuted")
         mark_plugin(#lines - 1, name)
       else
         local limit = math.min(#commits, max_commits)
@@ -342,7 +355,7 @@ local function build_content()
   add((" Updates (%d)"):format(#state.pending), "PackFloatSection")
   if #state.pending == 0 then
     add(
-      state.checking and "   checking..." or "  no pending updates",
+      state.checking and "   checking..." or "   no pending updates",
       "PackFloatMuted"
     )
   else
@@ -377,6 +390,46 @@ render = function()
   if not valid_buffer() then return end
   local lines, hls = build_content()
   set_lines(lines, hls)
+end
+
+local function set_update_status(name, status)
+  if not name or state.update_status[name] == nil then return end
+  state.update_status[name] = status
+  if valid_buffer() then
+    vim.schedule(function()
+      if valid_buffer() then render() end
+    end)
+  end
+end
+
+local function handle_pack_changed(status)
+  return function(ev)
+    local data = ev.data or {}
+    if data.kind ~= "update" or not data.spec then return end
+    set_update_status(data.spec.name, status)
+  end
+end
+
+local function clear_update_autocmds()
+  if not state.update_autocmds then return end
+  for _, autocmd in ipairs(state.update_autocmds) do
+    pcall(api.nvim_del_autocmd, autocmd)
+  end
+  state.update_autocmds = nil
+end
+
+local function setup_update_autocmds()
+  if state.update_autocmds then return end
+  state.update_autocmds = {
+    api.nvim_create_autocmd(
+      "PackChangedPre",
+      { callback = handle_pack_changed("updating") }
+    ),
+    api.nvim_create_autocmd(
+      "PackChanged",
+      { callback = handle_pack_changed("updated") }
+    ),
+  }
 end
 
 local function load_commits(plugin, check_id)
@@ -441,6 +494,7 @@ local function refresh_fetch_async()
   local remaining = total
   local failures = 0
   state.commits = {}
+  state.update_status = {}
   start_check_animation()
   render()
 
@@ -514,6 +568,7 @@ local function close()
   state.bufnr = nil
   state.check_id = state.check_id + 1
   state.checking = false
+  clear_update_autocmds()
   stop_check_animation()
 end
 
@@ -523,6 +578,10 @@ local function update_plugins(names)
     return
   end
 
+  state.update_status = {}
+  for _, name in ipairs(names) do
+    state.update_status[name] = "queued"
+  end
   state.status = "updating " .. table.concat(names, ", ")
   render()
 
@@ -531,10 +590,21 @@ local function update_plugins(names)
       pcall(vim.pack.update, names, { force = true, offline = true })
     if not ok then
       vim.notify("vim.pack: " .. tostring(err), vim.log.levels.ERROR)
+      for _, name in ipairs(names) do
+        if state.update_status[name] ~= "updated" then
+          state.update_status[name] = "failed"
+        end
+      end
       state.status = "update failed"
       render()
       return
     end
+    for _, name in ipairs(names) do
+      if state.update_status[name] ~= "updated" then
+        state.update_status[name] = "failed"
+      end
+    end
+    render()
     refresh(false)
   end)
 end
@@ -685,7 +755,7 @@ function M.open(opts)
     row = math.floor((screen_lines - height) / 2),
     col = math.floor((columns - width) / 2),
     style = "minimal",
-    border = "rounded",
+    border = "solid",
     title = " vim.pack ",
     title_pos = "center",
   })
@@ -698,6 +768,7 @@ function M.open(opts)
   reset_data()
   load_fast_plugin_list()
   setup_keymaps()
+  setup_update_autocmds()
   render()
 
   local captured_win = state.winid
@@ -710,6 +781,7 @@ function M.open(opts)
         state.bufnr = nil
         state.check_id = state.check_id + 1
         state.checking = false
+        clear_update_autocmds()
         stop_check_animation()
       end
     end,
