@@ -7,15 +7,17 @@ local api = vim.api
 local M = {}
 
 local ns = api.nvim_create_namespace("pack_float_ui")
-local max_commits = 12
+local config = {
+  highlights = {
+    commit_time = "PackFloatCommitTime",
+  },
+}
 
 local state = {
   bufnr = nil,
   winid = nil,
   autocmd = nil,
   update_autocmds = nil,
-  check_timer = nil,
-  check_dot_count = 0,
   checking = false,
   check_id = 0,
   status = "",
@@ -40,6 +42,7 @@ local function setup_highlights()
     PackFloatMuted = "Comment",
     PackFloatHash = "Number",
     PackFloatKey = "Function",
+    PackFloatCommitTime = "Comment",
     PackFloatError = "DiagnosticError",
     PackFloatProgress = "DiagnosticInfo",
     PackFloatDone = "DiagnosticOk",
@@ -47,6 +50,11 @@ local function setup_highlights()
   for group, link in pairs(links) do
     api.nvim_set_hl(0, group, { link = link, default = true })
   end
+end
+
+function M.setup(opts)
+  opts = opts or {}
+  config = vim.tbl_deep_extend("force", config, opts)
 end
 
 local function valid_window()
@@ -141,28 +149,6 @@ end
 
 local render
 
-local function stop_check_animation()
-  if state.check_timer then
-    state.check_timer:stop()
-    state.check_timer:close()
-    state.check_timer = nil
-  end
-  state.check_dot_count = 0
-end
-
-local function start_check_animation()
-  stop_check_animation()
-  state.check_dot_count = 1
-  state.check_timer = vim.uv.new_timer()
-  state.check_timer:start(350, 350, function()
-    vim.schedule(function()
-      if not state.checking or not valid_buffer() then return end
-      state.check_dot_count = state.check_dot_count % 3 + 1
-      render()
-    end)
-  end)
-end
-
 local function set_lines(lines, hls)
   if not valid_buffer() then return end
 
@@ -234,6 +220,10 @@ local function build_content()
       or message:match("^[%w_-]+!:") and #message:match("^[%w_-]+!:")
       or message:match("^[%w_-]+:") and #message:match("^[%w_-]+:")
       or nil
+  end
+
+  local function commit_time_range(message)
+    return message:find("%([^()]+%)$")
   end
 
   local function add_plugin(plugin, pending)
@@ -308,9 +298,7 @@ local function build_content()
         add(detail_indent .. "commits: no new commits found", "PackFloatMuted")
         mark_plugin(#lines - 1, name)
       else
-        local limit = math.min(#commits, max_commits)
-        for i = 1, limit do
-          local commit = commits[i]
+        for _, commit in ipairs(commits) do
           local hash, message = split_commit(commit)
           local commit_line = message ~= ""
               and (detail_indent .. "%s  %s"):format(hash, message)
@@ -326,24 +314,25 @@ local function build_content()
             )
           end
           local prefix_len = conventional_prefix_len(message)
+          local message_start = #detail_indent + #hash + 2
           if prefix_len then
-            local start_col = #detail_indent + #hash + 2
             add_hl(
               commit_row,
-              start_col,
-              start_col + prefix_len,
+              message_start,
+              message_start + prefix_len,
               "PackFloatKey"
             )
           end
-        end
-        if #commits > limit then
-          add("", "PackFloatMuted")
-          mark_plugin(#lines - 1, name)
-          add(
-            (detail_indent .. "... %d more"):format(#commits - limit),
-            "PackFloatMuted"
-          )
-          mark_plugin(#lines - 1, name)
+          local time_start, time_end = commit_time_range(message)
+          local time_hl = config.highlights.commit_time
+          if time_start and time_hl then
+            add_hl(
+              commit_row,
+              message_start + time_start - 1,
+              message_start + time_end,
+              time_hl
+            )
+          end
         end
       end
 
@@ -440,8 +429,11 @@ local function load_commits(plugin, check_id)
     "-C",
     plugin.path,
     "log",
-    "--oneline",
-    "--no-decorate",
+    "--pretty=format:%h %s (%cr)",
+    "--abbrev-commit",
+    "--date=short",
+    "--color=never",
+    "--no-show-signature",
     plugin.rev .. ".." .. plugin.rev_to,
   }, { text = true }, function(result)
     vim.schedule(function()
@@ -456,7 +448,6 @@ end
 local function finish_refresh(check_id, failures)
   if state.check_id ~= check_id or not valid_buffer() then return end
 
-  stop_check_animation()
   state.checking = false
   state.status = failures > 0 and ("ready, %d fetch failed"):format(failures)
     or "ready"
@@ -495,7 +486,6 @@ local function refresh_fetch_async()
   local failures = 0
   state.commits = {}
   state.update_status = {}
-  start_check_animation()
   render()
 
   if total == 0 then
@@ -569,7 +559,6 @@ local function close()
   state.check_id = state.check_id + 1
   state.checking = false
   clear_update_autocmds()
-  stop_check_animation()
 end
 
 local function update_plugins(names)
@@ -650,7 +639,6 @@ local function uninstall_current()
 
   state.check_id = state.check_id + 1
   state.checking = false
-  stop_check_animation()
   state.status = "uninstalling " .. name
   render()
 
@@ -782,7 +770,6 @@ function M.open(opts)
         state.check_id = state.check_id + 1
         state.checking = false
         clear_update_autocmds()
-        stop_check_animation()
       end
     end,
   })
