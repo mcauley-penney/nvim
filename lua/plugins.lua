@@ -38,7 +38,7 @@ vim.pack.add({
   GH("lewis6991/gitsigns.nvim"),
   GH("itchyny/vim-highlighturl"),
   GH("kevinhwang91/nvim-hlslens"),
-  GH("echasnovski/mini.icons"),
+  GH("Mirsmog/real-icons.nvim"),
   GH("rrethy/vim-illuminate"),
   GH("rareitems/hl_match_area.nvim"),
   GH("neovim/nvim-lspconfig"),
@@ -71,7 +71,7 @@ vim.pack.add({
   { src = GH("folke/which-key.nvim"), data = { defer = true } },
 }, { load = selective_load })
 
-pcall(vim.cmd.colorscheme, "techbase")
+pcall(vim.cmd.colorscheme, "entryway")
 
 local function get_lsp_completion_context(completion)
   local ok, source_name = pcall(
@@ -657,46 +657,6 @@ do
   map("n", "g#", [[g#<Cmd>lua require('hlslens').start()<CR>]], kopts)
   map("n", "<Leader>l", "<Cmd>noh<CR>", kopts)
 end
-
-require("mini.icons").setup((function()
-  local mini = require("mini.icons")
-
-  local make_icon_tbl = function(category)
-    local res = {}
-    local postfix = "  "
-
-    for _, name in ipairs(mini.list(category)) do
-      res[name] = { glyph = " " .. mini.get(category, name) .. postfix }
-    end
-
-    return res
-  end
-
-  local default_icon = { glyph = "   " }
-
-  local defaults = make_icon_tbl("default")
-  defaults.extension = default_icon
-  defaults.file = default_icon
-  defaults.filetype = default_icon
-
-  local file_icons = make_icon_tbl("file")
-  file_icons[".zshrc"] = { glyph = " 󰒓  " }
-  file_icons["init.lua"] = { glyph = " 󰢱  ", hl = "MiniIconsAzure" }
-  file_icons["README.md"] = { glyph = "   ", hl = "MiniIconsCyan" }
-
-  local ft_icons = make_icon_tbl("filetype")
-  ft_icons.dosini = default_icon
-  ft_icons.text = default_icon
-
-  return {
-    default = defaults,
-    directory = make_icon_tbl("directory"),
-    extension = make_icon_tbl("extension"),
-    file = file_icons,
-    filetype = ft_icons,
-    lsp = make_icon_tbl("lsp"),
-  }
-end)())
 
 local function setup_mdpreview()
   vim.fn["mkdp#util#install"]()
@@ -1325,3 +1285,10 @@ vim.schedule(function()
   vim.api.nvim_set_hl(0, "WhichKeyValue", { link = "NormalFloat" })
   vim.api.nvim_set_hl(0, "WhichKeyDesc", { link = "NormalFloat" })
 end)
+
+require("real-icons").setup({
+  pack = "material",
+  integrations = {
+    telescope = true,
+  },
+})
