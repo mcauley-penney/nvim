@@ -71,7 +71,7 @@ vim.pack.add({
   { src = GH("folke/which-key.nvim"), data = { defer = true } },
 }, { load = selective_load })
 
-pcall(vim.cmd.colorscheme, "techbase")
+pcall(vim.cmd.colorscheme, "entryway")
 
 local function get_lsp_completion_context(completion)
   local ok, source_name = pcall(
