@@ -41,7 +41,7 @@ local function setup_highlights()
     PackFloatClean = "NormalFloat",
     PackFloatMuted = "Comment",
     PackFloatHash = "Number",
-    PackFloatKey = "Function",
+    PackFloatKey = "Keyword",
     PackFloatCommitTime = "Comment",
     PackFloatError = "DiagnosticError",
     PackFloatProgress = "DiagnosticInfo",
@@ -222,15 +222,15 @@ local function build_content()
       or nil
   end
 
-  local function commit_time_range(message)
-    return message:find("%([^()]+%)$")
-  end
+  local function commit_time_range(message) return message:find("%([^()]+%)$") end
 
   local function add_plugin(plugin, pending)
     local name = plugin.spec.name
     local commits = state.commits[name]
     local progress = state.update_status[name]
-    local line = plugin_indent .. name .. (progress and ("  " .. progress) or "")
+    local line = plugin_indent
+      .. name
+      .. (progress and ("  " .. progress) or "")
     local revision = pending
         and ("%s → %s"):format(
           short_rev(plugin.rev),
