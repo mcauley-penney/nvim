@@ -4,7 +4,7 @@ local api, fn, bo = vim.api, vim.fn, vim.bo
 local get_opt = api.nvim_get_option_value
 
 local icons = tools.ui.icons
-local mini_icons = require("mini.icons")
+local real_icons = require("real-icons")
 
 local ICON = {
   branch = { "DiagnosticOk", icons.branch },
@@ -58,15 +58,25 @@ local function esc_str(str)
   return str:gsub("([%(%)%%%+%-%*%?%[%]%^%$])", "%%%1")
 end
 
+local function file_icon(fname)
+  local icon_segment = real_icons.segment("file", fname, {
+    filetype = bo.filetype,
+    is_dir = false,
+  })
+
+  return table.concat({
+    " ",
+    tools.hl_str(icon_segment.hl, icon_segment.text),
+    " ",
+  })
+end
+
 -- path and git info -----------------------------------------
 local function path_widget(root, fname)
   local file_name = fn.fnamemodify(fname, ":t")
 
-  local path, icon, hl
-  icon, hl = mini_icons.get("file", file_name)
-
   if fname == "" then file_name = "[No Name]" end
-  path = tools.hl_str(hl, icon) .. file_name
+  local path = file_icon(fname) .. file_name
 
   if bo.buftype == "help" then return ICON.file .. path end
 
@@ -100,9 +110,9 @@ local function diagnostics_widget()
   return string.format(
     "%s %s  %s %s  ",
     ICON.error,
-    tools.hl_str("DiagnosticError", err),
+    tools.hl_str("Normal", err),
     ICON.warn,
-    tools.hl_str("DiagnosticWarn", warn)
+    tools.hl_str("Normal", warn)
   )
 end
 
