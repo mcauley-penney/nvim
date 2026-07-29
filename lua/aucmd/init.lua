@@ -16,8 +16,8 @@ aucmd("BufEnter", {
     if root ~= nil then
       vim.cmd.lcd(vim.fn.fnameescape(root))
 
-      tools.get_git_branch(root)
-      tools.get_git_remote_name(root)
+      tools.get_git_state(root)
+      tools.get_git_remotes(root)
     end
   end,
   desc = "Set root dir and initialize version control branch",

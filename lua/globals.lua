@@ -3,13 +3,12 @@
 _G.tools = {
   ui = {
     icons = {
-      branch = "",
+      branch = " ",
       bullet = "•",
       open_bullet = "○",
       ok = "✔",
       d_chev = "∨",
       ellipses = "…",
-      node = "╼",
       document = "≡",
       lock = "",
       r_chev = ">",
@@ -107,7 +106,7 @@ end
 _G.tools.ui.kind_icons_spaced = icons_spaced
 
 -- files and directories -----------------------------
-local branch_cache = setmetatable({}, { __mode = "k" })
+local state_cache = setmetatable({}, { __mode = "k" })
 local remote_cache = setmetatable({}, { __mode = "k" })
 
 --- get the path to the root of the current file. The
@@ -139,35 +138,51 @@ local function git_cmd(root, ...)
   return vim.trim(job.stdout)
 end
 
+tools.get_git_state = function(root)
+  if not root then return nil end
+  if state_cache[root] then return state_cache[root] end
+
+  local cmd_out, err = git_cmd(root, "status", "--porcelain=v2", "--branch")
+  if not cmd_out then return err end
+
+  local git_state_lines_arr = vim.split(cmd_out, "\n", {
+    plain = true,
+    trimempty = true,
+  })
+
+  local git_state_tbl = {}
+
+  for _, line in ipairs(git_state_lines_arr) do
+    local key, value = line:match("^# branch%.(%S+)%s+(.+)$")
+    if key then git_state_tbl[key] = value end
+  end
+
+  if git_state_tbl.ab then
+    local ahead, behind = git_state_tbl.ab:match("^%+(%d+)%s+%-(%d+)$")
+
+    git_state_tbl.ahead = tonumber(ahead)
+    git_state_tbl.behind = tonumber(behind)
+  end
+
+  state_cache[root] = git_state_tbl
+  return git_state_tbl
+end
+
 -- get the name of the remote repository
-tools.get_git_remote_name = function(root)
+tools.get_git_remotes = function(root)
   if not root then return nil end
   if remote_cache[root] then return remote_cache[root] end
 
-  local out = git_cmd(root, "config", "--get", "remote.origin.url")
+  local out = git_cmd(root, "remote")
   if not out then return nil end
 
-  -- normalise to short repo name
-  out = out:gsub(":", "/"):gsub("%.git$", ""):match("([^/]+/[^/]+)$")
+  local remotes = vim.split(out, "\n", {
+    plain = true,
+    trimempty = true,
+  })
 
-  remote_cache[root] = out
-  return out
-end
-
-function tools.get_git_branch(root)
-  if not root then return nil end
-  if branch_cache[root] then return branch_cache[root] end
-
-  local out = git_cmd(root, "rev-parse", "--abbrev-ref", "HEAD")
-  if out == "HEAD" then
-    local commit = git_cmd(root, "rev-parse", "--short", "HEAD")
-    commit = tools.hl_str("Comment", "(" .. commit .. ")")
-    out = string.format("%s %s", out, commit)
-  end
-
-  branch_cache[root] = out
-
-  return out
+  remote_cache[root] = remotes
+  return remotes
 end
 
 -- LSP -----------------------------
