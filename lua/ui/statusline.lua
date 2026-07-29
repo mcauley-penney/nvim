@@ -65,30 +65,55 @@ local function file_icon(fname)
   })
 
   return table.concat({
+    tools.hl_str(icon_segment.hl, icon_segment.text),
     " ",
+  })
+end
+
+local function folder_icon(root)
+  local icon_segment = real_icons.segment("directory", root, {
+    is_dir = true,
+  })
+
+  return table.concat({
     tools.hl_str(icon_segment.hl, icon_segment.text),
     " ",
   })
 end
 
 -- path and git info -----------------------------------------
+local function project_widget(root, fname)
+  local icon
+  local project_path
+
+  if not root then
+    icon = folder_icon(fname)
+    project_path = vim.fs.dirname(fname)
+  else
+    icon = folder_icon(root)
+    project_path = vim.fs.basename(root)
+  end
+
+  return table.concat({
+    " ",
+    icon,
+    project_path,
+    " ›",
+  })
+end
+
 local function path_widget(root, fname)
   local file_name = fn.fnamemodify(fname, ":t")
 
   if fname == "" then file_name = "[No Name]" end
-  local path = file_icon(fname) .. file_name
 
-  if bo.buftype == "help" then return ICON.file .. path end
+  local pretty_fname = file_icon(fname) .. file_name
+  if bo.buftype == "help" then return pretty_fname end
 
-  local dir_path = fn.fnamemodify(fname, ":h") .. "/"
-  if dir_path == "./" then dir_path = "" end
-
-  local remote = tools.get_git_remote_name(root)
-  local branch = tools.get_git_branch(root)
-  local repo_info = ""
-  if remote and branch then
+  if root then
+    local dir_path = fn.fnamemodify(fname, ":h") .. "/"
     dir_path = dir_path:gsub("^" .. esc_str(root) .. "/", "")
-    repo_info = string.format("%s %s @ %s ", ICON.branch, remote, branch)
+    return dir_path .. " " .. pretty_fname
   end
 
   local win_w = api.nvim_win_get_width(0)
@@ -174,15 +199,16 @@ end
 
 -- render ---------------------------------------------
 function M.render()
-  local fname = api.nvim_buf_get_name(0)
-  local root = (bo.buftype == "" and tools.get_path_root(fname)) or nil
-  if bo.buftype ~= "" and bo.buftype ~= "help" then fname = bo.ft end
+  local curbuf_path = api.nvim_buf_get_name(0)
+  local root = (bo.buftype == "" and tools.get_path_root(curbuf_path)) or nil
+  if bo.buftype ~= "" and bo.buftype ~= "help" then curbuf_path = bo.ft end
 
   local buf = api.nvim_win_get_buf(vim.g.statusline_winid)
 
   local parts = {
     pad = PAD,
-    path = path_widget(root, fname),
+    project = project_widget(root, curbuf_path),
+    path = path_widget(root, curbuf_path),
     venv = venv_widget(),
     mod = get_opt("modifiable", { buf = buf })
         and (get_opt("modified", { buf = buf }) and ICON.modified or " ")
